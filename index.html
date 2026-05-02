@@ -9,70 +9,56 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { 
-            --bg: #0f1115; 
-            --panel: #1a1d23; 
-            --accent-data: #00d4ff; 
-            --accent-success: #10b981; 
-            --accent-alert: #ff4d4d; 
-            --white: #ffffff;
-            --gray-sub: #94a3b8;
-            --border: rgba(255, 255, 255, 0.05); 
+            --bg: #ffffff; /* Fondo Blanco solicitado */
+            --panel: #f8fafc; /* Gris muy tenue para definición de paneles */
+            --accent-data: #0669FE; /* Azul Arbolito para contraste en blanco */
+            --accent-success: #29903B; /* Verde Arbolito */
+            --accent-alert: #d63031; 
+            --text-main: #0f172a; /* Texto oscuro para legibilidad */
+            --text-sub: #64748b;
+            --border: #e2e8f0; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
         
         body { 
-            height: 100vh; width: 100vw; background: var(--bg); color: var(--white); 
+            height: 100vh; width: 100vw; background: var(--bg); color: var(--text-main); 
             font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; 
             overflow: hidden; padding: 2vh 2vw; 
         }
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
         
-        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.2vh; border-bottom: 1px solid var(--border); }
-        h1 { font-family: 'Rubik', sans-serif; font-size: 2.8vh; font-weight: 900; letter-spacing: -0.5px; color: var(--white); text-transform: uppercase; }
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.2vh; border-bottom: 2px solid var(--border); }
+        h1 { font-family: 'Rubik', sans-serif; font-size: 2.8vh; font-weight: 900; letter-spacing: -0.5px; color: var(--text-main); text-transform: uppercase; }
 
         .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
-        .glass-panel { background: var(--panel); border-radius: 8px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+        .glass-panel { background: var(--panel); border-radius: 12px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; height: 100%; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         
-        /* RESTAURACIÓN DEL AUTOAJUSTE */
-        .table-container { 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            overflow-y: auto; 
-            scrollbar-width: none; 
-        }
+        .table-container { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; scrollbar-width: none; }
         .table-container::-webkit-scrollbar { display: none; }
 
-        .table-wrapper { 
-            width: 100%; position: relative; padding-left: 50px; 
-            flex: 1; /* Esto obliga a cada sección de zona a ocupar el espacio disponible */
-            display: flex; flex-direction: column; 
-            margin-bottom: 10px; 
-        }
+        .table-wrapper { width: 100%; position: relative; padding-left: 50px; flex: 1; display: flex; flex-direction: column; margin-bottom: 10px; }
         
         .zona-tag {
             position: absolute; left: 0; top: 0; bottom: 0; width: 40px;
-            background: rgba(0, 212, 255, 0.03); border-left: 3px solid var(--accent-data);
+            background: rgba(6, 105, 254, 0.05); border-left: 4px solid var(--accent-data);
             display: flex; align-items: center; justify-content: center;
         }
         .zona-tag span { transform: rotate(270deg); white-space: nowrap; font-family: 'Rubik'; font-weight: 700; color: var(--accent-data); font-size: 1.3vh; letter-spacing: 1px; }
 
         table { width: 100%; border-collapse: collapse; table-layout: fixed; flex: 1; }
-        th { font-family: 'Inter'; font-size: 0.85vh; color: var(--gray-sub); text-transform: uppercase; padding: 6px 10px; font-weight: 700; border-bottom: 1px solid var(--border); }
+        th { font-family: 'Inter'; font-size: 0.85vh; color: var(--text-sub); text-transform: uppercase; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border); }
         
         .col-ruta { width: 28%; text-align: left; }
         .col-data { width: 18%; text-align: right; }
 
-        /* Filas con padding dinámico */
-        .ruta-row td { padding: 0.5vh 10px; font-size: 1.15vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
-        .ruta-name { font-weight: 600; color: var(--white); }
+        .ruta-row td { padding: 0.6vh 10px; font-size: 1.15vh; border-bottom: 1px solid var(--border); color: #334155; }
+        .ruta-name { font-weight: 700; color: var(--text-main); }
 
         .total-bar { 
-            background: #f8fafc; color: #0f172a; padding: 1vh 0; border-radius: 4px; 
-            display: flex; align-items: center; font-family: 'Rubik'; font-weight: 700; font-size: 1.4vh;
-            margin-top: auto; width: 100%; 
+            background: var(--accent-success); color: #ffffff; padding: 1.2vh 0; border-radius: 6px; 
+            display: flex; align-items: center; font-family: 'Rubik'; font-weight: 700; font-size: 1.45vh;
+            margin-top: auto; width: 100%; box-shadow: 0 4px 12px rgba(41, 144, 59, 0.2);
         }
         .total-spacer { width: 50px; flex-shrink: 0; }
         .total-content { display: flex; flex: 1; padding: 0 10px; }
@@ -80,20 +66,20 @@
         .t-val { width: 18%; text-align: right; }
 
         .footer-stats { display: flex; gap: 1.5vw; justify-content: center; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 1.5vh 2vw; text-align: center; min-width: 220px; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.5vh 2vw; text-align: center; min-width: 220px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .stat-card .val { font-family: 'Rubik'; font-size: 4.2vh; color: var(--accent-success); font-weight: 700; }
-        .stat-card .lbl { font-size: 0.85vh; color: var(--gray-sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
+        .stat-card .lbl { font-size: 0.85vh; color: var(--text-sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
         .stat-card.blue .val { color: var(--accent-data); }
         .stat-card.warning .val { color: var(--accent-alert); }
 
-        .source-footer { text-align: center; font-size: 0.8vh; color: #475569; font-weight: 700; margin-top: 1vh; text-transform: uppercase; letter-spacing: 1.5px; }
+        .source-footer { text-align: center; font-size: 0.8vh; color: var(--text-sub); font-weight: 700; margin-top: 1vh; text-transform: uppercase; letter-spacing: 1.5px; }
     </style>
 </head>
 <body>
     <div id="wrapper">
         <header>
             <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
-            <div id="date-tag" style="font-family: 'Inter'; color: var(--accent-data); font-size: 1.2vh; border: 1px solid var(--accent-data); padding: 5px 15px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
+            <div id="date-tag" style="font-family: 'Inter'; color: var(--accent-data); font-size: 1.2vh; border: 2px solid var(--accent-data); padding: 5px 15px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
                 CIERRE HISTÓRICO: AYER
             </div>
         </header>
@@ -191,17 +177,17 @@
                     data: {
                         labels: data.map(r => r[rKey]),
                         datasets: [
-                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.03)', barPercentage: 0.8, order: 3 },
-                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#ff4d4d' : '#10b981'), barPercentage: 0.4, borderRadius: 2, order: 2 },
-                            { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 10, pointBorderWidth: 3, order: 1 }
+                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: '#f1f5f9', barPercentage: 0.8, order: 3 },
+                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#d63031' : '#29903B'), barPercentage: 0.4, borderRadius: 2, order: 2 },
+                            { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#0f172a', borderColor: '#0f172a', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 10, pointBorderWidth: 3, order: 1 }
                         ]
                     },
                     options: {
                         indexAxis: 'y', responsive: true, maintainAspectRatio: false, grouped: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#475569', font: { size: 10 } } },
-                            y: { grid: { display: false }, ticks: { color: '#f8fafc', font: { weight: 600, size: 10 } } }
+                            x: { grid: { color: '#f1f5f9' }, ticks: { color: '#64748b', font: { size: 10 } } },
+                            y: { grid: { display: false }, ticks: { color: '#0f172a', font: { weight: 600, size: 10 } } }
                         }
                     }
                 });
