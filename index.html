@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
-    <title>Gusi Intelligence - Precision View v3.6</title>
+    <title>Gusi Intelligence - Final Precision v3.7</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
@@ -12,14 +12,12 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
-            height: 100vh; width: 100vw; background: var(--bg); 
-            color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; 
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-            padding: 30px; 
+            height: 100vh; width: 100vw; background: var(--bg); color: var(--text); 
+            font-family: 'Plus Jakarta Sans', sans-serif; display: flex; 
+            align-items: center; justify-content: center; overflow: hidden; padding: 30px; 
         }
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto; gap: 2vh; }
-        
         header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 1vh; border-bottom: 1px solid var(--border); }
         h1 { font-family: 'Orbitron', sans-serif; font-size: 3vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); }
 
@@ -29,58 +27,40 @@
         .table-container { flex: 1; overflow-y: auto; scrollbar-width: none; width: 100%; position: relative; }
         .table-container::-webkit-scrollbar { display: none; }
 
+        /* Estructura de Tabla sin Rowspan */
+        .table-wrapper { width: 100%; margin-bottom: 10px; position: relative; padding-left: 55px; }
+        
+        .zona-tag {
+            position: absolute; left: 0; top: 0; bottom: 0; width: 45px;
+            background: rgba(0, 210, 255, 0.1); border-left: 5px solid var(--blue);
+            display: flex; align-items: center; justify-content: center; border-radius: 4px;
+        }
+        .zona-tag span { 
+            transform: rotate(270deg); white-space: nowrap; font-family: 'Orbitron'; 
+            font-weight: 900; color: var(--blue); font-size: 1.4vh; letter-spacing: 2px;
+        }
+
         table { width: 100%; border-collapse: separate; border-spacing: 0 4px; table-layout: fixed; }
+        th { font-family: 'Orbitron', sans-serif; font-size: 0.85vh; color: var(--sub); text-transform: uppercase; padding: 5px 10px; }
         
-        /* Columnas con anchos fijos para alineación perfecta */
-        th:nth-child(1) { width: 60px; } /* Espacio para Zona */
-        th:nth-child(2) { width: 25%; text-align: left; } /* Ruta */
-        th:nth-child(3), th:nth-child(4), th:nth-child(5), th:nth-child(6) { width: 17%; text-align: right; }
+        /* Alineación milimétrica de columnas */
+        .col-ruta { width: 28%; text-align: left !important; }
+        .col-data { width: 18%; text-align: right !important; }
 
-        th { font-family: 'Orbitron', sans-serif; font-size: 0.85vh; color: var(--sub); text-transform: uppercase; padding: 0.5vh 10px; }
-        
-        /* Nueva Lógica de Zona: Sin desconfigurar filas */
-        .zona-container {
-            position: relative;
-            background: rgba(0, 210, 255, 0.05);
-            width: 100%;
-            height: 100%;
-        }
-
-        .zona-label-v {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(270deg);
-            white-space: nowrap;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 1.4vh;
-            color: var(--blue);
-            letter-spacing: 2px;
-            pointer-events: none;
-        }
-
-        .zona-border {
-            position: absolute;
-            left: 0; top: 0; bottom: 0;
-            width: 5px;
-            background: var(--blue);
-            box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
-        }
-        
-        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.8vh 12px; text-align: right; font-size: 1.15vh; }
-        .ruta-row td:nth-child(2) { text-align: left; font-weight: 800; color: #fff; padding-left: 15px; }
+        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.8vh 12px; font-size: 1.15vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
+        .ruta-name { font-weight: 800; color: #fff; text-align: left; }
+        .ruta-val { text-align: right; }
 
         .total-bar { 
-            margin-top: 1.5vh; background: var(--neon); color: #000; padding: 1.2vh 25px; border-radius: 8px; 
-            display: grid; grid-template-columns: 60px 25% 17% 17% 17% 17%;
-            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.3vh; text-align: right;
+            margin-top: 1vh; background: var(--neon); color: #000; padding: 1.2vh 20px; border-radius: 8px; 
+            display: flex; justify-content: space-between; align-items: center;
+            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.3vh;
         }
-        .total-bar span:nth-child(2) { text-align: left; padding-left: 15px; }
+        .total-bar .val-group { display: flex; gap: 3vw; }
 
         .footer-stats { display: flex; gap: 2vw; justify-content: center; padding-top: 1vh; }
         .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.5vh 3vw; text-align: center; min-width: 220px; }
-        .stat-card .val { font-family: 'Orbitron'; font-size: 3.8vh; color: var(--neon); line-height: 1; }
+        .stat-card .val { font-family: 'Orbitron'; font-size: 3.8vh; color: var(--neon); }
         .stat-card .lbl { font-size: 1vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
         .stat-card.blue .val { color: var(--blue); }
     </style>
@@ -96,28 +76,14 @@
             <div class="glass-panel"><canvas id="bulletChart"></canvas></div>
             
             <div class="glass-panel">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Ruta</th>
-                                <th>Meta</th>
-                                <th>Venta</th>
-                                <th>Ideal</th>
-                                <th>Cuota</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody"></tbody>
-                    </table>
+                <div class="table-container" id="content-tables">
+                    <!-- Las tablas por zona se generarán aquí -->
                 </div>
                 <div class="total-bar">
-                    <span></span>
                     <span>TOTAL CEDIS</span>
-                    <span id="t-obj">$0</span>
-                    <span id="t-vta">$0</span>
-                    <span id="t-esp">$0</span>
-                    <span id="t-cuota">$0</span>
+                    <div class="val-group">
+                        <span id="t-obj">$0</span><span id="t-vta">$0</span><span id="t-esp">$0</span><span id="t-cuota">$0</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -143,7 +109,6 @@
                 const dataRaw = res.data;
                 const h = Object.keys(dataRaw[0]);
                 const findK = (terms) => h.find(k => terms.some(t => k.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes(t.toUpperCase())));
-                
                 const cKey = findK(['CEDIS']), rKey = findK(['RUTA']), zKey = findK(['ZONA']), vKey = findK(['ORGANICA']), oKey = findK(['OBJETIVO']), eKey = findK(['ESPERADA']), sKey = findK(['FALTANTES', 'CUOTA']);
 
                 const targetCedis = filtradoCedis || dataRaw[0][cKey];
@@ -157,40 +122,28 @@
                     return acc;
                 }, {});
 
-                const tbody = document.getElementById('tableBody');
+                const container = document.getElementById('content-tables');
+                container.innerHTML = "";
                 let tObj = 0, tVta = 0, tEsp = 0, tSug = 0;
 
                 Object.keys(grouped).sort().forEach(zona => {
-                    const rutasZona = grouped[zona];
-                    rutasZona.forEach((item, index) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'table-wrapper';
+                    wrapper.innerHTML = `<div class="zona-tag"><span>ZONA ${zona}</span></div>`;
+                    
+                    const table = document.createElement('table');
+                    table.innerHTML = `<thead><tr><th class="col-ruta">Ruta</th><th class="col-data">Meta</th><th class="col-data">Venta</th><th class="col-data">Ideal</th><th class="col-data">Cuota</th></tr></thead><tbody></tbody>`;
+                    const tbody = table.querySelector('tbody');
+
+                    grouped[zona].forEach(item => {
                         const o = clean(item[oKey]), v = clean(item[vKey]), e = clean(item[eKey]), s = clean(item[sKey]);
                         tObj += o; tVta += v; tEsp += e; tSug += s;
-                        
-                        const row = document.createElement('tr');
-                        row.className = 'ruta-row';
-                        
-                        let zonaTD = '';
-                        if (index === 0) {
-                            // Usamos una celda con fondo pero sin afectar el flujo de las demás columnas
-                            zonaTD = `
-                                <td rowspan="${rutasZona.length}" style="padding:0; position:relative; background:transparent;">
-                                    <div class="zona-container">
-                                        <div class="zona-border"></div>
-                                        <div class="zona-label-v">ZONA ${zona}</div>
-                                    </div>
-                                </td>`;
-                        }
-
-                        row.innerHTML = `
-                            ${zonaTD}
-                            <td>${item[rKey]}</td>
-                            <td>${fmt(o)}</td>
-                            <td style="color:var(--neon);font-weight:800">${fmt(v)}</td>
-                            <td>${fmt(e)}</td>
-                            <td style="color:var(--blue);font-weight:800">${fmt(s)}</td>
-                        `;
+                        const row = document.createElement('tr'); row.className = 'ruta-row';
+                        row.innerHTML = `<td class="ruta-name">${item[rKey]}</td><td class="ruta-val">${fmt(o)}</td><td class="ruta-val" style="color:var(--neon);font-weight:800">${fmt(v)}</td><td class="ruta-val">${fmt(e)}</td><td class="ruta-val" style="color:var(--blue);font-weight:800">${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
+                    wrapper.appendChild(table);
+                    container.appendChild(wrapper);
                 });
 
                 document.getElementById('t-obj').innerText = fmt(tObj);
