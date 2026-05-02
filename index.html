@@ -3,42 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
-    <title>Gusi Elite Operations - Live Feed</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Gusi Intelligence - Live Monitor v2.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
-        :root {
-            --bg: #05070a;
-            --panel: #0d1117;
-            --neon: #00ff9d;
-            --blue: #00d2ff;
-            --text: #ffffff;
-            --sub: #8b949e;
-            --border: rgba(255, 255, 255, 0.08);
-        }
+        :root { --bg: #05070a; --panel: #0d1117; --neon: #00ff9d; --blue: #00d2ff; --text: #ffffff; --sub: #8b949e; --border: rgba(255, 255, 255, 0.08); }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            height: 100vh; width: 100vw; background: var(--bg); 
-            color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; 
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-        }
+        body { height: 100vh; width: 100vw; background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #wrapper { width: 96vw; height: 92vh; display: grid; grid-template-rows: auto 1fr auto; gap: 2vh; }
         header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 2vh; border-bottom: 1px solid var(--border); }
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 3.5vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 3.5vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); text-transform: uppercase; }
         .main-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5vw; overflow: hidden; }
-        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 2.5vh; overflow: hidden; position: relative; }
+        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 2.5vh; overflow: hidden; }
         .table-container { overflow-y: auto; scrollbar-width: none; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 6px; }
         th { font-family: 'Orbitron', sans-serif; font-size: 0.9vh; color: var(--sub); text-transform: uppercase; padding: 1vh; text-align: right; }
         th:first-child { text-align: left; }
-        .zona-header td { background: rgba(0, 210, 255, 0.1); color: var(--blue); font-weight: 800; font-size: 1.2vh; padding: 8px 12px; border-left: 3px solid var(--blue); }
-        .ruta-row td { background: rgba(255,255,255,0.02); padding: 1vh; text-align: right; font-size: 1.2vh; }
+        .zona-header td { background: rgba(0, 210, 255, 0.1); color: var(--blue); font-weight: 800; font-size: 1.2vh; padding: 8px 12px; border-left: 3px solid var(--blue); text-align: left !important; }
+        .ruta-row td { background: rgba(255,255,255,0.02); padding: 1vh; text-align: right; font-size: 1.2vh; border-top: 1px solid rgba(255,255,255,0.05); }
         .ruta-row td:first-child { text-align: left; font-weight: 700; color: #fff; border-radius: 6px 0 0 6px; }
-        .total-row td { background: var(--neon) !important; color: #000 !important; font-weight: 900 !important; font-family: 'Orbitron'; font-size: 1.4vh; }
+        .total-row td { background: var(--neon) !important; color: #000 !important; font-weight: 900 !important; font-family: 'Orbitron'; font-size: 1.4vh; border: none; }
         .footer-stats { display: flex; gap: 2vw; justify-content: center; }
         .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.5vh 3vw; text-align: center; }
-        .stat-card .val { font-family: 'Orbitron'; font-size: 4vh; color: var(--neon); text-shadow: 0 0 10px rgba(0,255,157,0.3); }
+        .stat-card .val { font-family: 'Orbitron'; font-size: 4vh; color: var(--neon); }
         .stat-card .lbl { font-size: 1vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
     </style>
 </head>
@@ -46,68 +34,52 @@
     <div id="wrapper">
         <header>
             <div class="h-left">
-                <p style="font-size: 1vh; letter-spacing: 3px; color: var(--sub); font-weight: 800; margin-bottom: 5px;">EXTRACT SYSTEM · ACTIVE</p>
+                <p style="font-size: 1vh; letter-spacing: 3px; color: var(--sub); font-weight: 800; margin-bottom: 5px;">EXTRACT SYSTEM · LIVE FEED</p>
                 <h1>OPERACIONES <span id="cedis-label">...</span></h1>
             </div>
             <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.4vh; border: 1px solid var(--blue); padding: 5px 15px; border-radius: 4px;">01-MAY</div>
         </header>
-
         <div class="main-grid">
-            <div class="glass-panel">
-                <canvas id="bulletChart"></canvas>
-            </div>
+            <div class="glass-panel"><canvas id="bulletChart"></canvas></div>
             <div class="glass-panel table-container">
                 <table id="dataTable">
                     <thead>
-                        <tr>
-                            <th style="text-align: left;">Zona / Ruta</th>
-                            <th>Objetivo</th>
-                            <th>Venta</th>
-                            <th>Esperado</th>
-                            <th>Cuota Diaria</th>
-                        </tr>
+                        <tr><th style="text-align: left;">Zona / Ruta</th><th>Objetivo</th><th>Venta</th><th>Esperado</th><th>Cuota Diaria</th></tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
                 </table>
             </div>
         </div>
-
         <div class="footer-stats">
-            <div class="stat-card">
-                <div class="val" id="global-perc">0%</div>
-                <div class="lbl">Avance Quincenal</div>
-            </div>
-            <div class="stat-card">
-                <div class="val" id="global-sug">$0</div>
-                <div class="lbl">Meta Diaria de Rescate</div>
-            </div>
+            <div class="stat-card"><div class="val" id="global-perc">0%</div><div class="lbl">Avance Quincenal</div></div>
+            <div class="stat-card"><div class="val" id="global-sug">$0</div><div class="lbl">Meta Diaria de Rescate</div></div>
         </div>
     </div>
 
     <script>
-        // TU VÍNCULO DE PUBLICACIÓN CORRECTO
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTxbA3JbYpdUJXXuUa3iicabHZ01QS98A610ugAgMRI7laj6B69ptMs6rG7Ot-pSIkaUe-stVIzL7BY/pub?gid=920388459&single=true&output=csv';
-        
         const urlParams = new URLSearchParams(window.location.search);
         const filtradoCedis = urlParams.get('cedis');
 
-        function clean(v) { return parseFloat(v?.toString().replace(/[$, ]/g, '')) || 0; }
+        function clean(v) { 
+            if (!v) return 0;
+            return parseFloat(v.toString().replace(/[$, ]/g, '')) || 0; 
+        }
         function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
 
         Papa.parse(csvUrl, {
             download: true, header: true, skipEmptyLines: true,
             complete: function(res) {
                 const dataRaw = res.data;
-                if (!dataRaw || dataRaw.length === 0) return;
-
                 const h = Object.keys(dataRaw[0]);
-                const findK = (str) => h.find(k => k.toUpperCase().trim().includes(str.toUpperCase().trim()));
                 
-                const cKey = findK('CEDIS'), rKey = findK('RUTA'), zKey = findK('ZONA');
-                const vKey = findK('VENTA ORGÁNICA'), oKey = findK('OBJETIVO');
-                const eKey = findK('VENTA ESPERADA'), sKey = findK('CANTIDAD POR DÍAS FALTANTES');
+                // Buscador de columnas insensible a acentos y espacios
+                const findK = (terms) => h.find(k => terms.some(t => k.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes(t.toUpperCase())));
+                
+                const cKey = findK(['CEDIS']), rKey = findK(['RUTA']), zKey = findK(['ZONA']);
+                const vKey = findK(['ORGANICA']), oKey = findK(['OBJETIVO']);
+                const eKey = findK(['ESPERADA']), sKey = findK(['FALTANTES', 'CUOTA']);
 
-                // Si no hay filtro, tomamos el primer CEDIS de la lista
                 const targetCedis = filtradoCedis || dataRaw[0][cKey];
                 let data = dataRaw.filter(row => row[cKey]?.trim().toUpperCase() === targetCedis?.toUpperCase() && row[rKey]?.trim());
                 
@@ -128,14 +100,11 @@
                     zRow.className = 'zona-header';
                     zRow.innerHTML = `<td colspan="5">ZONA ${zona}</td>`;
                     tbody.appendChild(zRow);
-
                     grouped[zona].forEach(item => {
                         const o = clean(item[oKey]), v = clean(item[vKey]), e = clean(item[eKey]), s = clean(item[sKey]);
                         tObj += o; tVta += v; tEsp += e; tSug += s;
-
-                        const row = document.createElement('tr');
-                        row.className = 'ruta-row';
-                        row.innerHTML = `<td>${item[rKey]}</td><td>${fmt(o)}</td><td style="color:var(--neon)">${fmt(v)}</td><td>${fmt(e)}</td><td>${fmt(s)}</td>`;
+                        const row = document.createElement('tr'); row.className = 'ruta-row';
+                        row.innerHTML = `<td>${item[rKey]}</td><td>${fmt(o)}</td><td style="color:var(--neon); font-weight:800;">${fmt(v)}</td><td>${fmt(e)}</td><td style="color:var(--blue); font-weight:800;">${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
                 });
