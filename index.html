@@ -17,21 +17,22 @@
         body { 
             height: 100vh; width: 100vw; background: var(--bg); color: var(--text); 
             font-family: 'Plus Jakarta Sans', sans-serif; display: flex; 
-            align-items: center; justify-content: center; overflow: hidden; padding: 30px; 
+            align-items: center; justify-content: center; overflow: hidden; 
+            padding: 20px 30px; /* Reducción de padding superior/inferior */
         }
         
-        #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 2vh; }
+        #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
         
-        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 1vh; border-bottom: 1px solid var(--border); }
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 2.8vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); text-transform: uppercase; }
+        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 0.8vh; border-bottom: 1px solid var(--border); }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 2.6vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); text-transform: uppercase; }
 
         .main-grid { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 2vw; overflow: hidden; }
-        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; overflow: hidden; }
+        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 1.5vh; display: flex; flex-direction: column; overflow: hidden; }
         
         .table-container { flex: 1; overflow-y: auto; scrollbar-width: none; width: 100%; position: relative; }
         .table-container::-webkit-scrollbar { display: none; }
 
-        .table-wrapper { width: 100%; margin-bottom: 10px; position: relative; padding-left: 55px; }
+        .table-wrapper { width: 100%; margin-bottom: 8px; position: relative; padding-left: 55px; }
         
         .zona-tag {
             position: absolute; left: 0; top: 0; bottom: 0; width: 45px;
@@ -40,35 +41,34 @@
         }
         .zona-tag span { 
             transform: rotate(270deg); white-space: nowrap; font-family: 'Orbitron'; 
-            font-weight: 900; color: var(--blue); font-size: 1.4vh; letter-spacing: 2px;
+            font-weight: 900; color: var(--blue); font-size: 1.3vh; letter-spacing: 2px;
         }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 4px; table-layout: fixed; }
-        th { font-family: 'Orbitron', sans-serif; font-size: 0.85vh; color: var(--sub); text-transform: uppercase; padding: 5px 10px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 3px; table-layout: fixed; }
+        th { font-family: 'Orbitron', sans-serif; font-size: 0.8vh; color: var(--sub); text-transform: uppercase; padding: 4px 10px; }
         
         .col-ruta { width: 28%; text-align: left !important; }
         .col-data { width: 18%; text-align: right !important; }
 
-        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.8vh 12px; font-size: 1.15vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
+        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.5vh 12px; font-size: 1.1vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
         .ruta-name { font-weight: 800; color: #fff; text-align: left; }
         .ruta-val { text-align: right; }
 
         .total-bar { 
-            margin-top: 1vh; background: var(--neon); color: #000; padding: 1.2vh 20px; border-radius: 8px; 
+            margin-top: 0.8vh; background: var(--neon); color: #000; padding: 1vh 20px; border-radius: 8px; 
             display: flex; justify-content: space-between; align-items: center;
-            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.3vh;
+            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.25vh;
         }
         .total-bar .val-group { display: flex; gap: 3vw; }
 
-        .footer-stats { display: flex; gap: 2vw; justify-content: center; padding-top: 1vh; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.5vh 3vw; text-align: center; min-width: 220px; }
-        .stat-card .val { font-family: 'Orbitron'; font-size: 3.8vh; color: var(--neon); }
-        .stat-card .lbl { font-size: 1vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
+        .footer-stats { display: flex; gap: 2vw; justify-content: center; padding-top: 0.5vh; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.2vh 3vw; text-align: center; min-width: 220px; }
+        .stat-card .val { font-family: 'Orbitron'; font-size: 3.5vh; color: var(--neon); }
+        .stat-card .lbl { font-size: 0.9vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 4px; }
         .stat-card.blue .val { color: var(--blue); }
         .stat-card.warning .val { color: var(--red); text-shadow: 0 0 10px rgba(255,71,87,0.4); }
 
-        /* Estilo sutil para el Source/PoweredBy */
-        .source-footer { text-align: center; font-size: 0.9vh; color: #4b5563; letter-spacing: 1px; font-weight: 600; margin-top: 1vh; }
+        .source-footer { text-align: center; font-size: 0.85vh; color: #4b5563; letter-spacing: 1px; font-weight: 600; margin-top: 0.5vh; }
     </style>
 </head>
 <body>
@@ -77,7 +77,7 @@
             <div class="h-left">
                 <h1 id="main-title">AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
             </div>
-            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.2vh; border: 1px solid var(--blue); padding: 5px 15px; border-radius: 5px; text-transform: uppercase;">
+            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.1vh; border: 1px solid var(--blue); padding: 4px 15px; border-radius: 5px; text-transform: uppercase;">
                 Actualizado al cierre de ayer
             </div>
         </header>
@@ -187,7 +187,7 @@
                         plugins: { legend: { display: false } },
                         scales: {
                             x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 9 } } },
-                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 700, size: 9.5 } } }
+                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 700, size: 9 } } }
                         }
                     }
                 });
