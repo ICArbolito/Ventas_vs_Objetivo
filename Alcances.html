@@ -3,83 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
-    <title>Gusi Elite Operations Center</title>
+    <title>Gusi Elite Operations - Extract Mode</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root {
-            --bg-deep: #020408;
-            --glass: rgba(17, 25, 40, 0.85);
-            --neon-primary: #00ff9d;
-            --neon-secondary: #00d2ff;
-            --text-pure: #ffffff;
-            --text-dim: #94a3b8;
-            --border-glass: rgba(255, 255, 255, 0.1);
+            --bg: #05070a;
+            --panel: #0d1117;
+            --neon-green: #00ff9d;
+            --neon-blue: #00d2ff;
+            --neon-red: #ff4757;
+            --text: #ffffff;
+            --sub: #8b949e;
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            height: 100vh; width: 100vw; background: var(--bg-deep); 
-            color: var(--text-pure); font-family: 'Plus Jakarta Sans', sans-serif; 
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-            background-image: radial-gradient(circle at 50% 50%, #0d1117 0%, #020408 100%);
+            height: 100vh; width: 100vw; background: var(--bg); 
+            color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; 
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
 
-        #wrapper { width: 95vw; height: 90vh; display: grid; grid-template-rows: auto 1fr auto; gap: 2vh; }
+        #wrapper { width: 96vw; height: 92vh; display: grid; grid-template-rows: auto 1fr auto; gap: 2vh; }
 
-        header { display: flex; justify-content: space-between; align-items: center; padding: 2vh 0; border-bottom: 1px solid var(--border-glass); }
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 3.5vh; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(to right, #fff, var(--neon-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        header { 
+            display: flex; justify-content: space-between; align-items: flex-end; 
+            padding-bottom: 2vh; border-bottom: 1px solid var(--border);
+        }
+        .h-left p { font-size: 1vh; letter-spacing: 3px; color: var(--sub); font-weight: 800; }
+        .h-left h1 { font-family: 'Orbitron', sans-serif; font-size: 3.5vh; color: var(--neon-green); text-shadow: 0 0 15px rgba(0,255,157,0.3); }
 
-        .main-container { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3vw; overflow: hidden; }
+        .main-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5vw; overflow: hidden; }
 
-        .chart-card { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 20px; padding: 2vh; position: relative; }
+        /* Estilo de Paneles */
+        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 2.5vh; overflow: hidden; position: relative; }
+        
+        .table-container { overflow-y: auto; scrollbar-width: none; }
+        .table-container::-webkit-scrollbar { display: none; }
 
-        .table-panel { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 24px; padding: 2vh; overflow-y: auto; scrollbar-width: none; }
-        .table-panel::-webkit-scrollbar { display: none; }
-
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-        th { font-family: 'Orbitron', sans-serif; font-size: 1vh; color: var(--text-dim); text-transform: uppercase; padding: 1vh; text-align: right; letter-spacing: 1px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 6px; }
+        th { font-family: 'Orbitron', sans-serif; font-size: 0.9vh; color: var(--sub); text-transform: uppercase; padding: 1vh; text-align: right; }
         th:first-child { text-align: left; }
 
-        .zona-row td { background: rgba(0, 210, 255, 0.1); font-weight: 800; color: var(--neon-secondary); font-size: 1.3vh; border-left: 4px solid var(--neon-secondary); padding: 8px 15px; }
+        .zona-header td { background: rgba(0, 210, 255, 0.1); color: var(--neon-blue); font-weight: 800; font-size: 1.2vh; padding: 8px 12px; border-left: 3px solid var(--neon-blue); }
+        
+        .ruta-row td { background: rgba(255,255,255,0.02); padding: 1vh; text-align: right; font-size: 1.2vh; }
+        .ruta-row td:first-child { text-align: left; font-weight: 700; color: #fff; border-radius: 6px 0 0 6px; }
+        .ruta-row td:last-child { color: var(--neon-blue); font-weight: 800; border-radius: 0 6px 6px 0; }
 
-        .ruta-row td { background: rgba(255, 255, 255, 0.03); padding: 1vh; text-align: right; border-top: 1px solid var(--border-glass); font-size: 1.25vh; }
-        .ruta-row td:first-child { text-align: left; font-weight: 700; border-radius: 8px 0 0 8px; color: #fff; }
-        .ruta-row td:last-child { border-radius: 0 8px 8px 0; color: var(--neon-secondary); font-weight: 800; }
+        .total-row td { background: var(--neon-green) !important; color: #000 !important; font-weight: 900 !important; font-family: 'Orbitron'; font-size: 1.4vh; }
 
-        .total-row td { background: var(--neon-primary) !important; color: #000 !important; font-weight: 900 !important; font-size: 1.5vh; font-family: 'Orbitron', sans-serif; }
+        /* KPIs de Pie */
+        .footer-stats { display: flex; gap: 2vw; justify-content: center; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.5vh 3vw; text-align: center; }
+        .stat-card .val { font-family: 'Orbitron'; font-size: 4vh; color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,157,0.3); }
+        .stat-card .lbl { font-size: 1vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
 
-        .kpi-footer { display: flex; gap: 2vw; justify-content: center; margin-top: 2vh; }
-        .kpi-stat { background: var(--glass); border: 1px solid var(--border-glass); border-radius: 15px; padding: 1.5vh 3vw; text-align: center; min-width: 220px; }
-        .kpi-stat .val { font-family: 'Orbitron', sans-serif; font-size: 3.5vh; color: var(--neon-primary); }
-        .kpi-stat .lbl { font-size: 1vh; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin-top: 5px; }
     </style>
 </head>
 <body>
     <div id="wrapper">
         <header>
-            <h1>CENTRAL <span id="cedis-label">...</span></h1>
-            <div id="days-info" class="kpi-stat" style="padding: 1vh 2vw; min-width: auto; border-color: var(--neon-secondary);">
-                <span id="days-val" style="font-family: 'Orbitron'; font-size: 2vh; color: var(--neon-secondary); font-weight: 900;">0</span>
-                <span class="lbl" style="margin-left: 10px;">Días para Cierre</span>
+            <div class="h-left">
+                <p>EXTRACT SYSTEM · LIVE FEED</p>
+                <h1>CENTRAL <span id="cedis-label">...</span></h1>
             </div>
+            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--neon-blue); font-size: 1.4vh; border: 1px solid var(--neon-blue); padding: 5px 15px; border-radius: 4px;"></div>
         </header>
 
-        <div class="main-container">
-            <div class="chart-card">
-                <canvas id="mainBullet"></canvas>
+        <div class="main-grid">
+            <div class="glass-panel">
+                <canvas id="bulletChart"></canvas>
             </div>
-            <div class="table-panel">
+            <div class="glass-panel table-container">
                 <table id="dataTable">
                     <thead>
                         <tr>
                             <th style="text-align: left;">Zona / Ruta</th>
                             <th>Objetivo</th>
                             <th>Venta</th>
-                            <th>Ideal</th>
-                            <th>Cuota L-S</th>
+                            <th>Esperado</th>
+                            <th>Cuota Diaria</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -87,36 +93,25 @@
             </div>
         </div>
 
-        <div class="kpi-footer">
-            <div class="kpi-stat">
-                <div class="val" id="total-perc">0%</div>
-                <div class="lbl">Logro Global CEDIS</div>
+        <div class="footer-stats">
+            <div class="stat-card">
+                <div class="val" id="global-perc">0%</div>
+                <div class="lbl">Avance Quincenal</div>
             </div>
-            <div class="kpi-stat">
-                <div class="val" id="total-sug">$0</div>
-                <div class="lbl">Meta Diaria de Rescate</div>
+            <div class="stat-card">
+                <div class="val" id="global-sug">$0</div>
+                <div class="lbl">Venta Diaria Sugerida</div>
             </div>
         </div>
     </div>
 
     <script>
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRd-mUGTkbL5f931RSST3DmkXazVg7SjfMNGuhJEi7WtSAo9kf1w681N85BETt3Y3RpaId5RJBbjD-J/pub?gid=255221202&single=true&output=csv';
+        // URL del CSV directo de la pestaña "Extract"
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRd-mUGTkbL5f931RSST3DmkXazVg7SjfMNGuhJEi7WtSAo9kf1w681N85BETt3Y3RpaId5RJBbjD-J/pub?gid=920388459&single=true&output=csv';
         const urlParams = new URLSearchParams(window.location.search);
         const filtradoCedis = urlParams.get('cedis');
 
-        function getWorkingDays() {
-            const now = new Date();
-            const dayOfMonth = now.getDate();
-            const lastDay = (dayOfMonth <= 15) ? 15 : new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-            let count = 0;
-            for (let i = dayOfMonth; i <= lastDay; i++) {
-                if (new Date(now.getFullYear(), now.getMonth(), i).getDay() !== 0) count++;
-            }
-            return Math.max(1, count);
-        }
-
-        const daysLeft = getWorkingDays();
-        document.getElementById('days-val').innerText = daysLeft;
+        document.getElementById('date-tag').innerText = new Date().toLocaleDateString('es-MX', {day:'2-digit', month:'short'}).toUpperCase();
 
         function clean(v) { return parseFloat(v?.toString().replace(/[$, ]/g, '')) || 0; }
         function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
@@ -124,17 +119,22 @@
         Papa.parse(csvUrl, {
             download: true, header: true, skipEmptyLines: true,
             complete: function(res) {
-                const h = Object.keys(res.data[0]);
-                const cKey = h.find(k => k.toUpperCase().includes('CEDIS'));
-                const zKey = h.find(k => k.toUpperCase().includes('ZONA'));
-                const rKey = h.find(k => k.toUpperCase().includes('RUTA'));
-                const oKey = h.find(k => k.toUpperCase().includes('OBJETIVO'));
-                const vKey = h.find(k => k.toUpperCase().includes('VENTA'));
-                const iKey = h.find(k => k.toUpperCase().includes('IDEAL'));
+                const dataRaw = res.data;
+                const h = Object.keys(dataRaw[0]);
 
-                let data = res.data.filter(row => (filtradoCedis ? row[cKey]?.trim().toUpperCase() === filtradoCedis.toUpperCase() : true) && row[rKey]?.trim());
-                document.getElementById('cedis-label').innerText = filtradoCedis?.toUpperCase() || "GLOBAL";
+                // Mapeo dinámico de columnas según tu pestaña Extract
+                const cKey = h.find(k => k.includes('CEDIS'));
+                const rKey = h.find(k => k.includes('RUTA'));
+                const zKey = h.find(k => k.includes('ZONA'));
+                const vKey = h.find(k => k.includes('VENTA ORGÁNICA'));
+                const oKey = h.find(k => k.includes('OBJETIVO'));
+                const eKey = h.find(k => k.includes('VENTA ESPERADA'));
+                const sKey = h.find(k => k.includes('CANTIDAD POR DÍAS FALTANTES'));
 
+                let data = dataRaw.filter(row => (filtradoCedis ? row[cKey]?.trim().toUpperCase() === filtradoCedis.toUpperCase() : true) && row[rKey]?.trim());
+                document.getElementById('cedis-label').innerText = filtradoCedis?.toUpperCase() || "BAJÍO";
+
+                // Agrupación por Zona
                 const grouped = data.reduce((acc, row) => {
                     const zona = row[zKey] || '1';
                     if (!acc[zona]) acc[zona] = [];
@@ -143,50 +143,50 @@
                 }, {});
 
                 const tbody = document.getElementById('tableBody');
-                let tObj = 0, tVta = 0, tIdl = 0;
+                let tObj = 0, tVta = 0, tEsp = 0, tSug = 0;
 
-                Object.keys(grouped).sort((a,b) => a-b).forEach(zona => {
+                Object.keys(grouped).sort().forEach(zona => {
                     const zRow = document.createElement('tr');
-                    zRow.className = 'zona-row';
+                    zRow.className = 'zona-header';
                     zRow.innerHTML = `<td colspan="5">ZONA ${zona}</td>`;
                     tbody.appendChild(zRow);
 
                     grouped[zona].forEach(item => {
-                        const o = clean(item[oKey]), v = clean(item[vKey]), i = clean(item[iKey]);
-                        const sug = Math.max(0, (o - v) / daysLeft);
-                        tObj += o; tVta += v; tIdl += i;
+                        const o = clean(item[oKey]), v = clean(item[vKey]), e = clean(item[eKey]), s = clean(item[sKey]);
+                        tObj += o; tVta += v; tEsp += e; tSug += s;
 
                         const row = document.createElement('tr');
                         row.className = 'ruta-row';
-                        row.innerHTML = `<td>${item[rKey]}</td><td>${fmt(o)}</td><td style="color:var(--neon-primary)">${fmt(v)}</td><td>${fmt(i)}</td><td>${fmt(sug)}</td>`;
+                        row.innerHTML = `<td>${item[rKey]}</td><td>${fmt(o)}</td><td style="color:var(--neon-green)">${fmt(v)}</td><td>${fmt(e)}</td><td>${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
                 });
 
+                // Fila Total
                 const totalRow = document.createElement('tr');
                 totalRow.className = 'total-row';
-                const totalSug = (tObj - tVta) / daysLeft;
-                totalRow.innerHTML = `<td>TOTAL CEDIS</td><td>${fmt(tObj)}</td><td>${fmt(tVta)}</td><td>${fmt(tIdl)}</td><td>${fmt(totalSug)}</td>`;
+                totalRow.innerHTML = `<td>TOTAL CEDIS</td><td>${fmt(tObj)}</td><td>${fmt(tVta)}</td><td>${fmt(tEsp)}</td><td>${fmt(tSug)}</td>`;
                 tbody.appendChild(totalRow);
 
-                document.getElementById('total-perc').innerText = Math.round((tVta/tObj)*100) + '%';
-                document.getElementById('total-sug').innerText = fmt(totalSug);
+                document.getElementById('global-perc').innerText = Math.round((tVta/tObj)*100) + '%';
+                document.getElementById('global-sug').innerText = fmt(tSug);
 
-                new Chart(document.getElementById('mainBullet'), {
+                // Gráfica de Bala
+                new Chart(document.getElementById('bulletChart'), {
                     data: {
                         labels: data.map(r => r[rKey]),
                         datasets: [
-                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.85, order: 3 },
-                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: '#00ff9d', barPercentage: 0.5, borderRadius: 5, order: 2 },
-                            { type: 'line', data: data.map(r => clean(r[iKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 15, pointBorderWidth: 4, order: 1 }
+                            { type: 'bar', label: 'Meta', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.8, order: 3 },
+                            { type: 'bar', label: 'Venta', data: data.map(r => clean(r[vKey])), backgroundColor: '#00ff9d', barPercentage: 0.45, borderRadius: 6, order: 2 },
+                            { type: 'line', label: 'Esperado', data: data.map(r => clean(r[eKey])), borderColor: '#fff', borderWidth: 3, pointStyle: 'line', rotation: 90, pointRadius: 15, showLine: false, order: 1 }
                         ]
                     },
                     options: {
                         indexAxis: 'y', responsive: true, maintainAspectRatio: false, grouped: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 10 }, callback: v => '$' + v.toLocaleString('en-US', { notation: 'compact' }) } },
-                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 800, size: 13 } } }
+                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 10 } } },
+                            y: { ticks: { color: '#fff', font: { weight: 'bold', size: 12 } } }
                         }
                     }
                 });
