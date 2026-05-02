@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
-    <title>Gusi Intelligence - Vertical Zone v3.4</title>
+    <title>Gusi Intelligence - Master View v3.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
@@ -15,58 +15,66 @@
             height: 100vh; width: 100vw; background: var(--bg); 
             color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; 
             display: flex; align-items: center; justify-content: center; overflow: hidden;
-            padding: 35px; 
+            padding: 30px; 
         }
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto; gap: 2vh; }
         
-        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 1.2vh; border-bottom: 1px solid var(--border); }
+        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 1vh; border-bottom: 1px solid var(--border); }
         h1 { font-family: 'Orbitron', sans-serif; font-size: 3vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); }
 
-        .main-grid { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 2.5vw; overflow: hidden; }
-        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 1.8vh; display: flex; flex-direction: column; overflow: hidden; }
+        .main-grid { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 2vw; overflow: hidden; }
+        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; overflow: hidden; }
         
         .table-container { flex: 1; overflow-y: auto; scrollbar-width: none; width: 100%; }
         .table-container::-webkit-scrollbar { display: none; }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 2px; }
-        th { font-family: 'Orbitron', sans-serif; font-size: 0.8vh; color: var(--sub); text-transform: uppercase; padding: 0.5vh 10px; text-align: right; border-bottom: 1px solid var(--border); }
-        th:first-child { text-align: left; padding-left: 45px; } /* Espacio para la zona vertical */
+        table { width: 100%; border-collapse: separate; border-spacing: 0 4px; table-layout: fixed; }
         
-        /* Estilo de Zona Vertical */
-        .zona-vertical {
+        /* Definición de anchos de columna para evitar espacio muerto */
+        th:nth-child(1) { width: 50px; } /* Zona */
+        th:nth-child(2) { width: auto; text-align: left; padding-left: 15px; } /* Ruta (Crecimiento dinámico) */
+        th:nth-child(3), th:nth-child(4), th:nth-child(5), th:nth-child(6) { width: 18%; text-align: right; }
+
+        th { font-family: 'Orbitron', sans-serif; font-size: 0.85vh; color: var(--sub); text-transform: uppercase; padding: 0.5vh 10px; }
+        
+        /* Estilo de Zona Vertical Mejorado */
+        .zona-td {
+            background: rgba(0, 210, 255, 0.12);
+            border-left: 5px solid var(--blue);
+            padding: 0 !important;
             position: relative;
-            width: 35px;
-            background: rgba(0, 210, 255, 0.1);
-            border-left: 3px solid var(--blue);
-            color: var(--blue);
+        }
+        .zona-wrapper {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .zona-label {
+            transform: rotate(270deg);
+            white-space: nowrap;
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
-            font-size: 1vh;
-            text-align: center;
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-        .zona-text {
-            display: block;
-            transform: rotate(-90deg);
-            margin: 0 auto;
+            font-size: 1.4vh; /* Letra más grande como pediste */
+            color: var(--blue);
+            letter-spacing: 2px;
         }
         
-        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.6vh 10px; text-align: right; font-size: 1.1vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
-        .ruta-row td:nth-child(2) { text-align: left; font-weight: 700; color: #fff; padding-left: 15px; }
+        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.7vh 12px; text-align: right; font-size: 1.15vh; }
+        .ruta-row td:nth-child(2) { text-align: left; font-weight: 800; color: #fff; }
 
         .total-bar { 
-            margin-top: 1.2vh; background: var(--neon); color: #000; padding: 1vh 20px; border-radius: 8px; 
-            display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr;
-            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.25vh; text-align: right;
+            margin-top: 1.5vh; background: var(--neon); color: #000; padding: 1.2vh 25px; border-radius: 8px; 
+            display: grid; grid-template-columns: 50px 1fr 18% 18% 18% 18%;
+            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.3vh; text-align: right;
         }
-        .total-bar span:first-child { text-align: left; padding-left: 35px; }
+        .total-bar span:nth-child(2) { text-align: left; padding-left: 15px; }
 
         .footer-stats { display: flex; gap: 2vw; justify-content: center; padding-top: 1vh; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.2vh 2.5vw; text-align: center; min-width: 200px; }
-        .stat-card .val { font-family: 'Orbitron'; font-size: 3.5vh; color: var(--neon); line-height: 1; }
-        .stat-card .lbl { font-size: 0.9vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.5vh 3vw; text-align: center; min-width: 220px; }
+        .stat-card .val { font-family: 'Orbitron'; font-size: 3.8vh; color: var(--neon); line-height: 1; }
+        .stat-card .lbl { font-size: 1vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
         .stat-card.blue .val { color: var(--blue); }
     </style>
 </head>
@@ -74,7 +82,7 @@
     <div id="wrapper">
         <header>
             <div class="h-left"><h1>OPERACIONES <span id="cedis-label">...</span></h1></div>
-            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.3vh; border: 1px solid var(--blue); padding: 4px 15px; border-radius: 4px;">01-MAY</div>
+            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.3vh; border: 1px solid var(--blue); padding: 4px 18px; border-radius: 5px;">LIVE FEED</div>
         </header>
 
         <div class="main-grid">
@@ -85,8 +93,8 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 35px; border-bottom: none;"></th>
-                                <th style="text-align: left; padding-left: 15px;">Ruta</th>
+                                <th></th>
+                                <th>Ruta</th>
                                 <th>Meta</th>
                                 <th>Venta</th>
                                 <th>Ideal</th>
@@ -97,6 +105,7 @@
                     </table>
                 </div>
                 <div class="total-bar">
+                    <span></span>
                     <span>TOTAL CEDIS</span>
                     <span id="t-obj">$0</span>
                     <span id="t-vta">$0</span>
@@ -155,7 +164,12 @@
                         
                         let zonaTD = '';
                         if (index === 0) {
-                            zonaTD = `<td class="zona-vertical" rowspan="${rutasZona.length}"><span class="zona-text">ZONA ${zona}</span></td>`;
+                            zonaTD = `
+                                <td class="zona-td" rowspan="${rutasZona.length}">
+                                    <div class="zona-wrapper">
+                                        <div class="zona-label">ZONA ${zona}</div>
+                                    </div>
+                                </td>`;
                         }
 
                         row.innerHTML = `
@@ -185,7 +199,7 @@
                         datasets: [
                             { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.9, order: 3 },
                             { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: '#00ff9d', barPercentage: 0.5, borderRadius: 3, order: 2 },
-                            { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 9, pointBorderWidth: 2, order: 1 }
+                            { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 8, pointBorderWidth: 2, order: 1 }
                         ]
                     },
                     options: {
@@ -193,7 +207,7 @@
                         plugins: { legend: { display: false } },
                         scales: {
                             x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 9 } } },
-                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 700, size: 9 } } }
+                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 700, size: 9.5 } } }
                         }
                     }
                 });
