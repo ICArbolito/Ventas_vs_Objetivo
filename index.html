@@ -29,12 +29,11 @@
         .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
         .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 1.5vh; display: flex; flex-direction: column; height: 100%; }
         
-        /* Contenedor autoajustable */
         .table-container { 
             flex: 1; 
             display: flex; 
             flex-direction: column; 
-            justify-content: space-between; /* Estira el contenido para llenar el panel */
+            justify-content: space-between; 
             overflow-y: auto; 
             scrollbar-width: none; 
         }
@@ -53,23 +52,26 @@
         }
 
         table { width: 100%; border-collapse: separate; border-spacing: 0 2px; table-layout: fixed; flex: 1; }
-        th { font-family: 'Orbitron', sans-serif; font-size: 0.8vh; color: var(--sub); text-transform: uppercase; padding: 4px 10px; }
+        th { font-family: 'Orbitron', sans-serif; font-size: 0.75vh; color: var(--sub); text-transform: uppercase; padding: 4px 10px; }
         
         .col-ruta { width: 28%; text-align: left !important; }
         .col-data { width: 18%; text-align: right !important; }
 
-        /* Filas con altura flexible */
         .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.4vh 12px; font-size: 1.15vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
         .ruta-name { font-weight: 800; color: #fff; text-align: left; }
         .ruta-val { text-align: right; }
 
+        /* Alineación Quirúrgica de Totales */
         .total-bar { 
-            background: var(--neon); color: #000; padding: 1.2vh 20px; border-radius: 8px; 
-            display: flex; justify-content: space-between; align-items: center;
-            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.3vh;
-            margin-top: auto; /* Empuja los totales al final del panel */
+            background: var(--neon); color: #000; padding: 1.2vh 12px; border-radius: 8px; 
+            display: flex; align-items: center;
+            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.1vh;
+            margin-top: auto; width: 100%;
         }
-        .total-bar .val-group { display: flex; gap: 3vw; }
+        .total-spacer { width: 55px; flex-shrink: 0; } /* Compensa el espacio de la zona-tag */
+        .total-content { display: flex; flex: 1; align-items: center; }
+        .t-lbl { width: 28%; text-align: left; }
+        .t-val { width: 18%; text-align: right; }
 
         .footer-stats { display: flex; gap: 1.5vw; justify-content: center; }
         .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.2vh 2.5vw; text-align: center; min-width: 200px; }
@@ -97,9 +99,13 @@
             <div class="glass-panel">
                 <div class="table-container" id="content-tables"></div>
                 <div class="total-bar">
-                    <span>TOTAL CEDIS</span>
-                    <div class="val-group">
-                        <span id="t-obj">$0</span><span id="t-vta">$0</span><span id="t-esp">$0</span><span id="t-cuota">$0</span>
+                    <div class="total-spacer"></div>
+                    <div class="total-content">
+                        <span class="t-lbl">TOTAL CEDIS</span>
+                        <span class="t-val" id="t-obj">$0</span>
+                        <span class="t-val" id="t-vta">$0</span>
+                        <span class="t-val" id="t-esp">$0</span>
+                        <span class="t-val" id="t-cuota">$0</span>
                     </div>
                 </div>
             </div>
@@ -152,7 +158,8 @@
                     wrapper.className = 'table-wrapper';
                     wrapper.innerHTML = `<div class="zona-tag"><span>ZONA ${zona}</span></div>`;
                     const table = document.createElement('table');
-                    table.innerHTML = `<thead><tr><th class="col-ruta">Ruta</th><th class="col-data">Meta</th><th class="col-data">Venta</th><th class="col-data">Ideal</th><th class="col-data">Cuota</th></tr></thead><tbody></tbody>`;
+                    // Títulos de columna actualizados
+                    table.innerHTML = `<thead><tr><th class="col-ruta">Ruta</th><th class="col-data">Objetivo Quincenal</th><th class="col-data">Venta Alcanzada</th><th class="col-data">Venta Esperada</th><th class="col-data">Cuota Reajustada</th></tr></thead><tbody></tbody>`;
                     const tbody = table.querySelector('tbody');
 
                     grouped[zona].forEach(item => {
