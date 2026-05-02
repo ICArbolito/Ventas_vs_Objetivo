@@ -3,121 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
-    <title>Inteligencia Comercial - Arbolito Mission Control</title>
+    <title>Inteligencia Comercial - Arbolito</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { 
-            --bg-obsidian: #0a0c10;
-            --panel-steel: rgba(30, 35, 45, 0.7);
+            --bg: #0a0c10;
+            --panel: #111827;
             --neon-emerald: #10b981; 
-            --cyber-cyan: #06b6d4; 
+            --cyber-cyan: #3b82f6; 
             --warning-red: #ef4444; 
-            --data-white: #f8fafc;
-            --dim-gray: #64748b;
-            --glass-border: rgba(255, 255, 255, 0.08); 
+            --white: #f8fafc;
+            --dim: #64748b;
+            --border: rgba(255, 255, 255, 0.08); 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
         
         body { 
-            height: 100vh; width: 100vw; 
-            background-color: var(--bg-obsidian);
-            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0a0c10 100%);
-            color: var(--data-white); 
-            font-family: 'Inter', sans-serif; 
-            display: flex; align-items: center; justify-content: center; 
+            height: 100vh; width: 100vw; background: var(--bg); color: var(--white); 
+            font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; 
             overflow: hidden; padding: 2vh 2vw; 
         }
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
         
-        header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding-bottom: 1vh; border-bottom: 1px solid var(--glass-border); 
-        }
-        h1 { 
-            font-family: 'Barlow Condensed', sans-serif; font-size: 3vh; 
-            color: var(--data-white);
-            text-transform: uppercase; letter-spacing: 2px; 
-            font-weight: 900;
-        }
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1vh; border-bottom: 1px solid var(--border); }
+        h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 3vh; font-weight: 900; letter-spacing: 1px; }
 
         .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
-        
-        .glass-panel { 
-            background: var(--panel-steel); 
-            backdrop-filter: blur(20px);
-            border-radius: 12px; 
-            border: 1px solid var(--glass-border); 
-            padding: 2vh; display: flex; flex-direction: column; height: 100%; 
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
+        .glass-panel { background: var(--panel); border-radius: 12px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; height: 100%; }
         
         .table-container { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; scrollbar-width: none; }
         .table-container::-webkit-scrollbar { display: none; }
 
-        .table-wrapper { width: 100%; position: relative; padding-left: 55px; flex: 1; display: flex; flex-direction: column; margin-bottom: 12px; }
+        .table-wrapper { width: 100%; position: relative; padding-left: 55px; flex: 1; display: flex; flex-direction: column; margin-bottom: 10px; }
         
         .zona-tag {
             position: absolute; left: 0; top: 0; bottom: 0; width: 45px;
-            background: rgba(6, 182, 212, 0.05);
-            border-left: 3px solid var(--cyber-cyan);
+            background: rgba(59, 130, 246, 0.05); border-left: 3px solid var(--cyber-cyan);
             display: flex; align-items: center; justify-content: center;
         }
-        .zona-tag span { 
-            transform: rotate(270deg); white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; 
-            font-weight: 900; color: var(--cyber-cyan); font-size: 1.4vh; letter-spacing: 3px;
-        }
+        .zona-tag span { transform: rotate(270deg); white-space: nowrap; font-family: 'Barlow Condensed'; font-weight: 900; color: var(--cyber-cyan); font-size: 1.4vh; letter-spacing: 2px; }
 
-        /* ALINEACIÓN QUIRÚRGICA DE CABECERAS Y DATOS */
-        table { width: 100%; border-collapse: separate; border-spacing: 0 4px; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th { font-family: 'Barlow Condensed'; font-size: 0.9vh; color: var(--dim); text-transform: uppercase; padding: 10px; border-bottom: 1px solid var(--border); }
         
-        th { 
-            font-family: 'Barlow Condensed', sans-serif; font-size: 0.9vh; 
-            color: var(--dim-gray); text-transform: uppercase; 
-            padding: 8px 12px; font-weight: 700; letter-spacing: 1px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-        
-        .col-ruta { width: 28%; text-align: left !important; }
-        .col-data { width: 18%; text-align: right !important; }
+        .col-ruta { width: 28%; text-align: left; }
+        .col-data { width: 18%; text-align: right; }
 
-        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.8vh 12px; font-size: 1.25vh; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .ruta-name { font-weight: 700; color: var(--data-white); }
-        .ruta-val { font-family: 'Inter', sans-serif; font-weight: 500; }
+        .ruta-row td { padding: 0.8vh 10px; font-size: 1.2vh; background: rgba(255,255,255,0.01); border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .ruta-name { font-weight: 700; color: var(--white); }
 
         .total-bar { 
-            background: var(--neon-emerald);
-            color: #0a0c10; padding: 1.4vh 12px; border-radius: 4px; 
-            display: flex; align-items: center;
-            font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.6vh;
+            background: var(--neon-emerald); color: #000; padding: 1.2vh 0; border-radius: 4px; 
+            display: flex; align-items: center; font-family: 'Barlow Condensed'; font-weight: 900; font-size: 1.5vh;
             margin-top: auto; width: 100%; 
         }
         .total-spacer { width: 55px; flex-shrink: 0; }
-        .total-content { display: flex; flex: 1; align-items: center; }
+        .total-content { display: flex; flex: 1; padding: 0 10px; }
         .t-lbl { width: 28%; text-align: left; }
         .t-val { width: 18%; text-align: right; }
 
         .footer-stats { display: flex; gap: 2vw; justify-content: center; }
-        .stat-card { 
-            background: var(--panel-steel); border: 1px solid var(--glass-border); 
-            border-radius: 12px; padding: 2vh 3vw; text-align: center; min-width: 240px; 
-        }
-        .stat-card .val { font-family: 'Barlow Condensed', sans-serif; font-size: 5vh; color: var(--neon-emerald); font-weight: 900; line-height: 1; }
-        .stat-card .lbl { font-size: 1vh; color: var(--dim-gray); text-transform: uppercase; font-weight: 700; margin-top: 10px; letter-spacing: 2px; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.5vh 3vw; text-align: center; min-width: 220px; }
+        .stat-card .val { font-family: 'Barlow Condensed'; font-size: 4.5vh; color: var(--neon-emerald); font-weight: 900; }
+        .stat-card .lbl { font-size: 0.9vh; color: var(--dim); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
         .stat-card.blue .val { color: var(--cyber-cyan); }
-        .stat-card.warning .val { color: var(--warning-red); text-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+        .stat-card.warning .val { color: var(--warning-red); }
 
-        .source-footer { text-align: center; font-size: 0.8vh; color: var(--dim-gray); letter-spacing: 3px; font-weight: 700; margin-top: 1vh; text-transform: uppercase; opacity: 0.6; }
+        .source-footer { text-align: center; font-size: 0.8vh; color: var(--dim); letter-spacing: 2px; font-weight: 700; margin-top: 1vh; text-transform: uppercase; }
     </style>
 </head>
 <body>
     <div id="wrapper">
         <header>
-            <h1 id="main-title">AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
-            <div id="date-tag" style="font-family: 'Barlow Condensed'; color: var(--cyber-cyan); font-size: 1.4vh; border: 1px solid var(--cyber-cyan); padding: 6px 20px; border-radius: 4px; font-weight: 900; letter-spacing: 1px;">
-                STATUS: HISTÓRICO CIERRE AYER
+            <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
+            <div id="date-tag" style="font-family: 'Barlow Condensed'; color: var(--cyber-cyan); font-size: 1.3vh; border: 1px solid var(--cyber-cyan); padding: 4px 15px; border-radius: 4px; font-weight: 900;">
+                ACTUALIZADO AL CIERRE DE AYER
             </div>
         </header>
 
@@ -139,14 +102,12 @@
         </div>
 
         <div class="footer-stats">
-            <div id="card-perc" class="stat-card"><div class="val" id="global-perc">0%</div><div class="lbl">Cumplimiento Quincenal</div></div>
-            <div id="card-exp" class="stat-card blue"><div class="val" id="global-expected">0%</div><div class="lbl">Avance Esperado</div></div>
-            <div class="stat-card"><div class="val" id="global-sug">$0</div><div class="lbl">Rescate Sugerido</div></div>
+            <div id="card-perc" class="stat-card"><div class="val" id="global-perc">0%</div><div class="lbl">AVANCE QUINCENAL</div></div>
+            <div class="stat-card blue"><div class="val" id="global-expected">0%</div><div class="lbl">AVANCE ESPERADO</div></div>
+            <div class="stat-card"><div class="val" id="global-sug">$0</div><div class="lbl">META DIARIA DE RESCATE</div></div>
         </div>
 
-        <div class="source-footer">
-            Inteligencia Comercial | Arbolito Mission Control v5.1
-        </div>
+        <div class="source-footer">SOURCE: SistemaCP | Powered by Inteligencia Comercial for Arbolito</div>
     </div>
 
     <script>
@@ -185,34 +146,15 @@
                     wrapper.className = 'table-wrapper';
                     wrapper.innerHTML = `<div class="zona-tag"><span>ZONA ${zona}</span></div>`;
                     const table = document.createElement('table');
-                    
-                    // CABECERAS CON CLASES DE ALINEACIÓN
-                    table.innerHTML = `
-                        <thead>
-                            <tr>
-                                <th class="col-ruta">Ruta</th>
-                                <th class="col-data">Objetivo</th>
-                                <th class="col-data">Alcanzada</th>
-                                <th class="col-data">Esperada</th>
-                                <th class="col-data">Cuota Reaj.</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>`;
-                    
+                    table.innerHTML = `<thead><tr><th class="col-ruta">RUTA</th><th class="col-data">OBJETIVO QUINCENAL</th><th class="col-data">VENTA ALCANZADA</th><th class="col-data">VENTA ESPERADA</th><th class="col-data">CUOTA REAJUSTADA</th></tr></thead><tbody></tbody>`;
                     const tbody = table.querySelector('tbody');
 
                     grouped[zona].forEach(item => {
                         const o = clean(item[oKey]), v = clean(item[vKey]), e = clean(item[eKey]), s = clean(item[sKey]);
                         tObj += o; tVta += v; tEsp += e; tSug += s;
                         const vColor = (v < e) ? 'var(--warning-red)' : 'var(--neon-emerald)';
-                        
                         const row = document.createElement('tr'); row.className = 'ruta-row';
-                        row.innerHTML = `
-                            <td class="col-ruta ruta-name">${item[rKey]}</td>
-                            <td class="col-data ruta-val">${fmt(o)}</td>
-                            <td class="col-data ruta-val" style="color:${vColor}; font-weight:800;">${fmt(v)}</td>
-                            <td class="col-data ruta-val">${fmt(e)}</td>
-                            <td class="col-data ruta-val" style="color:var(--cyber-cyan); font-weight:800;">${fmt(s)}</td>`;
+                        row.innerHTML = `<td class="col-ruta ruta-name">${item[rKey]}</td><td class="col-data">${fmt(o)}</td><td class="col-data" style="color:${vColor}; font-weight:800;">${fmt(v)}</td><td class="col-data">${fmt(e)}</td><td class="col-data" style="color:var(--cyber-cyan); font-weight:800;">${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
                     wrapper.appendChild(table);
@@ -228,7 +170,6 @@
                 document.getElementById('global-perc').innerText = percVta + '%';
                 document.getElementById('global-expected').innerText = percEsp + '%';
                 document.getElementById('global-sug').innerText = fmt(tSug);
-                
                 if (percVta < percEsp) document.getElementById('card-perc').classList.add('warning');
                 else document.getElementById('card-perc').classList.remove('warning');
 
@@ -246,7 +187,7 @@
                         plugins: { legend: { display: false } },
                         scales: {
                             x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#64748b', font: { size: 10 } } },
-                            y: { grid: { display: false }, ticks: { color: '#f8fafc', font: { weight: 600, size: 11 } } }
+                            y: { grid: { display: false }, ticks: { color: '#f8fafc', font: { weight: 600, size: 10 } } }
                         }
                     }
                 });
