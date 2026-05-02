@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
     <title>Inteligencia Comercial - Arbolito</title>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Importación de Rubik e Inter para legibilidad máxima -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { 
-            --bg: #0a0c10;
-            --panel: #111827;
-            --neon-emerald: #10b981; 
-            --cyber-cyan: #3b82f6; 
-            --warning-red: #ef4444; 
-            --white: #f8fafc;
-            --dim: #64748b;
-            --border: rgba(255, 255, 255, 0.08); 
+            --bg: #0f1115; /* Gris Grafito muy oscuro */
+            --panel: #1a1d23; /* Slate Corporate */
+            --accent-data: #00d4ff; /* Cian Tecnológico */
+            --accent-success: #10b981; /* Verde esmeralda para cumplimiento */
+            --accent-alert: #ff4d4d; /* Rojo sobrio */
+            --white: #ffffff;
+            --gray-sub: #94a3b8;
+            --border: rgba(255, 255, 255, 0.05); 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
         
@@ -28,59 +29,60 @@
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
         
-        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1vh; border-bottom: 1px solid var(--border); }
-        h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 3vh; font-weight: 900; letter-spacing: 1px; }
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.2vh; border-bottom: 1px solid var(--border); }
+        h1 { font-family: 'Rubik', sans-serif; font-size: 2.8vh; font-weight: 900; letter-spacing: -0.5px; color: var(--white); text-transform: uppercase; }
 
         .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
-        .glass-panel { background: var(--panel); border-radius: 12px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; height: 100%; }
+        .glass-panel { background: var(--panel); border-radius: 8px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; height: 100%; }
         
         .table-container { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; scrollbar-width: none; }
         .table-container::-webkit-scrollbar { display: none; }
 
-        .table-wrapper { width: 100%; position: relative; padding-left: 55px; flex: 1; display: flex; flex-direction: column; margin-bottom: 10px; }
+        .table-wrapper { width: 100%; position: relative; padding-left: 50px; flex: 1; display: flex; flex-direction: column; margin-bottom: 15px; }
         
         .zona-tag {
-            position: absolute; left: 0; top: 0; bottom: 0; width: 45px;
-            background: rgba(59, 130, 246, 0.05); border-left: 3px solid var(--cyber-cyan);
+            position: absolute; left: 0; top: 0; bottom: 0; width: 40px;
+            background: rgba(0, 212, 255, 0.03); border-left: 3px solid var(--accent-data);
             display: flex; align-items: center; justify-content: center;
         }
-        .zona-tag span { transform: rotate(270deg); white-space: nowrap; font-family: 'Barlow Condensed'; font-weight: 900; color: var(--cyber-cyan); font-size: 1.4vh; letter-spacing: 2px; }
+        .zona-tag span { transform: rotate(270deg); white-space: nowrap; font-family: 'Rubik'; font-weight: 700; color: var(--accent-data); font-size: 1.3vh; letter-spacing: 1px; }
 
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th { font-family: 'Barlow Condensed'; font-size: 0.9vh; color: var(--dim); text-transform: uppercase; padding: 10px; border-bottom: 1px solid var(--border); }
+        th { font-family: 'Inter'; font-size: 0.85vh; color: var(--gray-sub); text-transform: uppercase; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border); }
         
         .col-ruta { width: 28%; text-align: left; }
         .col-data { width: 18%; text-align: right; }
 
-        .ruta-row td { padding: 0.8vh 10px; font-size: 1.2vh; background: rgba(255,255,255,0.01); border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .ruta-name { font-weight: 700; color: var(--white); }
+        .ruta-row td { padding: 0.7vh 10px; font-size: 1.15vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
+        .ruta-name { font-weight: 600; color: var(--white); }
 
         .total-bar { 
-            background: var(--neon-emerald); color: #000; padding: 1.2vh 0; border-radius: 4px; 
-            display: flex; align-items: center; font-family: 'Barlow Condensed'; font-weight: 900; font-size: 1.5vh;
+            background: #f8fafc; /* Fondo claro para contraste máximo */
+            color: #0f172a; padding: 1.2vh 0; border-radius: 4px; 
+            display: flex; align-items: center; font-family: 'Rubik'; font-weight: 700; font-size: 1.4vh;
             margin-top: auto; width: 100%; 
         }
-        .total-spacer { width: 55px; flex-shrink: 0; }
+        .total-spacer { width: 50px; flex-shrink: 0; }
         .total-content { display: flex; flex: 1; padding: 0 10px; }
         .t-lbl { width: 28%; text-align: left; }
         .t-val { width: 18%; text-align: right; }
 
-        .footer-stats { display: flex; gap: 2vw; justify-content: center; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.5vh 3vw; text-align: center; min-width: 220px; }
-        .stat-card .val { font-family: 'Barlow Condensed'; font-size: 4.5vh; color: var(--neon-emerald); font-weight: 900; }
-        .stat-card .lbl { font-size: 0.9vh; color: var(--dim); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
-        .stat-card.blue .val { color: var(--cyber-cyan); }
-        .stat-card.warning .val { color: var(--warning-red); }
+        .footer-stats { display: flex; gap: 1.5vw; justify-content: center; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 1.5vh 2vw; text-align: center; min-width: 220px; }
+        .stat-card .val { font-family: 'Rubik'; font-size: 4.2vh; color: var(--accent-success); font-weight: 700; }
+        .stat-card .lbl { font-size: 0.85vh; color: var(--gray-sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
+        .stat-card.blue .val { color: var(--accent-data); }
+        .stat-card.warning .val { color: var(--accent-alert); }
 
-        .source-footer { text-align: center; font-size: 0.8vh; color: var(--dim); letter-spacing: 2px; font-weight: 700; margin-top: 1vh; text-transform: uppercase; }
+        .source-footer { text-align: center; font-size: 0.8vh; color: #475569; font-weight: 700; margin-top: 1vh; text-transform: uppercase; letter-spacing: 1.5px; }
     </style>
 </head>
 <body>
     <div id="wrapper">
         <header>
             <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
-            <div id="date-tag" style="font-family: 'Barlow Condensed'; color: var(--cyber-cyan); font-size: 1.3vh; border: 1px solid var(--cyber-cyan); padding: 4px 15px; border-radius: 4px; font-weight: 900;">
-                ACTUALIZADO AL CIERRE DE AYER
+            <div id="date-tag" style="font-family: 'Inter'; color: var(--accent-data); font-size: 1.2vh; border: 1px solid var(--accent-data); padding: 5px 15px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
+                CIERRE HISTÓRICO: AYER
             </div>
         </header>
 
@@ -152,9 +154,9 @@
                     grouped[zona].forEach(item => {
                         const o = clean(item[oKey]), v = clean(item[vKey]), e = clean(item[eKey]), s = clean(item[sKey]);
                         tObj += o; tVta += v; tEsp += e; tSug += s;
-                        const vColor = (v < e) ? 'var(--warning-red)' : 'var(--neon-emerald)';
+                        const vColor = (v < e) ? 'var(--accent-alert)' : 'var(--accent-success)';
                         const row = document.createElement('tr'); row.className = 'ruta-row';
-                        row.innerHTML = `<td class="col-ruta ruta-name">${item[rKey]}</td><td class="col-data">${fmt(o)}</td><td class="col-data" style="color:${vColor}; font-weight:800;">${fmt(v)}</td><td class="col-data">${fmt(e)}</td><td class="col-data" style="color:var(--cyber-cyan); font-weight:800;">${fmt(s)}</td>`;
+                        row.innerHTML = `<td class="col-ruta ruta-name">${item[rKey]}</td><td class="col-data">${fmt(o)}</td><td class="col-data" style="color:${vColor}; font-weight:700;">${fmt(v)}</td><td class="col-data">${fmt(e)}</td><td class="col-data" style="color:var(--accent-data); font-weight:700;">${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
                     wrapper.appendChild(table);
@@ -178,7 +180,7 @@
                         labels: data.map(r => r[rKey]),
                         datasets: [
                             { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.03)', barPercentage: 0.8, order: 3 },
-                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#ef4444' : '#10b981'), barPercentage: 0.4, borderRadius: 2, order: 2 },
+                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#ff4d4d' : '#10b981'), barPercentage: 0.4, borderRadius: 2, order: 2 },
                             { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 10, pointBorderWidth: 3, order: 1 }
                         ]
                     },
@@ -186,7 +188,7 @@
                         indexAxis: 'y', responsive: true, maintainAspectRatio: false, grouped: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#64748b', font: { size: 10 } } },
+                            x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#475569', font: { size: 10 } } },
                             y: { grid: { display: false }, ticks: { color: '#f8fafc', font: { weight: 600, size: 10 } } }
                         }
                     }
