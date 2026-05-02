@@ -4,17 +4,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
     <title>Inteligencia Comercial - Arbolito</title>
-    <!-- Importación de Rubik e Inter para legibilidad máxima -->
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { 
-            --bg: #0f1115; /* Gris Grafito muy oscuro */
-            --panel: #1a1d23; /* Slate Corporate */
-            --accent-data: #00d4ff; /* Cian Tecnológico */
-            --accent-success: #10b981; /* Verde esmeralda para cumplimiento */
-            --accent-alert: #ff4d4d; /* Rojo sobrio */
+            --bg: #0f1115; 
+            --panel: #1a1d23; 
+            --accent-data: #00d4ff; 
+            --accent-success: #10b981; 
+            --accent-alert: #ff4d4d; 
             --white: #ffffff;
             --gray-sub: #94a3b8;
             --border: rgba(255, 255, 255, 0.05); 
@@ -33,12 +32,25 @@
         h1 { font-family: 'Rubik', sans-serif; font-size: 2.8vh; font-weight: 900; letter-spacing: -0.5px; color: var(--white); text-transform: uppercase; }
 
         .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
-        .glass-panel { background: var(--panel); border-radius: 8px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; height: 100%; }
+        .glass-panel { background: var(--panel); border-radius: 8px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
         
-        .table-container { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; scrollbar-width: none; }
+        /* RESTAURACIÓN DEL AUTOAJUSTE */
+        .table-container { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            overflow-y: auto; 
+            scrollbar-width: none; 
+        }
         .table-container::-webkit-scrollbar { display: none; }
 
-        .table-wrapper { width: 100%; position: relative; padding-left: 50px; flex: 1; display: flex; flex-direction: column; margin-bottom: 15px; }
+        .table-wrapper { 
+            width: 100%; position: relative; padding-left: 50px; 
+            flex: 1; /* Esto obliga a cada sección de zona a ocupar el espacio disponible */
+            display: flex; flex-direction: column; 
+            margin-bottom: 10px; 
+        }
         
         .zona-tag {
             position: absolute; left: 0; top: 0; bottom: 0; width: 40px;
@@ -47,18 +59,18 @@
         }
         .zona-tag span { transform: rotate(270deg); white-space: nowrap; font-family: 'Rubik'; font-weight: 700; color: var(--accent-data); font-size: 1.3vh; letter-spacing: 1px; }
 
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th { font-family: 'Inter'; font-size: 0.85vh; color: var(--gray-sub); text-transform: uppercase; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; flex: 1; }
+        th { font-family: 'Inter'; font-size: 0.85vh; color: var(--gray-sub); text-transform: uppercase; padding: 6px 10px; font-weight: 700; border-bottom: 1px solid var(--border); }
         
         .col-ruta { width: 28%; text-align: left; }
         .col-data { width: 18%; text-align: right; }
 
-        .ruta-row td { padding: 0.7vh 10px; font-size: 1.15vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
+        /* Filas con padding dinámico */
+        .ruta-row td { padding: 0.5vh 10px; font-size: 1.15vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
         .ruta-name { font-weight: 600; color: var(--white); }
 
         .total-bar { 
-            background: #f8fafc; /* Fondo claro para contraste máximo */
-            color: #0f172a; padding: 1.2vh 0; border-radius: 4px; 
+            background: #f8fafc; color: #0f172a; padding: 1vh 0; border-radius: 4px; 
             display: flex; align-items: center; font-family: 'Rubik'; font-weight: 700; font-size: 1.4vh;
             margin-top: auto; width: 100%; 
         }
@@ -156,7 +168,7 @@
                         tObj += o; tVta += v; tEsp += e; tSug += s;
                         const vColor = (v < e) ? 'var(--accent-alert)' : 'var(--accent-success)';
                         const row = document.createElement('tr'); row.className = 'ruta-row';
-                        row.innerHTML = `<td class="col-ruta ruta-name">${item[rKey]}</td><td class="col-data">${fmt(o)}</td><td class="col-data" style="color:${vColor}; font-weight:700;">${fmt(v)}</td><td class="col-data">${fmt(e)}</td><td class="col-data" style="color:var(--accent-data); font-weight:700;">${fmt(s)}</td>`;
+                        row.innerHTML = `<td class="col-ruta ruta-name">${item[rKey]}</td><td class="col-data ruta-val">${fmt(o)}</td><td class="col-data ruta-val" style="color:${vColor}; font-weight:700;">${fmt(v)}</td><td class="col-data ruta-val">${fmt(e)}</td><td class="col-data ruta-val" style="color:var(--accent-data); font-weight:700;">${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
                     wrapper.appendChild(table);
