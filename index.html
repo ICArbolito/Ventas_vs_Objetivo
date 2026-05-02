@@ -57,8 +57,9 @@
     </div>
 
     <script>
-        // URL de tu pestaña "Extract"
+        // ENLACE DE PUBLICACIÓN CSV ACTUALIZADO
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRd-mUGTkbL5f931RSST3DmkXazVg7SjfMNGuhJEi7WtSAo9kf1w681N85BETt3Y3RpaId5RJBbjD-J/pub?gid=920388459&single=true&output=csv';
+        
         const urlParams = new URLSearchParams(window.location.search);
         const filtradoCedis = urlParams.get('cedis');
 
@@ -69,20 +70,17 @@
             download: true, header: true, skipEmptyLines: true,
             complete: function(res) {
                 const dataRaw = res.data;
-                if (!dataRaw || dataRaw.length === 0) { console.error("No se recibieron datos."); return; }
+                if (!dataRaw || dataRaw.length === 0) return;
 
                 const h = Object.keys(dataRaw[0]);
-                const findK = (str) => h.find(k => k.toUpperCase().trim() === str.toUpperCase().trim());
+                const findK = (str) => h.find(k => k.toUpperCase().trim().includes(str.toUpperCase().trim()));
                 
                 const cKey = findK('CEDIS'), rKey = findK('RUTA'), zKey = findK('ZONA');
                 const vKey = findK('VENTA ORGÁNICA'), oKey = findK('OBJETIVO');
                 const eKey = findK('VENTA ESPERADA'), sKey = findK('CANTIDAD POR DÍAS FALTANTES');
 
-                // Si no hay filtro, tomamos el primer registro
                 const targetCedis = filtradoCedis || dataRaw[0][cKey];
                 let data = dataRaw.filter(row => row[cKey]?.trim().toUpperCase() === targetCedis?.toUpperCase() && row[rKey]?.trim());
-                
-                if (data.length === 0) { document.getElementById('cedis-label').innerText = "CEDIS NO ENCONTRADO"; return; }
                 
                 document.getElementById('cedis-label').innerText = targetCedis?.toUpperCase();
 
@@ -136,8 +134,7 @@
                         }
                     }
                 });
-            },
-            error: function(err) { console.error("Error al leer CSV:", err); }
+            }
         });
     </script>
 </body>
