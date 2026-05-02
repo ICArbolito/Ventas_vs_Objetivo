@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
-    <title>Gusi Intelligence - Safe View v3.3</title>
+    <title>Gusi Intelligence - Vertical Zone v3.4</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
@@ -11,45 +11,62 @@
         :root { --bg: #05070a; --panel: #0d1117; --neon: #00ff9d; --blue: #00d2ff; --text: #ffffff; --sub: #8b949e; --border: rgba(255, 255, 255, 0.08); }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* Margen de seguridad para proyecciones */
         body { 
             height: 100vh; width: 100vw; background: var(--bg); 
             color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; 
             display: flex; align-items: center; justify-content: center; overflow: hidden;
-            padding: 40px; /* <--- ESTE ES EL MARGEN PARA LAS ORILLAS */
+            padding: 35px; 
         }
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto; gap: 2vh; }
         
-        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 1.5vh; border-bottom: 1px solid var(--border); }
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 3.2vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); }
+        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 1.2vh; border-bottom: 1px solid var(--border); }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 3vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); }
 
-        .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2.5vw; overflow: hidden; }
-        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; overflow: hidden; }
+        .main-grid { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 2.5vw; overflow: hidden; }
+        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 1.8vh; display: flex; flex-direction: column; overflow: hidden; }
         
         .table-container { flex: 1; overflow-y: auto; scrollbar-width: none; width: 100%; }
         .table-container::-webkit-scrollbar { display: none; }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 3px; }
-        th { font-family: 'Orbitron', sans-serif; font-size: 0.85vh; color: var(--sub); text-transform: uppercase; padding: 0.8vh 12px; text-align: right; border-bottom: 1px solid var(--border); }
-        th:first-child { text-align: left; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 2px; }
+        th { font-family: 'Orbitron', sans-serif; font-size: 0.8vh; color: var(--sub); text-transform: uppercase; padding: 0.5vh 10px; text-align: right; border-bottom: 1px solid var(--border); }
+        th:first-child { text-align: left; padding-left: 45px; } /* Espacio para la zona vertical */
         
-        .zona-header td { background: rgba(0, 210, 255, 0.15); color: var(--blue); font-weight: 800; font-size: 1.2vh; padding: 8px 15px; border-left: 5px solid var(--blue); text-align: left !important; }
+        /* Estilo de Zona Vertical */
+        .zona-vertical {
+            position: relative;
+            width: 35px;
+            background: rgba(0, 210, 255, 0.1);
+            border-left: 3px solid var(--blue);
+            color: var(--blue);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1vh;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        .zona-text {
+            display: block;
+            transform: rotate(-90deg);
+            margin: 0 auto;
+        }
         
-        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.8vh 12px; text-align: right; font-size: 1.15vh; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .ruta-row td:first-child { text-align: left; font-weight: 700; color: #fff; border-radius: 5px 0 0 5px; }
+        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.6vh 10px; text-align: right; font-size: 1.1vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
+        .ruta-row td:nth-child(2) { text-align: left; font-weight: 700; color: #fff; padding-left: 15px; }
 
         .total-bar { 
-            margin-top: 1.5vh; background: var(--neon); color: #000; padding: 1.2vh 20px; border-radius: 8px; 
-            display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.3vh; text-align: right;
+            margin-top: 1.2vh; background: var(--neon); color: #000; padding: 1vh 20px; border-radius: 8px; 
+            display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr;
+            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.25vh; text-align: right;
         }
-        .total-bar span:first-child { text-align: left; }
+        .total-bar span:first-child { text-align: left; padding-left: 35px; }
 
         .footer-stats { display: flex; gap: 2vw; justify-content: center; padding-top: 1vh; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.5vh 3vw; text-align: center; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .stat-card .val { font-family: 'Orbitron'; font-size: 3.8vh; color: var(--neon); line-height: 1; }
-        .stat-card .lbl { font-size: 1vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 6px; letter-spacing: 1px; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.2vh 2.5vw; text-align: center; min-width: 200px; }
+        .stat-card .val { font-family: 'Orbitron'; font-size: 3.5vh; color: var(--neon); line-height: 1; }
+        .stat-card .lbl { font-size: 0.9vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
         .stat-card.blue .val { color: var(--blue); }
     </style>
 </head>
@@ -57,7 +74,7 @@
     <div id="wrapper">
         <header>
             <div class="h-left"><h1>OPERACIONES <span id="cedis-label">...</span></h1></div>
-            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.4vh; border: 1px solid var(--blue); padding: 5px 18px; border-radius: 5px;">01-MAY</div>
+            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.3vh; border: 1px solid var(--blue); padding: 4px 15px; border-radius: 4px;">01-MAY</div>
         </header>
 
         <div class="main-grid">
@@ -68,11 +85,12 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="text-align: left;">Zona / Ruta</th>
-                                <th>Objetivo</th>
+                                <th style="width: 35px; border-bottom: none;"></th>
+                                <th style="text-align: left; padding-left: 15px;">Ruta</th>
+                                <th>Meta</th>
                                 <th>Venta</th>
-                                <th>Esperado</th>
-                                <th>Cuota Diaria</th>
+                                <th>Ideal</th>
+                                <th>Cuota</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody"></tbody>
@@ -114,7 +132,6 @@
 
                 const targetCedis = filtradoCedis || dataRaw[0][cKey];
                 let data = dataRaw.filter(row => row[cKey]?.trim().toUpperCase() === targetCedis?.toUpperCase() && row[rKey]?.trim());
-                
                 document.getElementById('cedis-label').innerText = targetCedis?.toUpperCase();
 
                 const grouped = data.reduce((acc, row) => {
@@ -128,16 +145,27 @@
                 let tObj = 0, tVta = 0, tEsp = 0, tSug = 0;
 
                 Object.keys(grouped).sort().forEach(zona => {
-                    const zRow = document.createElement('tr');
-                    zRow.className = 'zona-header';
-                    zRow.innerHTML = `<td colspan="5">ZONA ${zona}</td>`;
-                    tbody.appendChild(zRow);
-
-                    grouped[zona].forEach(item => {
+                    const rutasZona = grouped[zona];
+                    rutasZona.forEach((item, index) => {
                         const o = clean(item[oKey]), v = clean(item[vKey]), e = clean(item[eKey]), s = clean(item[sKey]);
                         tObj += o; tVta += v; tEsp += e; tSug += s;
-                        const row = document.createElement('tr'); row.className = 'ruta-row';
-                        row.innerHTML = `<td>${item[rKey]}</td><td>${fmt(o)}</td><td style="color:var(--neon);font-weight:800">${fmt(v)}</td><td>${fmt(e)}</td><td style="color:var(--blue);font-weight:800">${fmt(s)}</td>`;
+                        
+                        const row = document.createElement('tr');
+                        row.className = 'ruta-row';
+                        
+                        let zonaTD = '';
+                        if (index === 0) {
+                            zonaTD = `<td class="zona-vertical" rowspan="${rutasZona.length}"><span class="zona-text">ZONA ${zona}</span></td>`;
+                        }
+
+                        row.innerHTML = `
+                            ${zonaTD}
+                            <td>${item[rKey]}</td>
+                            <td>${fmt(o)}</td>
+                            <td style="color:var(--neon);font-weight:800">${fmt(v)}</td>
+                            <td>${fmt(e)}</td>
+                            <td style="color:var(--blue);font-weight:800">${fmt(s)}</td>
+                        `;
                         tbody.appendChild(row);
                     });
                 });
@@ -155,9 +183,9 @@
                     data: {
                         labels: data.map(r => r[rKey]),
                         datasets: [
-                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.85, order: 3 },
+                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.9, order: 3 },
                             { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: '#00ff9d', barPercentage: 0.5, borderRadius: 3, order: 2 },
-                            { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 10, pointBorderWidth: 2, order: 1 }
+                            { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 9, pointBorderWidth: 2, order: 1 }
                         ]
                     },
                     options: {
@@ -165,7 +193,7 @@
                         plugins: { legend: { display: false } },
                         scales: {
                             x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 9 } } },
-                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 700, size: 11 } } }
+                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 700, size: 9 } } }
                         }
                     }
                 });
