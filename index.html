@@ -4,83 +4,82 @@
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
     <title>Inteligencia Comercial - Dashboard Arbolito</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Fuentes de alta legibilidad -->
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { 
-            --bg: #05070a; --panel: #0d1117; --neon: #00ff9d; --red: #ff4757; 
-            --blue: #00d2ff; --text: #ffffff; --sub: #8b949e; --border: rgba(255, 255, 255, 0.08); 
+            --bg: #020406; 
+            --panel: #0a0e14; 
+            --neon: #ccff00; /* Verde Lima Eléctrico - Más visible */
+            --red: #ff3e3e; 
+            --blue: #00f2ff; /* Cyan Vibrante */
+            --text: #ffffff; 
+            --sub: #a1a1aa; 
+            --border: rgba(255, 255, 255, 0.12); 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
         
         body { 
             height: 100vh; width: 100vw; background: var(--bg); color: var(--text); 
-            font-family: 'Plus Jakarta Sans', sans-serif; display: flex; 
+            font-family: 'Inter', sans-serif; display: flex; 
             align-items: center; justify-content: center; overflow: hidden; 
             padding: 2vh 2vw; 
         }
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
         
-        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 0.8vh; border-bottom: 1px solid var(--border); }
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 2.6vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); text-transform: uppercase; }
+        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 0.8vh; border-bottom: 2px solid var(--border); }
+        h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 3.2vh; color: var(--neon); letter-spacing: 1px; text-transform: uppercase; }
 
         .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
-        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 1.5vh; display: flex; flex-direction: column; height: 100%; }
+        .glass-panel { background: var(--panel); border-radius: 12px; border: 1px solid var(--border); padding: 1.5vh; display: flex; flex-direction: column; height: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
-        .table-container { 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            overflow-y: auto; 
-            scrollbar-width: none; 
-        }
+        .table-container { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; scrollbar-width: none; }
         .table-container::-webkit-scrollbar { display: none; }
 
-        .table-wrapper { width: 100%; position: relative; padding-left: 55px; flex: 1; display: flex; flex-direction: column; margin-bottom: 4px; }
+        .table-wrapper { width: 100%; position: relative; padding-left: 50px; flex: 1; display: flex; flex-direction: column; margin-bottom: 4px; }
         
         .zona-tag {
-            position: absolute; left: 0; top: 0; bottom: 0; width: 45px;
-            background: rgba(0, 210, 255, 0.05); border-left: 5px solid var(--blue);
+            position: absolute; left: 0; top: 0; bottom: 0; width: 40px;
+            background: rgba(0, 242, 255, 0.08); border-left: 4px solid var(--blue);
             display: flex; align-items: center; justify-content: center; border-radius: 4px;
         }
         .zona-tag span { 
-            transform: rotate(270deg); white-space: nowrap; font-family: 'Orbitron'; 
-            font-weight: 900; color: var(--blue); font-size: 1.3vh; letter-spacing: 2px;
+            transform: rotate(270deg); white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; 
+            font-weight: 900; color: var(--blue); font-size: 1.6vh; letter-spacing: 1px;
         }
 
         table { width: 100%; border-collapse: separate; border-spacing: 0 2px; table-layout: fixed; flex: 1; }
-        th { font-family: 'Orbitron', sans-serif; font-size: 0.75vh; color: var(--sub); text-transform: uppercase; padding: 4px 10px; }
+        th { font-family: 'Barlow Condensed', sans-serif; font-size: 1vh; color: var(--sub); text-transform: uppercase; padding: 4px 10px; font-weight: 700; letter-spacing: 0.5px; }
         
         .col-ruta { width: 28%; text-align: left !important; }
         .col-data { width: 18%; text-align: right !important; }
 
-        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.4vh 12px; font-size: 1.15vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
+        .ruta-row td { background: rgba(255,255,255,0.03); padding: 0.5vh 12px; font-size: 1.2vh; font-weight: 600; }
         .ruta-name { font-weight: 800; color: #fff; text-align: left; }
-        .ruta-val { text-align: right; }
+        .ruta-val { text-align: right; font-family: 'Inter', sans-serif; }
 
-        /* Alineación Quirúrgica de Totales */
         .total-bar { 
-            background: var(--neon); color: #000; padding: 1.2vh 12px; border-radius: 8px; 
+            background: var(--neon); color: #000; padding: 1.2vh 12px; border-radius: 6px; 
             display: flex; align-items: center;
-            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.1vh;
-            margin-top: auto; width: 100%;
+            font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.4vh;
+            margin-top: auto; width: 100%; box-shadow: 0 0 20px rgba(204, 255, 0, 0.2);
         }
-        .total-spacer { width: 55px; flex-shrink: 0; } /* Compensa el espacio de la zona-tag */
+        .total-spacer { width: 50px; flex-shrink: 0; }
         .total-content { display: flex; flex: 1; align-items: center; }
         .t-lbl { width: 28%; text-align: left; }
         .t-val { width: 18%; text-align: right; }
 
         .footer-stats { display: flex; gap: 1.5vw; justify-content: center; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.2vh 2.5vw; text-align: center; min-width: 200px; }
-        .stat-card .val { font-family: 'Orbitron'; font-size: 3.5vh; color: var(--neon); }
-        .stat-card .lbl { font-size: 0.9vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 4px; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.2vh 2.5vw; text-align: center; min-width: 200px; }
+        .stat-card .val { font-family: 'Barlow Condensed', sans-serif; font-size: 4.5vh; color: var(--neon); font-weight: 900; line-height: 1; }
+        .stat-card .lbl { font-size: 1vh; color: var(--sub); text-transform: uppercase; font-weight: 800; margin-top: 6px; letter-spacing: 1px; }
         .stat-card.blue .val { color: var(--blue); }
-        .stat-card.warning .val { color: var(--red); text-shadow: 0 0 10px rgba(255,71,87,0.4); }
+        .stat-card.warning .val { color: var(--red); text-shadow: 0 0 15px rgba(255,62,62,0.4); }
 
-        .source-footer { text-align: center; font-size: 0.85vh; color: #4b5563; letter-spacing: 1px; font-weight: 600; margin-top: 0.5vh; }
+        .source-footer { text-align: center; font-size: 0.9vh; color: #4b5563; letter-spacing: 1.5px; font-weight: 700; margin-top: 0.5vh; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -89,8 +88,8 @@
             <div class="h-left">
                 <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
             </div>
-            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.1vh; border: 1px solid var(--blue); padding: 4px 15px; border-radius: 5px;">
-                Actualizado al cierre de ayer
+            <div id="date-tag" style="font-family: 'Barlow Condensed'; color: var(--blue); font-size: 1.4vh; border: 2px solid var(--blue); padding: 4px 15px; border-radius: 4px; font-weight: 900;">
+                ACTUALIZADO AL CIERRE DE AYER
             </div>
         </header>
 
@@ -158,7 +157,6 @@
                     wrapper.className = 'table-wrapper';
                     wrapper.innerHTML = `<div class="zona-tag"><span>ZONA ${zona}</span></div>`;
                     const table = document.createElement('table');
-                    // Títulos de columna actualizados
                     table.innerHTML = `<thead><tr><th class="col-ruta">Ruta</th><th class="col-data">Objetivo Quincenal</th><th class="col-data">Venta Alcanzada</th><th class="col-data">Venta Esperada</th><th class="col-data">Cuota Reajustada</th></tr></thead><tbody></tbody>`;
                     const tbody = table.querySelector('tbody');
 
@@ -167,7 +165,7 @@
                         tObj += o; tVta += v; tEsp += e; tSug += s;
                         const vColor = (v < e) ? 'var(--red)' : 'var(--neon)';
                         const row = document.createElement('tr'); row.className = 'ruta-row';
-                        row.innerHTML = `<td class="ruta-name">${item[rKey]}</td><td class="ruta-val">${fmt(o)}</td><td class="ruta-val" style="color:${vColor};font-weight:800">${fmt(v)}</td><td class="ruta-val">${fmt(e)}</td><td class="ruta-val" style="color:var(--blue);font-weight:800">${fmt(s)}</td>`;
+                        row.innerHTML = `<td class="ruta-name">${item[rKey]}</td><td class="ruta-val">${fmt(o)}</td><td class="ruta-val" style="color:${vColor}">${fmt(v)}</td><td class="ruta-val">${fmt(e)}</td><td class="ruta-val" style="color:var(--blue); font-weight:800;">${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
                     wrapper.appendChild(table);
@@ -190,8 +188,8 @@
                     data: {
                         labels: data.map(r => r[rKey]),
                         datasets: [
-                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.9, order: 3 },
-                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#ff4757' : '#00ff9d'), barPercentage: 0.5, borderRadius: 3, order: 2 },
+                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.06)', barPercentage: 0.9, order: 3 },
+                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#ff3e3e' : '#ccff00'), barPercentage: 0.5, borderRadius: 2, order: 2 },
                             { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 8, pointBorderWidth: 2, order: 1 }
                         ]
                     },
@@ -199,8 +197,8 @@
                         indexAxis: 'y', responsive: true, maintainAspectRatio: false, grouped: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 9 } } },
-                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 700, size: 9 } } }
+                            x: { grid: { color: 'rgba(255,255,255,0.08)' }, ticks: { color: '#a1a1aa', font: { size: 10 } } },
+                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 700, size: 11 } } }
                         }
                     }
                 });
