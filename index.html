@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
-    <title>Gusi Intelligence - Final Precision v3.7</title>
+    <title>Gusi Intelligence - Master Gold v3.8</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
-        :root { --bg: #05070a; --panel: #0d1117; --neon: #00ff9d; --blue: #00d2ff; --text: #ffffff; --sub: #8b949e; --border: rgba(255, 255, 255, 0.08); }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { 
+            --bg: #05070a; --panel: #0d1117; --neon: #00ff9d; --red: #ff4757; 
+            --blue: #00d2ff; --text: #ffffff; --sub: #8b949e; --border: rgba(255, 255, 255, 0.08); 
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; } /* Cursor oculto para TV */
         
         body { 
             height: 100vh; width: 100vw; background: var(--bg); color: var(--text); 
@@ -27,12 +30,11 @@
         .table-container { flex: 1; overflow-y: auto; scrollbar-width: none; width: 100%; position: relative; }
         .table-container::-webkit-scrollbar { display: none; }
 
-        /* Estructura de Tabla sin Rowspan */
         .table-wrapper { width: 100%; margin-bottom: 10px; position: relative; padding-left: 55px; }
         
         .zona-tag {
             position: absolute; left: 0; top: 0; bottom: 0; width: 45px;
-            background: rgba(0, 210, 255, 0.1); border-left: 5px solid var(--blue);
+            background: rgba(0, 210, 255, 0.05); border-left: 5px solid var(--blue);
             display: flex; align-items: center; justify-content: center; border-radius: 4px;
         }
         .zona-tag span { 
@@ -43,7 +45,6 @@
         table { width: 100%; border-collapse: separate; border-spacing: 0 4px; table-layout: fixed; }
         th { font-family: 'Orbitron', sans-serif; font-size: 0.85vh; color: var(--sub); text-transform: uppercase; padding: 5px 10px; }
         
-        /* Alineación milimétrica de columnas */
         .col-ruta { width: 28%; text-align: left !important; }
         .col-data { width: 18%; text-align: right !important; }
 
@@ -59,10 +60,11 @@
         .total-bar .val-group { display: flex; gap: 3vw; }
 
         .footer-stats { display: flex; gap: 2vw; justify-content: center; padding-top: 1vh; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.5vh 3vw; text-align: center; min-width: 220px; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.5vh 3vw; text-align: center; min-width: 220px; transition: 0.3s; }
         .stat-card .val { font-family: 'Orbitron'; font-size: 3.8vh; color: var(--neon); }
         .stat-card .lbl { font-size: 1vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
         .stat-card.blue .val { color: var(--blue); }
+        .stat-card.warning .val { color: var(--red); text-shadow: 0 0 10px rgba(255,71,87,0.4); }
     </style>
 </head>
 <body>
@@ -74,11 +76,8 @@
 
         <div class="main-grid">
             <div class="glass-panel"><canvas id="bulletChart"></canvas></div>
-            
             <div class="glass-panel">
-                <div class="table-container" id="content-tables">
-                    <!-- Las tablas por zona se generarán aquí -->
-                </div>
+                <div class="table-container" id="content-tables"></div>
                 <div class="total-bar">
                     <span>TOTAL CEDIS</span>
                     <div class="val-group">
@@ -89,7 +88,7 @@
         </div>
 
         <div class="footer-stats">
-            <div class="stat-card"><div class="val" id="global-perc">0%</div><div class="lbl">Avance Quincenal</div></div>
+            <div id="card-perc" class="stat-card"><div class="val" id="global-perc">0%</div><div class="lbl">Avance Quincenal</div></div>
             <div class="stat-card blue"><div class="val" id="global-expected">0%</div><div class="lbl">Avance Esperado</div></div>
             <div class="stat-card"><div class="val" id="global-sug">$0</div><div class="lbl">Meta Diaria de Rescate</div></div>
         </div>
@@ -130,7 +129,6 @@
                     const wrapper = document.createElement('div');
                     wrapper.className = 'table-wrapper';
                     wrapper.innerHTML = `<div class="zona-tag"><span>ZONA ${zona}</span></div>`;
-                    
                     const table = document.createElement('table');
                     table.innerHTML = `<thead><tr><th class="col-ruta">Ruta</th><th class="col-data">Meta</th><th class="col-data">Venta</th><th class="col-data">Ideal</th><th class="col-data">Cuota</th></tr></thead><tbody></tbody>`;
                     const tbody = table.querySelector('tbody');
@@ -138,8 +136,12 @@
                     grouped[zona].forEach(item => {
                         const o = clean(item[oKey]), v = clean(item[vKey]), e = clean(item[eKey]), s = clean(item[sKey]);
                         tObj += o; tVta += v; tEsp += e; tSug += s;
+                        
+                        // Lógica del semáforo por ruta
+                        const vColor = (v < e) ? 'var(--red)' : 'var(--neon)';
+                        
                         const row = document.createElement('tr'); row.className = 'ruta-row';
-                        row.innerHTML = `<td class="ruta-name">${item[rKey]}</td><td class="ruta-val">${fmt(o)}</td><td class="ruta-val" style="color:var(--neon);font-weight:800">${fmt(v)}</td><td class="ruta-val">${fmt(e)}</td><td class="ruta-val" style="color:var(--blue);font-weight:800">${fmt(s)}</td>`;
+                        row.innerHTML = `<td class="ruta-name">${item[rKey]}</td><td class="ruta-val">${fmt(o)}</td><td class="ruta-val" style="color:${vColor};font-weight:800">${fmt(v)}</td><td class="ruta-val">${fmt(e)}</td><td class="ruta-val" style="color:var(--blue);font-weight:800">${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
                     wrapper.appendChild(table);
@@ -151,16 +153,26 @@
                 document.getElementById('t-esp').innerText = fmt(tEsp);
                 document.getElementById('t-cuota').innerText = fmt(tSug);
 
-                document.getElementById('global-perc').innerText = Math.round((tVta/tObj)*100) + '%';
-                document.getElementById('global-expected').innerText = Math.round((tEsp/tObj)*100) + '%';
+                const percVta = Math.round((tVta/tObj)*100);
+                const percEsp = Math.round((tEsp/tObj)*100);
+                
+                document.getElementById('global-perc').innerText = percVta + '%';
+                document.getElementById('global-expected').innerText = percEsp + '%';
                 document.getElementById('global-sug').innerText = fmt(tSug);
+
+                // Semáforo Global: Si el avance total es menor al esperado, la tarjeta se vuelve roja
+                if (percVta < percEsp) { document.getElementById('card-perc').classList.add('warning'); }
+                else { document.getElementById('card-perc').classList.remove('warning'); }
 
                 new Chart(document.getElementById('bulletChart'), {
                     data: {
                         labels: data.map(r => r[rKey]),
                         datasets: [
                             { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.9, order: 3 },
-                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: '#00ff9d', barPercentage: 0.5, borderRadius: 3, order: 2 },
+                            { type: 'bar', data: data.map(r => {
+                                const v = clean(r[vKey]), e = clean(r[eKey]);
+                                return { y: v, backgroundColor: v < e ? 'rgba(255,71,87,0.7)' : '#00ff9d' };
+                            }), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#ff4757' : '#00ff9d'), barPercentage: 0.5, borderRadius: 3, order: 2 },
                             { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 8, pointBorderWidth: 2, order: 1 }
                         ]
                     },
