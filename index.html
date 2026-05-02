@@ -9,20 +9,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { 
-            --bg: #05070a; 
-            --panel: #0d1117; 
-            --v-arbolito: #29903B; /* Tu Verde */
-            --a-arbolito: #0669FE; /* Tu Azul */
-            --red: #d63031; 
-            --white: #ffffff;
-            --gray-light: #f1f2f6;
-            --gray-mid: #a4b0be;
-            --border: rgba(255, 255, 255, 0.08); 
+            --bg: #030712; 
+            --panel: #111827; 
+            --accent-green: #10b981; 
+            --accent-blue: #3b82f6; 
+            --alert-red: #ef4444; 
+            --text-main: #f9fafb;
+            --text-sub: #9ca3af;
+            --border: rgba(255, 255, 255, 0.05); 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
         
         body { 
-            height: 100vh; width: 100vw; background: var(--bg); color: var(--white); 
+            height: 100vh; width: 100vw; background: var(--bg); color: var(--text-main); 
             font-family: 'Inter', sans-serif; display: flex; 
             align-items: center; justify-content: center; overflow: hidden; 
             padding: 2vh 2vw; 
@@ -30,56 +29,56 @@
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
         
-        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 0.8vh; border-bottom: 2px solid var(--border); }
-        h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 3vh; color: var(--v-arbolito); text-transform: uppercase; letter-spacing: 0.5px; }
+        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 1vh; border-bottom: 2px solid var(--border); }
+        h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 2.8vh; color: var(--accent-green); text-transform: uppercase; letter-spacing: 1px; }
 
         .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
-        .glass-panel { background: var(--panel); border-radius: 12px; border: 1px solid var(--border); padding: 1.5vh; display: flex; flex-direction: column; height: 100%; }
+        .glass-panel { background: var(--panel); border-radius: 16px; border: 1px solid var(--border); padding: 1.5vh; display: flex; flex-direction: column; height: 100%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         
         .table-container { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; scrollbar-width: none; }
         .table-container::-webkit-scrollbar { display: none; }
 
-        .table-wrapper { width: 100%; position: relative; padding-left: 50px; flex: 1; display: flex; flex-direction: column; margin-bottom: 4px; }
+        .table-wrapper { width: 100%; position: relative; padding-left: 50px; flex: 1; display: flex; flex-direction: column; margin-bottom: 6px; }
         
         .zona-tag {
             position: absolute; left: 0; top: 0; bottom: 0; width: 40px;
-            background: rgba(6, 105, 254, 0.1); border-left: 4px solid var(--a-arbolito);
+            background: rgba(59, 130, 246, 0.05); border-left: 4px solid var(--accent-blue);
             display: flex; align-items: center; justify-content: center; border-radius: 4px;
         }
         .zona-tag span { 
             transform: rotate(270deg); white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; 
-            font-weight: 900; color: var(--a-arbolito); font-size: 1.6vh; letter-spacing: 1px;
+            font-weight: 900; color: var(--accent-blue); font-size: 1.5vh; letter-spacing: 1.5px;
         }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 2px; table-layout: fixed; flex: 1; }
-        th { font-family: 'Barlow Condensed', sans-serif; font-size: 0.95vh; color: var(--gray-mid); text-transform: uppercase; padding: 4px 10px; letter-spacing: 0.5px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 4px; table-layout: fixed; flex: 1; }
+        th { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9vh; color: var(--text-sub); text-transform: uppercase; padding: 4px 10px; font-weight: 600; }
         
         .col-ruta { width: 28%; text-align: left !important; }
         .col-data { width: 18%; text-align: right !important; }
 
-        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.5vh 12px; font-size: 1.2vh; color: var(--gray-light); }
-        .ruta-name { font-weight: 700; color: var(--white); text-align: left; }
+        .ruta-row td { background: rgba(255,255,255,0.01); padding: 0.6vh 12px; font-size: 1.15vh; border-bottom: 1px solid var(--border); }
+        .ruta-name { font-weight: 700; color: var(--text-main); text-align: left; }
         .ruta-val { text-align: right; }
 
         .total-bar { 
-            background: var(--v-arbolito); color: var(--white); padding: 1.2vh 12px; border-radius: 6px; 
+            background: var(--accent-green); color: var(--bg); padding: 1.2vh 12px; border-radius: 8px; 
             display: flex; align-items: center;
-            font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.45vh;
+            font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.4vh;
             margin-top: auto; width: 100%;
         }
         .total-spacer { width: 50px; flex-shrink: 0; }
         .total-content { display: flex; flex: 1; align-items: center; }
-        .t-lbl { width: 28%; text-align: left; }
+        .t-lbl { width: 28%; text-align: left; padding-left: 5px; }
         .t-val { width: 18%; text-align: right; }
 
         .footer-stats { display: flex; gap: 1.5vw; justify-content: center; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.2vh 2.5vw; text-align: center; min-width: 200px; }
-        .stat-card .val { font-family: 'Barlow Condensed', sans-serif; font-size: 4.5vh; color: var(--v-arbolito); font-weight: 900; line-height: 1; }
-        .stat-card .lbl { font-size: 0.95vh; color: var(--gray-mid); text-transform: uppercase; font-weight: 700; margin-top: 4px; }
-        .stat-card.blue .val { color: var(--a-arbolito); }
-        .stat-card.warning .val { color: var(--red); text-shadow: 0 0 10px rgba(214, 48, 49, 0.3); }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.5vh 2.5vw; text-align: center; min-width: 210px; }
+        .stat-card .val { font-family: 'Barlow Condensed', sans-serif; font-size: 4.5vh; color: var(--accent-green); font-weight: 900; line-height: 1; }
+        .stat-card .lbl { font-size: 0.9vh; color: var(--text-sub); text-transform: uppercase; font-weight: 700; margin-top: 6px; }
+        .stat-card.blue .val { color: var(--accent-blue); }
+        .stat-card.warning .val { color: var(--alert-red); }
 
-        .source-footer { text-align: center; font-size: 0.9vh; color: #4b5563; letter-spacing: 1px; font-weight: 600; margin-top: 0.5vh; }
+        .source-footer { text-align: center; font-size: 0.8vh; color: #4b5563; letter-spacing: 2px; font-weight: 700; margin-top: 0.5vh; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -88,7 +87,7 @@
             <div class="h-left">
                 <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
             </div>
-            <div id="date-tag" style="font-family: 'Barlow Condensed'; color: var(--a-arbolito); font-size: 1.4vh; border: 2px solid var(--a-arbolito); padding: 4px 15px; border-radius: 4px; font-weight: 900;">
+            <div id="date-tag" style="font-family: 'Barlow Condensed'; color: var(--accent-blue); font-size: 1.3vh; border: 1.5px solid var(--accent-blue); padding: 4px 15px; border-radius: 6px; font-weight: 900; letter-spacing: 0.5px;">
                 ACTUALIZADO AL CIERRE DE AYER
             </div>
         </header>
@@ -100,7 +99,7 @@
                 <div class="total-bar">
                     <div class="total-spacer"></div>
                     <div class="total-content">
-                        <span class="t-lbl">TOTAL CEDIS</span>
+                        <span class="t-lbl">TOTAL GENERAL</span>
                         <span class="t-val" id="t-obj">$0</span>
                         <span class="t-val" id="t-vta">$0</span>
                         <span class="t-val" id="t-esp">$0</span>
@@ -137,9 +136,11 @@
                 const findK = (terms) => h.find(k => terms.some(t => k.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes(t.toUpperCase())));
                 const cKey = findK(['CEDIS']), rKey = findK(['RUTA']), zKey = findK(['ZONA']), vKey = findK(['ORGANICA']), oKey = findK(['OBJETIVO']), eKey = findK(['ESPERADA']), sKey = findK(['FALTANTES', 'CUOTA']);
 
-                const targetCedis = filtradoCedis || dataRaw[0][cKey];
-                let data = dataRaw.filter(row => row[cKey]?.trim().toUpperCase() === targetCedis?.toUpperCase() && row[rKey]?.trim());
-                document.getElementById('cedis-label').innerText = targetCedis?.toUpperCase();
+                const rawCedis = filtradoCedis || dataRaw[0][cKey];
+                // Nueva lógica de título: CEDIS + Nombre
+                document.getElementById('cedis-label').innerText = "CEDIS " + rawCedis?.toUpperCase();
+
+                let data = dataRaw.filter(row => row[cKey]?.trim().toUpperCase() === rawCedis?.toUpperCase() && row[rKey]?.trim());
 
                 const grouped = data.reduce((acc, row) => {
                     const zona = row[zKey] || '1';
@@ -163,9 +164,9 @@
                     grouped[zona].forEach(item => {
                         const o = clean(item[oKey]), v = clean(item[vKey]), e = clean(item[eKey]), s = clean(item[sKey]);
                         tObj += o; tVta += v; tEsp += e; tSug += s;
-                        const vColor = (v < e) ? 'var(--red)' : 'var(--v-arbolito)';
+                        const vColor = (v < e) ? 'var(--alert-red)' : 'var(--accent-green)';
                         const row = document.createElement('tr'); row.className = 'ruta-row';
-                        row.innerHTML = `<td class="ruta-name">${item[rKey]}</td><td class="ruta-val">${fmt(o)}</td><td class="ruta-val" style="color:${vColor}">${fmt(v)}</td><td class="ruta-val">${fmt(e)}</td><td class="ruta-val" style="color:var(--a-arbolito); font-weight:800;">${fmt(s)}</td>`;
+                        row.innerHTML = `<td class="ruta-name">${item[rKey]}</td><td class="ruta-val">${fmt(o)}</td><td class="ruta-val" style="color:${vColor}; font-weight:700;">${fmt(v)}</td><td class="ruta-val">${fmt(e)}</td><td class="ruta-val" style="color:var(--accent-blue); font-weight:700;">${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
                     wrapper.appendChild(table);
@@ -188,8 +189,8 @@
                     data: {
                         labels: data.map(r => r[rKey]),
                         datasets: [
-                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.06)', barPercentage: 0.9, order: 3 },
-                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#d63031' : '#29903B'), barPercentage: 0.5, borderRadius: 2, order: 2 },
+                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.03)', barPercentage: 0.9, order: 3 },
+                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#ef4444' : '#10b981'), barPercentage: 0.5, borderRadius: 2, order: 2 },
                             { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 8, pointBorderWidth: 2, order: 1 }
                         ]
                     },
@@ -197,8 +198,8 @@
                         indexAxis: 'y', responsive: true, maintainAspectRatio: false, grouped: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.08)' }, ticks: { color: '#a1a1aa', font: { size: 10 } } },
-                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 700, size: 10 } } }
+                            x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#6b7280', font: { size: 10 } } },
+                            y: { grid: { display: false }, ticks: { color: '#f3f4f6', font: { weight: 600, size: 10 } } }
                         }
                     }
                 });
