@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
-    <title>Gusi Elite Operations - Extract Mode</title>
+    <title>Gusi Intelligence - Black Ops Elite V2</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
@@ -11,9 +11,8 @@
         :root {
             --bg: #05070a;
             --panel: #0d1117;
-            --neon-green: #00ff9d;
-            --neon-blue: #00d2ff;
-            --neon-red: #ff4757;
+            --neon: #00ff9d;
+            --blue: #00d2ff;
             --text: #ffffff;
             --sub: #8b949e;
             --border: rgba(255, 255, 255, 0.08);
@@ -32,51 +31,40 @@
             display: flex; justify-content: space-between; align-items: flex-end; 
             padding-bottom: 2vh; border-bottom: 1px solid var(--border);
         }
-        .h-left p { font-size: 1vh; letter-spacing: 3px; color: var(--sub); font-weight: 800; }
-        .h-left h1 { font-family: 'Orbitron', sans-serif; font-size: 3.5vh; color: var(--neon-green); text-shadow: 0 0 15px rgba(0,255,157,0.3); }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 3.5vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); }
 
         .main-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5vw; overflow: hidden; }
-
-        /* Estilo de Paneles */
         .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 2.5vh; overflow: hidden; position: relative; }
         
         .table-container { overflow-y: auto; scrollbar-width: none; }
-        .table-container::-webkit-scrollbar { display: none; }
-
         table { width: 100%; border-collapse: separate; border-spacing: 0 6px; }
         th { font-family: 'Orbitron', sans-serif; font-size: 0.9vh; color: var(--sub); text-transform: uppercase; padding: 1vh; text-align: right; }
         th:first-child { text-align: left; }
 
-        .zona-header td { background: rgba(0, 210, 255, 0.1); color: var(--neon-blue); font-weight: 800; font-size: 1.2vh; padding: 8px 12px; border-left: 3px solid var(--neon-blue); }
-        
+        .zona-header td { background: rgba(0, 210, 255, 0.1); color: var(--blue); font-weight: 800; font-size: 1.2vh; padding: 8px 12px; border-left: 3px solid var(--blue); }
         .ruta-row td { background: rgba(255,255,255,0.02); padding: 1vh; text-align: right; font-size: 1.2vh; }
         .ruta-row td:first-child { text-align: left; font-weight: 700; color: #fff; border-radius: 6px 0 0 6px; }
-        .ruta-row td:last-child { color: var(--neon-blue); font-weight: 800; border-radius: 0 6px 6px 0; }
 
-        .total-row td { background: var(--neon-green) !important; color: #000 !important; font-weight: 900 !important; font-family: 'Orbitron'; font-size: 1.4vh; }
+        .total-row td { background: var(--neon) !important; color: #000 !important; font-weight: 900 !important; font-family: 'Orbitron'; font-size: 1.4vh; }
 
-        /* KPIs de Pie */
         .footer-stats { display: flex; gap: 2vw; justify-content: center; }
         .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.5vh 3vw; text-align: center; }
-        .stat-card .val { font-family: 'Orbitron'; font-size: 4vh; color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,157,0.3); }
+        .stat-card .val { font-family: 'Orbitron'; font-size: 4vh; color: var(--neon); }
         .stat-card .lbl { font-size: 1vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
-
     </style>
 </head>
 <body>
     <div id="wrapper">
         <header>
             <div class="h-left">
-                <p>EXTRACT SYSTEM · LIVE FEED</p>
+                <p style="font-size: 1.1vh; letter-spacing: 3px; color: var(--sub); font-weight: 800; margin-bottom: 5px;">EXTRACT SYSTEM · ACTIVE</p>
                 <h1>CENTRAL <span id="cedis-label">...</span></h1>
             </div>
-            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--neon-blue); font-size: 1.4vh; border: 1px solid var(--neon-blue); padding: 5px 15px; border-radius: 4px;"></div>
+            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.4vh; border: 1px solid var(--blue); padding: 5px 15px; border-radius: 4px;"></div>
         </header>
 
         <div class="main-grid">
-            <div class="glass-panel">
-                <canvas id="bulletChart"></canvas>
-            </div>
+            <div class="glass-panel"><canvas id="bulletChart"></canvas></div>
             <div class="glass-panel table-container">
                 <table id="dataTable">
                     <thead>
@@ -100,13 +88,12 @@
             </div>
             <div class="stat-card">
                 <div class="val" id="global-sug">$0</div>
-                <div class="lbl">Venta Diaria Sugerida</div>
+                <div class="lbl">Meta Diaria de Rescate</div>
             </div>
         </div>
     </div>
 
     <script>
-        // URL del CSV directo de la pestaña "Extract"
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRd-mUGTkbL5f931RSST3DmkXazVg7SjfMNGuhJEi7WtSAo9kf1w681N85BETt3Y3RpaId5RJBbjD-J/pub?gid=920388459&single=true&output=csv';
         const urlParams = new URLSearchParams(window.location.search);
         const filtradoCedis = urlParams.get('cedis');
@@ -122,19 +109,13 @@
                 const dataRaw = res.data;
                 const h = Object.keys(dataRaw[0]);
 
-                // Mapeo dinámico de columnas según tu pestaña Extract
-                const cKey = h.find(k => k.includes('CEDIS'));
-                const rKey = h.find(k => k.includes('RUTA'));
-                const zKey = h.find(k => k.includes('ZONA'));
-                const vKey = h.find(k => k.includes('VENTA ORGÁNICA'));
-                const oKey = h.find(k => k.includes('OBJETIVO'));
-                const eKey = h.find(k => k.includes('VENTA ESPERADA'));
-                const sKey = h.find(k => k.includes('CANTIDAD POR DÍAS FALTANTES'));
+                const cKey = h.find(k => k.includes('CEDIS')), rKey = h.find(k => k.includes('RUTA')), zKey = h.find(k => k.includes('ZONA'));
+                const vKey = h.find(k => k.includes('VENTA ORGÁNICA')), oKey = h.find(k => k.includes('OBJETIVO'));
+                const eKey = h.find(k => k.includes('VENTA ESPERADA')), sKey = h.find(k => k.includes('CANTIDAD POR DÍAS FALTANTES'));
 
                 let data = dataRaw.filter(row => (filtradoCedis ? row[cKey]?.trim().toUpperCase() === filtradoCedis.toUpperCase() : true) && row[rKey]?.trim());
                 document.getElementById('cedis-label').innerText = filtradoCedis?.toUpperCase() || "BAJÍO";
 
-                // Agrupación por Zona
                 const grouped = data.reduce((acc, row) => {
                     const zona = row[zKey] || '1';
                     if (!acc[zona]) acc[zona] = [];
@@ -154,15 +135,13 @@
                     grouped[zona].forEach(item => {
                         const o = clean(item[oKey]), v = clean(item[vKey]), e = clean(item[eKey]), s = clean(item[sKey]);
                         tObj += o; tVta += v; tEsp += e; tSug += s;
-
                         const row = document.createElement('tr');
                         row.className = 'ruta-row';
-                        row.innerHTML = `<td>${item[rKey]}</td><td>${fmt(o)}</td><td style="color:var(--neon-green)">${fmt(v)}</td><td>${fmt(e)}</td><td>${fmt(s)}</td>`;
+                        row.innerHTML = `<td>${item[rKey]}</td><td>${fmt(o)}</td><td style="color:var(--neon)">${fmt(v)}</td><td>${fmt(e)}</td><td>${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
                 });
 
-                // Fila Total
                 const totalRow = document.createElement('tr');
                 totalRow.className = 'total-row';
                 totalRow.innerHTML = `<td>TOTAL CEDIS</td><td>${fmt(tObj)}</td><td>${fmt(tVta)}</td><td>${fmt(tEsp)}</td><td>${fmt(tSug)}</td>`;
@@ -171,22 +150,21 @@
                 document.getElementById('global-perc').innerText = Math.round((tVta/tObj)*100) + '%';
                 document.getElementById('global-sug').innerText = fmt(tSug);
 
-                // Gráfica de Bala
                 new Chart(document.getElementById('bulletChart'), {
                     data: {
                         labels: data.map(r => r[rKey]),
                         datasets: [
-                            { type: 'bar', label: 'Meta', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.8, order: 3 },
-                            { type: 'bar', label: 'Venta', data: data.map(r => clean(r[vKey])), backgroundColor: '#00ff9d', barPercentage: 0.45, borderRadius: 6, order: 2 },
-                            { type: 'line', label: 'Esperado', data: data.map(r => clean(r[eKey])), borderColor: '#fff', borderWidth: 3, pointStyle: 'line', rotation: 90, pointRadius: 15, showLine: false, order: 1 }
+                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.85, order: 3 },
+                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: '#00ff9d', barPercentage: 0.5, borderRadius: 4, order: 2 },
+                            { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 15, pointBorderWidth: 4, order: 1 }
                         ]
                     },
                     options: {
                         indexAxis: 'y', responsive: true, maintainAspectRatio: false, grouped: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 10 } } },
-                            y: { ticks: { color: '#fff', font: { weight: 'bold', size: 12 } } }
+                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 10 }, callback: v => '$' + v.toLocaleString('en-US', { notation: 'compact' }) } },
+                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 800, size: 13 } } }
                         }
                     }
                 });
