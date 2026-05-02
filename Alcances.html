@@ -10,13 +10,12 @@
     <style>
         :root {
             --bg-deep: #020408;
-            --glass: rgba(17, 25, 40, 0.75);
+            --glass: rgba(17, 25, 40, 0.85);
             --neon-primary: #00ff9d;
             --neon-secondary: #00d2ff;
-            --neon-alert: #ff4757;
             --text-pure: #ffffff;
             --text-dim: #94a3b8;
-            --border-glass: rgba(255, 255, 255, 0.125);
+            --border-glass: rgba(255, 255, 255, 0.1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,103 +27,50 @@
             background-image: radial-gradient(circle at 50% 50%, #0d1117 0%, #020408 100%);
         }
 
-        #wrapper { 
-            width: 95vw; height: 90vh;
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            gap: 2vh;
-        }
+        #wrapper { width: 95vw; height: 90vh; display: grid; grid-template-rows: auto 1fr auto; gap: 2vh; }
 
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 2vh 0; border-bottom: 1px solid var(--border-glass);
-        }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 2vh 0; border-bottom: 1px solid var(--border-glass); }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 3.5vh; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(to right, #fff, var(--neon-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .header-title h1 { 
-            font-family: 'Orbitron', sans-serif; font-size: 3.5vh; font-weight: 900; 
-            letter-spacing: 2px; text-transform: uppercase;
-            background: linear-gradient(to right, #fff, var(--neon-primary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .main-container { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3vw; overflow: hidden; }
 
-        .main-container {
-            display: grid; grid-template-columns: 1fr 1.2fr; gap: 3vw; overflow: hidden;
-        }
+        .chart-card { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 20px; padding: 2vh; position: relative; }
 
-        /* --- Panel de Gráficas --- */
-        .analytics-panel { display: flex; flex-direction: column; gap: 2vh; }
-        .chart-card {
-            background: var(--glass); backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass); border-radius: 20px;
-            padding: 2vh; flex: 1; position: relative;
-        }
-
-        /* --- Panel de Tabla --- */
-        .table-panel {
-            background: var(--glass); backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass); border-radius: 24px;
-            padding: 2vh; overflow-y: auto; scrollbar-width: none;
-        }
+        .table-panel { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 24px; padding: 2vh; overflow-y: auto; scrollbar-width: none; }
         .table-panel::-webkit-scrollbar { display: none; }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        th { 
-            font-family: 'Orbitron', sans-serif; font-size: 1.1vh; color: var(--text-dim);
-            text-transform: uppercase; padding: 1vh; text-align: right; letter-spacing: 1px;
-        }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        th { font-family: 'Orbitron', sans-serif; font-size: 1vh; color: var(--text-dim); text-transform: uppercase; padding: 1vh; text-align: right; letter-spacing: 1px; }
         th:first-child { text-align: left; }
 
-        /* Filas de Zona */
-        .zona-row td {
-            background: rgba(0, 210, 255, 0.1); font-weight: 800;
-            color: var(--neon-secondary); font-size: 1.4vh; border-left: 4px solid var(--neon-secondary);
-        }
+        .zona-row td { background: rgba(0, 210, 255, 0.1); font-weight: 800; color: var(--neon-secondary); font-size: 1.3vh; border-left: 4px solid var(--neon-secondary); padding: 8px 15px; }
 
-        /* Filas de Ruta */
-        .ruta-row td { 
-            background: rgba(255, 255, 255, 0.03); padding: 1.2vh 1vh; text-align: right;
-            border-top: 1px solid var(--border-glass); font-size: 1.3vh;
-        }
-        .ruta-row td:first-child { text-align: left; font-weight: 600; border-radius: 8px 0 0 8px; }
+        .ruta-row td { background: rgba(255, 255, 255, 0.03); padding: 1vh; text-align: right; border-top: 1px solid var(--border-glass); font-size: 1.25vh; }
+        .ruta-row td:first-child { text-align: left; font-weight: 700; border-radius: 8px 0 0 8px; color: #fff; }
         .ruta-row td:last-child { border-radius: 0 8px 8px 0; color: var(--neon-secondary); font-weight: 800; }
 
-        .total-row td {
-            background: var(--neon-primary) !important; color: #000 !important;
-            font-weight: 900 !important; font-size: 1.6vh; font-family: 'Orbitron', sans-serif;
-        }
+        .total-row td { background: var(--neon-primary) !important; color: #000 !important; font-weight: 900 !important; font-size: 1.5vh; font-family: 'Orbitron', sans-serif; }
 
-        /* KPI Floating Bar */
-        .kpi-footer {
-            display: flex; gap: 2vw; justify-content: center;
-        }
-        .kpi-stat {
-            background: var(--glass); border: 1px solid var(--border-glass);
-            border-radius: 15px; padding: 1.5vh 3vw; text-align: center; min-width: 200px;
-        }
-        .kpi-stat .val { font-family: 'Orbitron', sans-serif; font-size: 3vh; font-weight: 900; color: var(--neon-primary); }
-        .kpi-stat .lbl { font-size: 1.1vh; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin-top: 5px; }
-
+        .kpi-footer { display: flex; gap: 2vw; justify-content: center; margin-top: 2vh; }
+        .kpi-stat { background: var(--glass); border: 1px solid var(--border-glass); border-radius: 15px; padding: 1.5vh 3vw; text-align: center; min-width: 220px; }
+        .kpi-stat .val { font-family: 'Orbitron', sans-serif; font-size: 3.5vh; color: var(--neon-primary); }
+        .kpi-stat .lbl { font-size: 1vh; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin-top: 5px; }
     </style>
 </head>
 <body>
     <div id="wrapper">
         <header>
-            <div class="header-title">
-                <h1>Operaciones <span id="cedis-label">...</span></h1>
-            </div>
-            <div id="countdown" class="kpi-stat" style="padding: 1vh 2vw; min-width: auto; border-color: var(--neon-secondary);">
-                <span class="val" id="days-val" style="color: var(--neon-secondary); font-size: 2vh;">0</span>
+            <h1>CENTRAL <span id="cedis-label">...</span></h1>
+            <div id="days-info" class="kpi-stat" style="padding: 1vh 2vw; min-width: auto; border-color: var(--neon-secondary);">
+                <span id="days-val" style="font-family: 'Orbitron'; font-size: 2vh; color: var(--neon-secondary); font-weight: 900;">0</span>
                 <span class="lbl" style="margin-left: 10px;">Días para Cierre</span>
             </div>
         </header>
 
         <div class="main-container">
-            <div class="analytics-panel">
-                <div class="chart-card">
-                    <canvas id="mainBullet"></canvas>
-                </div>
+            <div class="chart-card">
+                <canvas id="mainBullet"></canvas>
             </div>
-
             <div class="table-panel">
                 <table id="dataTable">
                     <thead>
@@ -144,11 +90,11 @@
         <div class="kpi-footer">
             <div class="kpi-stat">
                 <div class="val" id="total-perc">0%</div>
-                <div class="lbl">Logro Global</div>
+                <div class="lbl">Logro Global CEDIS</div>
             </div>
             <div class="kpi-stat">
                 <div class="val" id="total-sug">$0</div>
-                <div class="lbl">Venta Diaria Sugerida</div>
+                <div class="lbl">Meta Diaria de Rescate</div>
             </div>
         </div>
     </div>
@@ -162,18 +108,18 @@
             const now = new Date();
             const dayOfMonth = now.getDate();
             const lastDay = (dayOfMonth <= 15) ? 15 : new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-            let workingDays = 0;
+            let count = 0;
             for (let i = dayOfMonth; i <= lastDay; i++) {
-                if (new Date(now.getFullYear(), now.getMonth(), i).getDay() !== 0) workingDays++;
+                if (new Date(now.getFullYear(), now.getMonth(), i).getDay() !== 0) count++;
             }
-            return Math.max(1, workingDays);
+            return Math.max(1, count);
         }
 
         const daysLeft = getWorkingDays();
         document.getElementById('days-val').innerText = daysLeft;
 
         function clean(v) { return parseFloat(v?.toString().replace(/[$, ]/g, '')) || 0; }
-        function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+        function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
 
         Papa.parse(csvUrl, {
             download: true, header: true, skipEmptyLines: true,
@@ -189,9 +135,8 @@
                 let data = res.data.filter(row => (filtradoCedis ? row[cKey]?.trim().toUpperCase() === filtradoCedis.toUpperCase() : true) && row[rKey]?.trim());
                 document.getElementById('cedis-label').innerText = filtradoCedis?.toUpperCase() || "GLOBAL";
 
-                // Agrupación por Zona
                 const grouped = data.reduce((acc, row) => {
-                    const zona = row[zKey] || 'Sin Zona';
+                    const zona = row[zKey] || '1';
                     if (!acc[zona]) acc[zona] = [];
                     acc[zona].push(row);
                     return acc;
@@ -200,8 +145,7 @@
                 const tbody = document.getElementById('tableBody');
                 let tObj = 0, tVta = 0, tIdl = 0;
 
-                Object.keys(grouped).sort().forEach(zona => {
-                    // Fila de Zona
+                Object.keys(grouped).sort((a,b) => a-b).forEach(zona => {
                     const zRow = document.createElement('tr');
                     zRow.className = 'zona-row';
                     zRow.innerHTML = `<td colspan="5">ZONA ${zona}</td>`;
@@ -214,18 +158,11 @@
 
                         const row = document.createElement('tr');
                         row.className = 'ruta-row';
-                        row.innerHTML = `
-                            <td>${item[rKey]}</td>
-                            <td>${fmt(o)}</td>
-                            <td style="color:var(--neon-primary)">${fmt(v)}</td>
-                            <td>${fmt(i)}</td>
-                            <td>${fmt(sug)}</td>
-                        `;
+                        row.innerHTML = `<td>${item[rKey]}</td><td>${fmt(o)}</td><td style="color:var(--neon-primary)">${fmt(v)}</td><td>${fmt(i)}</td><td>${fmt(sug)}</td>`;
                         tbody.appendChild(row);
                     });
                 });
 
-                // Fila Total
                 const totalRow = document.createElement('tr');
                 totalRow.className = 'total-row';
                 const totalSug = (tObj - tVta) / daysLeft;
@@ -235,22 +172,21 @@
                 document.getElementById('total-perc').innerText = Math.round((tVta/tObj)*100) + '%';
                 document.getElementById('total-sug').innerText = fmt(totalSug);
 
-                // --- Gráfica Bullet Elite ---
                 new Chart(document.getElementById('mainBullet'), {
                     data: {
                         labels: data.map(r => r[rKey]),
                         datasets: [
-                            { type: 'bar', label: 'Meta', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.8, order: 3 },
-                            { type: 'bar', label: 'Logro', data: data.map(r => clean(r[vKey])), backgroundColor: '#00ff9d', barPercentage: 0.4, borderRadius: 10, order: 2 },
-                            { type: 'line', label: 'Ideal', data: data.map(r => clean(r[iKey])), borderColor: '#fff', borderWidth: 3, pointStyle: 'line', rotation: 90, pointRadius: 15, showLine: false, order: 1 }
+                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.85, order: 3 },
+                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: '#00ff9d', barPercentage: 0.5, borderRadius: 5, order: 2 },
+                            { type: 'line', data: data.map(r => clean(r[iKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 15, pointBorderWidth: 4, order: 1 }
                         ]
                     },
                     options: {
-                        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                        indexAxis: 'y', responsive: true, maintainAspectRatio: false, grouped: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 10 } } },
-                            y: { ticks: { color: '#fff', font: { weight: 'bold', size: 12 } } }
+                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 10 }, callback: v => '$' + v.toLocaleString('en-US', { notation: 'compact' }) } },
+                            y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 800, size: 13 } } }
                         }
                     }
                 });
