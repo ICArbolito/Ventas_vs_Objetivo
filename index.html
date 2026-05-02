@@ -18,7 +18,7 @@
             height: 100vh; width: 100vw; background: var(--bg); color: var(--text); 
             font-family: 'Plus Jakarta Sans', sans-serif; display: flex; 
             align-items: center; justify-content: center; overflow: hidden; 
-            padding: 20px 30px; /* Reducción de padding superior/inferior */
+            padding: 2vh 2vw; 
         }
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
@@ -26,13 +26,21 @@
         header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 0.8vh; border-bottom: 1px solid var(--border); }
         h1 { font-family: 'Orbitron', sans-serif; font-size: 2.6vh; color: var(--neon); text-shadow: 0 0 15px rgba(0,255,157,0.3); text-transform: uppercase; }
 
-        .main-grid { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 2vw; overflow: hidden; }
-        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 1.5vh; display: flex; flex-direction: column; overflow: hidden; }
+        .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
+        .glass-panel { background: var(--panel); border-radius: 20px; border: 1px solid var(--border); padding: 1.5vh; display: flex; flex-direction: column; height: 100%; }
         
-        .table-container { flex: 1; overflow-y: auto; scrollbar-width: none; width: 100%; position: relative; }
+        /* Contenedor autoajustable */
+        .table-container { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; /* Estira el contenido para llenar el panel */
+            overflow-y: auto; 
+            scrollbar-width: none; 
+        }
         .table-container::-webkit-scrollbar { display: none; }
 
-        .table-wrapper { width: 100%; margin-bottom: 8px; position: relative; padding-left: 55px; }
+        .table-wrapper { width: 100%; position: relative; padding-left: 55px; flex: 1; display: flex; flex-direction: column; margin-bottom: 4px; }
         
         .zona-tag {
             position: absolute; left: 0; top: 0; bottom: 0; width: 45px;
@@ -44,25 +52,27 @@
             font-weight: 900; color: var(--blue); font-size: 1.3vh; letter-spacing: 2px;
         }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 3px; table-layout: fixed; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 2px; table-layout: fixed; flex: 1; }
         th { font-family: 'Orbitron', sans-serif; font-size: 0.8vh; color: var(--sub); text-transform: uppercase; padding: 4px 10px; }
         
         .col-ruta { width: 28%; text-align: left !important; }
         .col-data { width: 18%; text-align: right !important; }
 
-        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.5vh 12px; font-size: 1.1vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
+        /* Filas con altura flexible */
+        .ruta-row td { background: rgba(255,255,255,0.02); padding: 0.4vh 12px; font-size: 1.15vh; border-bottom: 1px solid rgba(255,255,255,0.01); }
         .ruta-name { font-weight: 800; color: #fff; text-align: left; }
         .ruta-val { text-align: right; }
 
         .total-bar { 
-            margin-top: 0.8vh; background: var(--neon); color: #000; padding: 1vh 20px; border-radius: 8px; 
+            background: var(--neon); color: #000; padding: 1.2vh 20px; border-radius: 8px; 
             display: flex; justify-content: space-between; align-items: center;
-            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.25vh;
+            font-family: 'Orbitron', sans-serif; font-weight: 950; font-size: 1.3vh;
+            margin-top: auto; /* Empuja los totales al final del panel */
         }
         .total-bar .val-group { display: flex; gap: 3vw; }
 
-        .footer-stats { display: flex; gap: 2vw; justify-content: center; padding-top: 0.5vh; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.2vh 3vw; text-align: center; min-width: 220px; }
+        .footer-stats { display: flex; gap: 1.5vw; justify-content: center; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 1.2vh 2.5vw; text-align: center; min-width: 200px; }
         .stat-card .val { font-family: 'Orbitron'; font-size: 3.5vh; color: var(--neon); }
         .stat-card .lbl { font-size: 0.9vh; color: var(--sub); text-transform: uppercase; font-weight: 700; margin-top: 4px; }
         .stat-card.blue .val { color: var(--blue); }
@@ -75,9 +85,9 @@
     <div id="wrapper">
         <header>
             <div class="h-left">
-                <h1 id="main-title">AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
+                <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
             </div>
-            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.1vh; border: 1px solid var(--blue); padding: 4px 15px; border-radius: 5px; text-transform: uppercase;">
+            <div id="date-tag" style="font-family: 'Orbitron'; color: var(--blue); font-size: 1.1vh; border: 1px solid var(--blue); padding: 4px 15px; border-radius: 5px;">
                 Actualizado al cierre de ayer
             </div>
         </header>
@@ -149,7 +159,6 @@
                         const o = clean(item[oKey]), v = clean(item[vKey]), e = clean(item[eKey]), s = clean(item[sKey]);
                         tObj += o; tVta += v; tEsp += e; tSug += s;
                         const vColor = (v < e) ? 'var(--red)' : 'var(--neon)';
-                        
                         const row = document.createElement('tr'); row.className = 'ruta-row';
                         row.innerHTML = `<td class="ruta-name">${item[rKey]}</td><td class="ruta-val">${fmt(o)}</td><td class="ruta-val" style="color:${vColor};font-weight:800">${fmt(v)}</td><td class="ruta-val">${fmt(e)}</td><td class="ruta-val" style="color:var(--blue);font-weight:800">${fmt(s)}</td>`;
                         tbody.appendChild(row);
@@ -163,15 +172,12 @@
                 document.getElementById('t-esp').innerText = fmt(tEsp);
                 document.getElementById('t-cuota').innerText = fmt(tSug);
 
-                const percVta = Math.round((tVta/tObj)*100);
-                const percEsp = Math.round((tEsp/tObj)*100);
-                
+                const percVta = Math.round((tVta/tObj)*100), percEsp = Math.round((tEsp/tObj)*100);
                 document.getElementById('global-perc').innerText = percVta + '%';
                 document.getElementById('global-expected').innerText = percEsp + '%';
                 document.getElementById('global-sug').innerText = fmt(tSug);
-
-                if (percVta < percEsp) { document.getElementById('card-perc').classList.add('warning'); }
-                else { document.getElementById('card-perc').classList.remove('warning'); }
+                if (percVta < percEsp) document.getElementById('card-perc').classList.add('warning');
+                else document.getElementById('card-perc').classList.remove('warning');
 
                 new Chart(document.getElementById('bulletChart'), {
                     data: {
