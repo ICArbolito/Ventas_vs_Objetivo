@@ -3,82 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
-    <title>Inteligencia Comercial - Dashboard Arbolito</title>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Inteligencia Comercial - Arbolito Elite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { 
-            --bg: #030712; 
-            --panel: #111827; 
+            --bg-gradient: radial-gradient(circle at top right, #111827, #030712);
+            --panel-glass: rgba(17, 24, 39, 0.7);
             --accent-green: #10b981; 
             --accent-blue: #3b82f6; 
             --alert-red: #ef4444; 
             --text-main: #f9fafb;
             --text-sub: #9ca3af;
-            --border: rgba(255, 255, 255, 0.05); 
+            --border-glass: rgba(255, 255, 255, 0.1); 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
         
         body { 
-            height: 100vh; width: 100vw; background: var(--bg); color: var(--text-main); 
-            font-family: 'Inter', sans-serif; display: flex; 
-            align-items: center; justify-content: center; overflow: hidden; 
-            padding: 2vh 2vw; 
+            height: 100vh; width: 100vw; 
+            background: var(--bg-gradient); 
+            color: var(--text-main); 
+            font-family: 'Inter', sans-serif; 
+            display: flex; align-items: center; justify-content: center; 
+            overflow: hidden; padding: 2vh 2vw; 
         }
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
         
-        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 1vh; border-bottom: 2px solid var(--border); }
-        h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 2.8vh; color: var(--accent-green); text-transform: uppercase; letter-spacing: 1px; }
+        header { 
+            display: flex; justify-content: space-between; align-items: flex-end; 
+            padding-bottom: 1vh; border-bottom: 1px solid var(--border-glass); 
+        }
+        h1 { 
+            font-family: 'Barlow Condensed', sans-serif; font-size: 3vh; 
+            background: linear-gradient(to right, var(--accent-green), #6ee7b7);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; letter-spacing: 1.5px; 
+        }
 
         .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
-        .glass-panel { background: var(--panel); border-radius: 16px; border: 1px solid var(--border); padding: 1.5vh; display: flex; flex-direction: column; height: 100%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        
+        .glass-panel { 
+            background: var(--panel-glass); 
+            backdrop-filter: blur(12px);
+            border-radius: 20px; 
+            border: 1px solid var(--border-glass); 
+            padding: 2vh; display: flex; flex-direction: column; height: 100%; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
         
         .table-container { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; scrollbar-width: none; }
         .table-container::-webkit-scrollbar { display: none; }
 
-        .table-wrapper { width: 100%; position: relative; padding-left: 50px; flex: 1; display: flex; flex-direction: column; margin-bottom: 6px; }
+        .table-wrapper { width: 100%; position: relative; padding-left: 55px; flex: 1; display: flex; flex-direction: column; margin-bottom: 8px; }
         
         .zona-tag {
-            position: absolute; left: 0; top: 0; bottom: 0; width: 40px;
-            background: rgba(59, 130, 246, 0.05); border-left: 4px solid var(--accent-blue);
+            position: absolute; left: 0; top: 0; bottom: 0; width: 45px;
+            background: linear-gradient(to bottom, rgba(59, 130, 246, 0.2), transparent);
+            border-left: 3px solid var(--accent-blue);
             display: flex; align-items: center; justify-content: center; border-radius: 4px;
         }
         .zona-tag span { 
             transform: rotate(270deg); white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; 
-            font-weight: 900; color: var(--accent-blue); font-size: 1.5vh; letter-spacing: 1.5px;
+            font-weight: 900; color: var(--accent-blue); font-size: 1.6vh; letter-spacing: 2px;
         }
 
         table { width: 100%; border-collapse: separate; border-spacing: 0 4px; table-layout: fixed; flex: 1; }
-        th { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9vh; color: var(--text-sub); text-transform: uppercase; padding: 4px 10px; font-weight: 600; }
+        th { font-family: 'Barlow Condensed', sans-serif; font-size: 0.95vh; color: var(--text-sub); text-transform: uppercase; padding: 6px 10px; font-weight: 600; letter-spacing: 0.5px; }
         
         .col-ruta { width: 28%; text-align: left !important; }
         .col-data { width: 18%; text-align: right !important; }
 
-        .ruta-row td { background: rgba(255,255,255,0.01); padding: 0.6vh 12px; font-size: 1.15vh; border-bottom: 1px solid var(--border); }
-        .ruta-name { font-weight: 700; color: var(--text-main); text-align: left; }
-        .ruta-val { text-align: right; }
+        .ruta-row td { background: rgba(255,255,255,0.03); padding: 0.7vh 12px; font-size: 1.2vh; border-radius: 4px; }
+        .ruta-name { font-weight: 700; color: #fff; text-align: left; }
 
         .total-bar { 
-            background: var(--accent-green); color: var(--bg); padding: 1.2vh 12px; border-radius: 8px; 
+            background: linear-gradient(90deg, var(--accent-green), #059669); 
+            color: #030712; padding: 1.2vh 15px; border-radius: 10px; 
             display: flex; align-items: center;
-            font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.4vh;
-            margin-top: auto; width: 100%;
+            font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.5vh;
+            margin-top: auto; width: 100%; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
         }
-        .total-spacer { width: 50px; flex-shrink: 0; }
+        .total-spacer { width: 55px; flex-shrink: 0; }
         .total-content { display: flex; flex: 1; align-items: center; }
-        .t-lbl { width: 28%; text-align: left; padding-left: 5px; }
+        .t-lbl { width: 28%; text-align: left; }
         .t-val { width: 18%; text-align: right; }
 
-        .footer-stats { display: flex; gap: 1.5vw; justify-content: center; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.5vh 2.5vw; text-align: center; min-width: 210px; }
-        .stat-card .val { font-family: 'Barlow Condensed', sans-serif; font-size: 4.5vh; color: var(--accent-green); font-weight: 900; line-height: 1; }
-        .stat-card .lbl { font-size: 0.9vh; color: var(--text-sub); text-transform: uppercase; font-weight: 700; margin-top: 6px; }
+        .footer-stats { display: flex; gap: 2vw; justify-content: center; }
+        .stat-card { 
+            background: var(--panel-glass); backdrop-filter: blur(8px);
+            border: 1px solid var(--border-glass); border-radius: 18px; 
+            padding: 1.5vh 3vw; text-align: center; min-width: 220px; 
+        }
+        .stat-card .val { font-family: 'Barlow Condensed', sans-serif; font-size: 4.8vh; color: var(--accent-green); font-weight: 900; line-height: 1; }
+        .stat-card .lbl { font-size: 1vh; color: var(--text-sub); text-transform: uppercase; font-weight: 700; margin-top: 8px; letter-spacing: 1px; }
         .stat-card.blue .val { color: var(--accent-blue); }
-        .stat-card.warning .val { color: var(--alert-red); }
+        .stat-card.warning .val { color: var(--alert-red); text-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
 
-        .source-footer { text-align: center; font-size: 0.8vh; color: #4b5563; letter-spacing: 2px; font-weight: 700; margin-top: 0.5vh; text-transform: uppercase; }
+        .source-footer { text-align: center; font-size: 0.9vh; color: rgba(156, 163, 175, 0.5); letter-spacing: 2px; font-weight: 700; margin-top: 0.8vh; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -87,7 +110,7 @@
             <div class="h-left">
                 <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
             </div>
-            <div id="date-tag" style="font-family: 'Barlow Condensed'; color: var(--accent-blue); font-size: 1.3vh; border: 1.5px solid var(--accent-blue); padding: 4px 15px; border-radius: 6px; font-weight: 900; letter-spacing: 0.5px;">
+            <div id="date-tag" style="font-family: 'Barlow Condensed'; color: var(--accent-blue); font-size: 1.4vh; border: 1px solid var(--accent-blue); padding: 5px 20px; border-radius: 8px; font-weight: 900;">
                 ACTUALIZADO AL CIERRE DE AYER
             </div>
         </header>
@@ -137,11 +160,9 @@
                 const cKey = findK(['CEDIS']), rKey = findK(['RUTA']), zKey = findK(['ZONA']), vKey = findK(['ORGANICA']), oKey = findK(['OBJETIVO']), eKey = findK(['ESPERADA']), sKey = findK(['FALTANTES', 'CUOTA']);
 
                 const rawCedis = filtradoCedis || dataRaw[0][cKey];
-                // Nueva lógica de título: CEDIS + Nombre
                 document.getElementById('cedis-label').innerText = "CEDIS " + rawCedis?.toUpperCase();
 
                 let data = dataRaw.filter(row => row[cKey]?.trim().toUpperCase() === rawCedis?.toUpperCase() && row[rKey]?.trim());
-
                 const grouped = data.reduce((acc, row) => {
                     const zona = row[zKey] || '1';
                     if (!acc[zona]) acc[zona] = [];
@@ -166,7 +187,7 @@
                         tObj += o; tVta += v; tEsp += e; tSug += s;
                         const vColor = (v < e) ? 'var(--alert-red)' : 'var(--accent-green)';
                         const row = document.createElement('tr'); row.className = 'ruta-row';
-                        row.innerHTML = `<td class="ruta-name">${item[rKey]}</td><td class="ruta-val">${fmt(o)}</td><td class="ruta-val" style="color:${vColor}; font-weight:700;">${fmt(v)}</td><td class="ruta-val">${fmt(e)}</td><td class="ruta-val" style="color:var(--accent-blue); font-weight:700;">${fmt(s)}</td>`;
+                        row.innerHTML = `<td class="ruta-name">${item[rKey]}</td><td class="ruta-val">${fmt(o)}</td><td class="ruta-val" style="color:${vColor}; font-weight:800;">${fmt(v)}</td><td class="ruta-val">${fmt(e)}</td><td class="ruta-val" style="color:var(--accent-blue); font-weight:800;">${fmt(s)}</td>`;
                         tbody.appendChild(row);
                     });
                     wrapper.appendChild(table);
@@ -189,17 +210,17 @@
                     data: {
                         labels: data.map(r => r[rKey]),
                         datasets: [
-                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.03)', barPercentage: 0.9, order: 3 },
-                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#ef4444' : '#10b981'), barPercentage: 0.5, borderRadius: 2, order: 2 },
-                            { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 8, pointBorderWidth: 2, order: 1 }
+                            { type: 'bar', data: data.map(r => clean(r[oKey])), backgroundColor: 'rgba(255,255,255,0.05)', barPercentage: 0.9, order: 3 },
+                            { type: 'bar', data: data.map(r => clean(r[vKey])), backgroundColor: data.map(r => clean(r[vKey]) < clean(r[eKey]) ? '#ef4444' : '#10b981'), barPercentage: 0.5, borderRadius: 4, order: 2 },
+                            { type: 'line', data: data.map(r => clean(r[eKey])), backgroundColor: '#fff', borderColor: '#fff', showLine: false, pointStyle: 'line', rotation: 90, pointRadius: 10, pointBorderWidth: 3, order: 1 }
                         ]
                     },
                     options: {
                         indexAxis: 'y', responsive: true, maintainAspectRatio: false, grouped: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#6b7280', font: { size: 10 } } },
-                            y: { grid: { display: false }, ticks: { color: '#f3f4f6', font: { weight: 600, size: 10 } } }
+                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                            y: { grid: { display: false }, ticks: { color: '#f9fafb', font: { weight: 600, size: 11 } } }
                         }
                     }
                 });
