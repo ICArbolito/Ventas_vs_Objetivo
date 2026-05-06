@@ -9,12 +9,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { 
-            --bg: #ffffff; /* Fondo Blanco solicitado */
-            --panel: #f8fafc; /* Gris muy tenue para definición de paneles */
-            --accent-data: #0669FE; /* Azul Arbolito para contraste en blanco */
-            --accent-success: #29903B; /* Verde Arbolito */
+            --bg: #ffffff; 
+            --panel: #f8fafc; 
+            --accent-data: #0669FE; 
+            --accent-success: #29903B; 
             --accent-alert: #d63031; 
-            --text-main: #0f172a; /* Texto oscuro para legibilidad */
+            --text-main: #0f172a; 
             --text-sub: #64748b;
             --border: #e2e8f0; 
         }
@@ -23,7 +23,8 @@
         body { 
             height: 100vh; width: 100vw; background: var(--bg); color: var(--text-main); 
             font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; 
-            overflow: hidden; padding: 2vh 2vw; 
+            overflow: hidden; 
+            padding: 4vh 4vw; /* Cambio Quirúrgico 1: Márgenes recorridos hacia adentro */
         }
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
@@ -166,11 +167,15 @@
                 document.getElementById('t-esp').innerText = fmt(tEsp);
                 document.getElementById('t-cuota').innerText = fmt(tSug);
 
-                const percVta = Math.round((tVta/tObj)*100), percEsp = Math.round((tEsp/tObj)*100);
+                // Cambio Quirúrgico 2: Porcentajes con 2 decimales usando toFixed(2)
+                const percVta = ((tVta/tObj)*100).toFixed(2);
+                const percEsp = ((tEsp/tObj)*100).toFixed(2);
+                
                 document.getElementById('global-perc').innerText = percVta + '%';
                 document.getElementById('global-expected').innerText = percEsp + '%';
                 document.getElementById('global-sug').innerText = fmt(tSug);
-                if (percVta < percEsp) document.getElementById('card-perc').classList.add('warning');
+                
+                if (parseFloat(percVta) < parseFloat(percEsp)) document.getElementById('card-perc').classList.add('warning');
                 else document.getElementById('card-perc').classList.remove('warning');
 
                 new Chart(document.getElementById('bulletChart'), {
