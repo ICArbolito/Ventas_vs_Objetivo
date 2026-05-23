@@ -9,14 +9,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { 
-            --bg: #ffffff; 
-            --panel: #f8fafc; 
+            --bg: #f8fafc; 
+            --panel: #ffffff; 
             --accent-data: #0669FE; 
             --accent-success: #29903B; 
+            --accent-warning: #f59e0b;
             --accent-alert: #d63031; 
             --text-main: #0f172a; 
             --text-sub: #64748b;
-            --border: #e2e8f0; 
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
         
@@ -24,137 +26,198 @@
             height: 100vh; width: 100vw; background: var(--bg); color: var(--text-main); 
             font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; 
             overflow: hidden; 
-            padding: 4vh 4vw;
+            padding: 3vh 3vw;
         }
         
-        #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
+        #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr; gap: 2vh; }
         
-        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.2vh; border-bottom: 2px solid var(--border); }
-        h1 { font-family: 'Rubik', sans-serif; font-size: 2.8vh; font-weight: 900; letter-spacing: -0.5px; color: var(--text-main); text-transform: uppercase; }
+        header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: var(--panel); padding: 2vh 3vw; border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        h1 { font-family: 'Rubik', sans-serif; font-size: 2.5vh; font-weight: 900; letter-spacing: -0.5px; color: var(--text-main); text-transform: uppercase; }
 
-        .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
-        .glass-panel { background: var(--panel); border-radius: 12px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; height: 100%; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        /* === KPIs GLOBALES === */
+        .global-kpis { 
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vw; margin-bottom: 2vh;
+        }
+        .kpi-card {
+            background: var(--panel); border-radius: 12px; padding: 2vh; 
+            box-shadow: var(--shadow); text-align: center; position: relative;
+            overflow: hidden; border-left: 4px solid var(--accent-data);
+        }
+        .kpi-card.success { border-left-color: var(--accent-success); }
+        .kpi-card.warning { border-left-color: var(--accent-warning); }
+        .kpi-card.danger { border-left-color: var(--accent-alert); }
         
-        .table-container { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; scrollbar-width: none; }
-        .table-container::-webkit-scrollbar { display: none; }
-
-        .table-wrapper { width: 100%; position: relative; padding-left: 50px; flex: 1; display: flex; flex-direction: column; margin-bottom: 10px; }
-        
-        .zona-tag {
-            position: absolute; left: 0; top: 0; bottom: 0; width: 40px;
-            background: rgba(6, 105, 254, 0.05); border-left: 4px solid var(--accent-data);
-            display: flex; align-items: center; justify-content: center;
+        .kpi-card .icon { font-size: 3vh; margin-bottom: 1vh; }
+        .kpi-card .value { font-family: 'Rubik'; font-size: 3.5vh; font-weight: 700; color: var(--text-main); margin: 1vh 0; }
+        .kpi-card .label { font-size: 1vh; color: var(--text-sub); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .kpi-card .delta { 
+            position: absolute; top: 1.5vh; right: 2vw; 
+            font-size: 1.1vh; font-weight: 700; padding: 2px 8px; border-radius: 4px;
         }
-        .zona-tag span { transform: rotate(270deg); white-space: nowrap; font-family: 'Rubik'; font-weight: 700; color: var(--accent-data); font-size: 1.3vh; letter-spacing: 1px; }
+        .delta.up { background: rgba(41, 144, 59, 0.1); color: var(--accent-success); }
+        .delta.down { background: rgba(214, 48, 49, 0.1); color: var(--accent-alert); }
 
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; flex: 1; }
-        th { font-family: 'Inter'; font-size: 0.85vh; color: var(--text-sub); text-transform: uppercase; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border); }
-        
-        .col-ruta { width: 28%; text-align: left; }
-        .col-data { width: 18%; text-align: right; }
-
-        .ruta-row td { padding: 0.6vh 10px; font-size: 1.15vh; border-bottom: 1px solid var(--border); color: #334155; }
-        .ruta-name { font-weight: 700; color: var(--text-main); }
-
-        .total-bar { 
-            background: var(--accent-success); color: #ffffff; padding: 1.2vh 0; border-radius: 6px; 
-            display: flex; align-items: center; font-family: 'Rubik'; font-weight: 700; font-size: 1.45vh;
-            margin-top: auto; width: 100%; box-shadow: 0 4px 12px rgba(41, 144, 59, 0.2);
+        /* === GRID DE CEDIS === */
+        .cedis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2vh;
+            overflow-y: auto;
+            padding-right: 1vh;
         }
-        .total-spacer { width: 50px; flex-shrink: 0; }
-        .total-content { display: flex; flex: 1; padding: 0 10px; }
-        .t-lbl { width: 28%; text-align: left; }
-        .t-val { width: 18%; text-align: right; }
+        .cedis-grid::-webkit-scrollbar { width: 6px; }
+        .cedis-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-        .footer-stats { display: flex; gap: 1.5vw; justify-content: center; }
-        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.5vh 2vw; text-align: center; min-width: 220px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .stat-card .val { font-family: 'Rubik'; font-size: 4.2vh; color: var(--accent-success); font-weight: 700; }
-        .stat-card .lbl { font-size: 0.85vh; color: var(--text-sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
-        .stat-card.blue .val { color: var(--accent-data); }
-        .stat-card.warning .val { color: var(--accent-alert); }
+        .cedis-card {
+            background: var(--panel); border-radius: 12px; padding: 2.5vh;
+            box-shadow: var(--shadow); position: relative;
+            transition: all 0.3s ease; cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .cedis-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-color: var(--accent-data);
+        }
+        .cedis-card.critical { border-left: 4px solid var(--accent-alert); }
+        .cedis-card.on-track { border-left: 4px solid var(--accent-success); }
+        .cedis-card.warning { border-left: 4px solid var(--accent-warning); }
 
-        .source-footer { text-align: center; font-size: 0.8vh; color: var(--text-sub); font-weight: 700; margin-top: 1vh; text-transform: uppercase; letter-spacing: 1.5px; }
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2vh; padding-bottom: 1.5vh; border-bottom: 2px solid var(--border);
+        }
+        .cedis-name {
+            font-family: 'Rubik'; font-size: 2vh; font-weight: 700; color: var(--text-main);
+            display: flex; align-items: center; gap: 1vw;
+        }
+        .status-badge {
+            padding: 4px 12px; border-radius: 20px; font-size: 1vh; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .status-badge.critical { background: rgba(214, 48, 49, 0.1); color: var(--accent-alert); }
+        .status-badge.on-track { background: rgba(41, 144, 59, 0.1); color: var(--accent-success); }
+        .status-badge.warning { background: rgba(245, 158, 11, 0.1); color: var(--accent-warning); }
 
-        /* === NUEVOS ESTILOS PARA VISTA EMPRESA === */
-        .enterprise-row { 
-            transition: all 0.2s ease; 
-            cursor: pointer;
+        /* === BULLET CHART MINI === */
+        .bullet-container { margin: 2vh 0; }
+        .bullet-labels {
+            display: flex; justify-content: space-between; font-size: 1vh;
+            color: var(--text-sub); margin-bottom: 0.5vh; font-weight: 600;
         }
-        .enterprise-row:hover { 
-            background: rgba(6, 105, 254, 0.08) !important; 
+        .bullet-chart {
+            height: 40px; background: var(--bg); border-radius: 6px;
+            position: relative; overflow: hidden;
         }
-        .enterprise-btn {
-            background: var(--accent-data); 
-            color: #fff; 
-            padding: 4px 12px; 
-            border-radius: 4px; 
-            font-size: 1.1vh; 
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
+        .bullet-bar {
+            position: absolute; height: 100%; transition: width 0.5s ease;
         }
+        .bullet-bg { background: #e2e8f0; width: 100%; }
+        .bullet-expected { 
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(6, 105, 254, 0.2),
+                rgba(6, 105, 254, 0.2) 10px,
+                rgba(6, 105, 254, 0.3) 10px,
+                rgba(6, 105, 254, 0.3) 20px
+            );
+            border-right: 3px solid var(--accent-data);
+        }
+        .bullet-actual {
+            background: linear-gradient(90deg, var(--accent-success), #4ade80);
+            z-index: 10;
+        }
+        .bullet-actual.short {
+            background: linear-gradient(90deg, var(--accent-alert), #f87171);
+        }
+
+        /* === METRICS ROW === */
+        .metrics-row {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5vw;
+            margin-top: 2vh; padding-top: 1.5vh; border-top: 1px solid var(--border);
+        }
+        .metric { text-align: center; }
+        .metric-value {
+            font-family: 'Rubik'; font-size: 1.8vh; font-weight: 700;
+            color: var(--text-main); margin-bottom: 0.5vh;
+        }
+        .metric-label { font-size: 0.9vh; color: var(--text-sub); text-transform: uppercase; font-weight: 600; }
+        .metric-value.rescue { color: var(--accent-data); }
+        .metric-value.sales { color: var(--accent-success); }
+        .metric-value.goal { color: var(--text-sub); }
+
         .back-btn {
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 5px 15px; 
-            border-radius: 6px; 
-            font-size: 1.1vh; 
-            cursor: pointer; 
-            color: var(--text-main); 
-            font-weight: 600; 
-            margin-left: 1vw;
-            display: none;
+            background: var(--panel); border: 2px solid var(--border); 
+            padding: 8px 20px; border-radius: 8px; font-size: 1.2vh; 
+            cursor: pointer; color: var(--text-main); font-weight: 700; 
+            transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;
         }
         .back-btn:hover {
-            background: var(--border);
+            background: var(--accent-data); color: white; border-color: var(--accent-data);
         }
-        #enterprise-table-container {
-            overflow-y: auto; 
-            flex: 1; 
-            scrollbar-width: none;
+
+        .source-footer { 
+            text-align: center; font-size: 0.8vh; color: var(--text-sub); 
+            font-weight: 700; padding: 1vh; text-transform: uppercase; letter-spacing: 1.5px; 
         }
-        #enterprise-table-container::-webkit-scrollbar { 
-            display: none; 
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .global-kpis { grid-template-columns: repeat(2, 1fr); }
+            .cedis-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div id="wrapper">
         <header>
-            <div style="display:flex; align-items:center;">
-                <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
-                <button id="back-to-enterprise" class="back-btn" onclick="window.location='?'">← TODOS LOS CEDIS</button>
+            <div style="display:flex; align-items:center; gap: 2vw;">
+                <h1>📊 AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">TODOS LOS CEDIS</span></h1>
+                <button id="back-to-enterprise" class="back-btn" onclick="window.location='?'" style="display:none;">← Volver al Resumen</button>
             </div>
-            <div id="date-tag" style="font-family: 'Inter'; color: var(--accent-data); font-size: 1.2vh; border: 2px solid var(--accent-data); padding: 5px 15px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
-                CIERRE HISTÓRICO: AYER
+            <div id="date-tag" style="font-family: 'Inter'; color: var(--accent-data); font-size: 1.2vh; border: 2px solid var(--accent-data); padding: 5px 15px; border-radius: 8px; font-weight: 700; text-transform: uppercase;">
+                CIERRE: AYER
             </div>
         </header>
 
-        <!-- === VISTA EMPRESA (se muestra solo sin ?cedis=) === -->
-        <div id="enterprise-view" class="glass-panel" style="display:none;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5vh; padding-bottom:1vh; border-bottom:2px solid var(--border);">
-                <h2 style="font-family:'Rubik'; font-size:2.2vh; font-weight:700; color:var(--text-main);">📊 RESUMEN POR CEDIS</h2>
-                <span id="enterprise-date" style="font-size:1.1vh; color:var(--text-sub); font-family:'Inter';"></span>
+        <!-- === VISTA EMPRESA: DASHBOARD EJECUTIVO === -->
+        <div id="enterprise-view" style="display:none; height: 100%; overflow: hidden;">
+            <!-- KPIs Globales -->
+            <div class="global-kpis">
+                <div class="kpi-card" id="kpi-total-obj">
+                    <div class="icon">🎯</div>
+                    <div class="value" id="total-objetivo">$0</div>
+                    <div class="label">Objetivo Quincenal</div>
+                </div>
+                <div class="kpi-card success" id="kpi-total-vta">
+                    <div class="icon">💰</div>
+                    <div class="value" id="total-venta">$0</div>
+                    <div class="label">Venta Alcanzada</div>
+                    <div class="delta up" id="delta-venta">+0%</div>
+                </div>
+                <div class="kpi-card warning" id="kpi-global-perc">
+                    <div class="icon">📈</div>
+                    <div class="value" id="global-perc">0%</div>
+                    <div class="label">Avance Global</div>
+                    <div class="delta down" id="delta-perc">-0%</div>
+                </div>
+                <div class="kpi-card danger" id="kpi-total-rescue">
+                    <div class="icon">🚨</div>
+                    <div class="value" id="total-rescue">$0</div>
+                    <div class="label">Meta Diaria de Rescate</div>
+                </div>
             </div>
-            <div id="enterprise-table-container">
-                <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
-                    <thead style="position:sticky; top:0; background:var(--panel); z-index:10;">
-                        <tr>
-                            <th style="text-align:left; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">CEDIS</th>
-                            <th style="text-align:right; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">OBJETIVO QUINCENAL</th>
-                            <th style="text-align:right; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">VENTA ALCANZADA</th>
-                            <th style="text-align:right; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">% AVANCE</th>
-                            <th style="text-align:right; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">% ESPERADO</th>
-                            <th style="text-align:center; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">ACCIÓN</th>
-                        </tr>
-                    </thead>
-                    <tbody id="enterprise-tbody"></tbody>
-                </table>
-            </div>
+
+            <!-- Grid de CEDIS -->
+            <div class="cedis-grid" id="cedis-grid"></div>
         </div>
 
-        <!-- === VISTA DETALLADA POR CEDIS (código original) === -->
-        <div class="main-grid" id="detail-view">
+        <!-- === VISTA DETALLADA (código original) === -->
+        <div class="main-grid" id="detail-view" style="display:none;">
             <div class="glass-panel"><canvas id="bulletChart"></canvas></div>
             <div class="glass-panel">
                 <div class="table-container" id="content-tables"></div>
@@ -171,13 +234,13 @@
             </div>
         </div>
 
-        <div class="footer-stats" id="footer-stats">
-            <div id="card-perc" class="stat-card"><div class="val" id="global-perc">0%</div><div class="lbl">AVANCE QUINCENAL</div></div>
+        <div class="footer-stats" id="footer-stats" style="display:none;">
+            <div id="card-perc" class="stat-card"><div class="val" id="global-perc-detail">0%</div><div class="lbl">AVANCE QUINCENAL</div></div>
             <div class="stat-card blue"><div class="val" id="global-expected">0%</div><div class="lbl">AVANCE ESPERADO</div></div>
             <div class="stat-card"><div class="val" id="global-sug">$0</div><div class="lbl">META DIARIA DE RESCATE</div></div>
         </div>
 
-        <div class="source-footer">SOURCE: SistemaCP | Powered by Inteligencia Comercial for Arbolito</div>
+        <div class="source-footer">SOURCE: SistemaCP | POWERED BY INTELIGENCIA COMERCIAL FOR ARBOLITO</div>
     </div>
 
     <script>
@@ -187,10 +250,10 @@
 
         function clean(v) { return v ? parseFloat(v.toString().replace(/[$, ]/g, '')) || 0 : 0; }
         function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+        function fmtPerc(n) { return n.toFixed(2) + '%'; }
 
-        // === NUEVA FUNCIÓN: Renderizar vista empresa ===
+        // === NUEVA FUNCIÓN: Renderizar vista empresa mejorada ===
         function renderEnterpriseView(dataRaw, cKey, rKey, zKey, vKey, oKey, eKey, sKey) {
-            // Agrupar TODOS los datos por CEDIS
             const byCedis = dataRaw.reduce((acc, row) => {
                 const cedis = row[cKey]?.trim().toUpperCase();
                 if (!cedis || !row[rKey]?.trim()) return acc;
@@ -203,43 +266,108 @@
                 return acc;
             }, {});
 
-            const tbody = document.getElementById('enterprise-tbody');
-            tbody.innerHTML = '';
+            // Calcular totales globales
+            let totalObj = 0, totalVta = 0, totalEsp = 0, totalSug = 0;
+            Object.values(byCedis).forEach(d => {
+                totalObj += d.obj;
+                totalVta += d.vta;
+                totalEsp += d.esp;
+                totalSug += d.sug;
+            });
 
-            // Ordenar CEDIS alfabéticamente
+            const globalPerc = totalObj > 0 ? (totalVta/totalObj)*100 : 0;
+            const globalExp = totalObj > 0 ? (totalEsp/totalObj)*100 : 0;
+            const gap = globalExp - globalPerc;
+
+            // Actualizar KPIs globales
+            document.getElementById('total-objetivo').innerText = fmt(totalObj);
+            document.getElementById('total-venta').innerText = fmt(totalVta);
+            document.getElementById('global-perc').innerText = fmtPerc(globalPerc);
+            document.getElementById('total-rescue').innerText = fmt(totalSug);
+            
+            document.getElementById('delta-venta').innerText = (globalPerc >= globalExp ? '+' : '') + fmtPerc(globalPerc - globalExp);
+            document.getElementById('delta-venta').className = 'delta ' + (globalPerc >= globalExp ? 'up' : 'down');
+            
+            document.getElementById('delta-perc').innerText = (gap >= 0 ? '-' : '+') + fmtPerc(Math.abs(gap));
+            document.getElementById('delta-perc').className = 'delta ' + (gap <= 0 ? 'up' : 'down');
+
+            // Actualizar colores de KPIs
+            document.getElementById('kpi-global-perc').className = 'kpi-card ' + (globalPerc >= globalExp ? 'success' : 'warning');
+
+            // Renderizar cards de CEDIS
+            const grid = document.getElementById('cedis-grid');
+            grid.innerHTML = '';
+
             Object.keys(byCedis).sort().forEach(cedis => {
                 const d = byCedis[cedis];
-                const perc = d.obj > 0 ? ((d.vta/d.obj)*100).toFixed(2) : 0;
-                const expPerc = d.obj > 0 ? ((d.esp/d.obj)*100).toFixed(2) : 0;
-                const statusColor = parseFloat(perc) < parseFloat(expPerc) ? 'var(--accent-alert)' : 'var(--accent-success)';
+                const perc = d.obj > 0 ? (d.vta/d.obj)*100 : 0;
+                const expPerc = d.obj > 0 ? (d.esp/d.obj)*100 : 0;
+                const gapCedis = expPerc - perc;
                 
-                const tr = document.createElement('tr');
-                tr.className = 'enterprise-row';
+                let status, statusClass, cardClass;
+                if (perc >= expPerc) {
+                    status = 'EN META'; statusClass = 'on-track'; cardClass = 'on-track';
+                } else if (gapCedis < 5) {
+                    status = 'RIESGO'; statusClass = 'warning'; cardClass = 'warning';
+                } else {
+                    status = 'CRÍTICO'; statusClass = 'critical'; cardClass = 'critical';
+                }
+
+                const bulletWidth = Math.min((perc / expPerc) * 100, 100);
+                const expectedWidth = 100;
+
+                const card = document.createElement('div');
+                card.className = `cedis-card ${cardClass}`;
+                card.onclick = () => window.location = `?cedis=${cedis}`;
                 
-                tr.innerHTML = `
-                    <td style="padding:1.2vh 1.5vw; font-weight:700; color:var(--text-main); border-bottom:1px solid var(--border); font-size:1.2vh;">${cedis}</td>
-                    <td style="padding:1.2vh 1.5vw; text-align:right; border-bottom:1px solid var(--border); font-size:1.1vh;">${fmt(d.obj)}</td>
-                    <td style="padding:1.2vh 1.5vw; text-align:right; border-bottom:1px solid var(--border); font-weight:600; font-size:1.1vh;">${fmt(d.vta)}</td>
-                    <td style="padding:1.2vh 1.5vw; text-align:right; border-bottom:1px solid var(--border); color:${statusColor}; font-weight:700; font-size:1.1vh;">${perc}%</td>
-                    <td style="padding:1.2vh 1.5vw; text-align:right; border-bottom:1px solid var(--border); font-size:1.1vh;">${expPerc}%</td>
-                    <td style="padding:1.2vh 1.5vw; text-align:center; border-bottom:1px solid var(--border);">
-                        <button class="enterprise-btn" onclick="window.location='?cedis=${cedis}'">VER DETALLE →</button>
-                    </td>
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="cedis-name">
+                            <span style="font-size:2.5vh;">🏭</span>
+                            ${cedis}
+                        </div>
+                        <span class="status-badge ${statusClass}">${status}</span>
+                    </div>
+                    
+                    <div class="bullet-container">
+                        <div class="bullet-labels">
+                            <span>Progreso vs Esperado</span>
+                            <span style="color:${perc >= expPerc ? 'var(--accent-success)' : 'var(--accent-alert)'}; font-weight:700;">
+                                ${fmtPerc(perc)} de ${fmtPerc(expPerc)}
+                            </span>
+                        </div>
+                        <div class="bullet-chart">
+                            <div class="bullet-bar bullet-bg"></div>
+                            <div class="bullet-bar bullet-expected" style="width: ${expectedWidth}%"></div>
+                            <div class="bullet-bar bullet-actual ${perc < expPerc ? 'short' : ''}" style="width: ${bulletWidth}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="metrics-row">
+                        <div class="metric">
+                            <div class="metric-value goal">${fmt(d.obj)}</div>
+                            <div class="metric-label">Objetivo</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value sales" style="color:${perc >= expPerc ? 'var(--accent-success)' : 'var(--accent-alert)'}">
+                                ${fmt(d.vta)}
+                            </div>
+                            <div class="metric-label">Alcanzado</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value rescue">${fmt(d.sug)}</div>
+                            <div class="metric-label">Rescate/Día</div>
+                        </div>
+                    </div>
                 `;
-                tbody.appendChild(tr);
+                grid.appendChild(card);
             });
 
-            // Mostrar vista empresa, ocultar vista detallada
-            document.getElementById('enterprise-view').style.display = 'flex';
+            // Mostrar/ocultar vistas
+            document.getElementById('enterprise-view').style.display = 'block';
             document.getElementById('detail-view').style.display = 'none';
             document.getElementById('footer-stats').style.display = 'none';
-            document.getElementById('cedis-label').innerText = 'TODOS LOS CEDIS';
             document.getElementById('back-to-enterprise').style.display = 'none';
-            
-            // Actualizar fecha
-            document.getElementById('enterprise-date').innerText = new Date().toLocaleDateString('es-MX', { 
-                weekday:'long', year:'numeric', month:'short', day:'numeric' 
-            });
         }
 
         Papa.parse(csvUrl, {
@@ -250,16 +378,14 @@
                 const findK = (terms) => h.find(k => terms.some(t => k.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes(t.toUpperCase())));
                 const cKey = findK(['CEDIS']), rKey = findK(['RUTA']), zKey = findK(['ZONA']), vKey = findK(['ORGANICA']), oKey = findK(['OBJETIVO']), eKey = findK(['ESPERADA']), sKey = findK(['FALTANTES', 'CUOTA']);
 
-                // === DETECTAR MODO: Empresa vs Detalle ===
                 const isEnterpriseMode = !filtradoCedis;
 
                 if (isEnterpriseMode) {
-                    // Renderizar vista empresa con TODOS los CEDIS
                     renderEnterpriseView(dataRaw, cKey, rKey, zKey, vKey, oKey, eKey, sKey);
-                    return; // ⚠️ Salir aquí, NO ejecutar el código de vista detallada
+                    return;
                 }
 
-                // === CÓDIGO ORIGINAL DE VISTA DETALLADA (SIN CAMBIOS) ===
+                // === CÓDIGO ORIGINAL DE VISTA DETALLADA (sin cambios) ===
                 const rawCedis = filtradoCedis || dataRaw[0][cKey];
                 document.getElementById('cedis-label').innerText = "CEDIS " + rawCedis?.toUpperCase();
                 document.getElementById('back-to-enterprise').style.display = 'inline-block';
@@ -304,7 +430,7 @@
                 const percVta = ((tVta/tObj)*100).toFixed(2);
                 const percEsp = ((tEsp/tObj)*100).toFixed(2);
                 
-                document.getElementById('global-perc').innerText = percVta + '%';
+                document.getElementById('global-perc-detail').innerText = percVta + '%';
                 document.getElementById('global-expected').innerText = percEsp + '%';
                 document.getElementById('global-sug').innerText = fmt(tSug);
                 
