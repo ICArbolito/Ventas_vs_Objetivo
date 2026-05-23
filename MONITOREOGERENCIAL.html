@@ -10,208 +10,153 @@
     <style>
         :root {
             --bg-primary: #f8fafc;
-            --bg-secondary: #f1f5f9;
             --bg-card: #ffffff;
             --border: #e2e8f0;
-            --border-light: #cbd5e1;
             --text-primary: #0f172a;
-            --text-secondary: #334155;
             --text-muted: #64748b;
-            
             --accent-blue: #3b82f6;
-            --accent-blue-soft: rgba(59, 130, 246, 0.1);
             --accent-green: #10b981;
-            --accent-green-soft: rgba(16, 185, 129, 0.1);
             --accent-orange: #f59e0b;
-            --accent-orange-soft: rgba(245, 158, 11, 0.1);
             --accent-red: #ef4444;
+            --accent-green-soft: rgba(16, 185, 129, 0.1);
+            --accent-orange-soft: rgba(245, 158, 11, 0.1);
             --accent-red-soft: rgba(239, 68, 68, 0.1);
-            
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.04);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.06);
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: default; }
         
         body {
             height: 100vh; width: 100vw; background: var(--bg-primary); color: var(--text-primary);
-            font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center;
-            overflow: hidden; padding: 1.5vh 1.5vw;
+            font-family: 'Inter', sans-serif; padding: 1.2vh 1.5vw;
         }
         
         #wrapper {
-            width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh;
-            overflow-y: auto; overflow-x: hidden;
+            width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.2vh;
+            overflow-y: auto;
         }
-        #wrapper::-webkit-scrollbar { width: 5px; }
-        #wrapper::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
         
-        /* === HEADER === */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
-            padding: 1.5vh 2vw; box-shadow: var(--shadow-sm); flex-shrink: 0;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+            padding: 1.2vh 2vw; flex-shrink: 0;
         }
-        .header-left { display: flex; align-items: center; gap: 2vw; }
-        .logo { font-family: 'Rubik'; font-size: 2vh; font-weight: 800; color: var(--text-primary); }
+        .logo { font-family: 'Rubik'; font-size: 1.8vh; font-weight: 800; }
         .logo span { color: var(--accent-blue); }
-        .header-divider { width: 1px; height: 2.5vh; background: var(--border); }
-        .header-subtitle { font-size: 1.1vh; color: var(--text-muted); font-weight: 500; }
-        .header-right { display: flex; align-items: center; gap: 2vw; }
         .header-badge {
-            font-family: 'JetBrains Mono'; font-size: 1vh; color: var(--text-secondary);
-            background: var(--bg-secondary); border: 1px solid var(--border);
-            padding: 5px 12px; border-radius: 6px; font-weight: 600;
+            font-family: 'JetBrains Mono'; font-size: 0.9vh; background: #f1f5f9;
+            border: 1px solid var(--border); padding: 4px 10px; border-radius: 5px; font-weight: 600;
         }
-        .header-date { font-size: 1vh; color: var(--text-muted); font-weight: 500; }
 
-        /* === KPIs ROW === */
-        .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5vw; flex-shrink: 0; }
-        
+        /* KPIs */
+        .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2vw; flex-shrink: 0; }
         .kpi-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
-            padding: 2vh 2vw; position: relative; overflow: hidden;
-            transition: all 0.2s ease; box-shadow: var(--shadow-sm);
-            display: flex; flex-direction: column; justify-content: space-between;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+            padding: 1.8vh 1.5vw; border-top-width: 4px;
         }
-        .kpi-card:hover { border-color: var(--border-light); box-shadow: var(--shadow-md); }
-        .kpi-card.accent-blue { border-top: 4px solid var(--accent-blue); }
-        .kpi-card.accent-green { border-top: 4px solid var(--accent-green); }
-        .kpi-card.accent-orange { border-top: 4px solid var(--accent-orange); }
-        .kpi-card.accent-red { border-top: 4px solid var(--accent-red); }
+        .kpi-card.blue { border-top-color: var(--accent-blue); }
+        .kpi-card.green { border-top-color: var(--accent-green); }
+        .kpi-card.orange { border-top-color: var(--accent-orange); }
+        .kpi-card.red { border-top-color: var(--accent-red); }
         
-        .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1vh; }
-        .kpi-label { font-size: 1vh; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-        .kpi-icon { font-size: 1.8vh; }
-        
-        .kpi-value {
-            font-family: 'Rubik'; font-size: 3.5vh; font-weight: 700; color: var(--text-primary);
-            margin: 0.5vh 0; line-height: 1;
-        }
-        .kpi-value.mono { font-family: 'JetBrains Mono'; }
-        
-        .kpi-bar { height: 4px; background: var(--bg-secondary); border-radius: 2px; overflow: hidden; margin: 1vh 0; }
-        .kpi-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
-        .kpi-bar-fill.blue { background: linear-gradient(90deg, var(--accent-blue), #60a5fa); }
-        .kpi-bar-fill.green { background: linear-gradient(90deg, var(--accent-green), #34d399); }
-        .kpi-bar-fill.orange { background: linear-gradient(90deg, var(--accent-orange), #fbbf24); }
-        .kpi-bar-fill.red { background: linear-gradient(90deg, var(--accent-red), #f87171); }
-        
-        .kpi-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1vh; }
-        .kpi-delta { font-family: 'JetBrains Mono'; font-size: 1.1vh; font-weight: 600; }
+        .kpi-label { font-size: 0.9vh; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5vh; }
+        .kpi-value { font-family: 'JetBrains Mono'; font-size: 3vh; font-weight: 700; margin-bottom: 1vh; }
+        .kpi-bar { height: 4px; background: #f1f5f9; border-radius: 2px; overflow: hidden; margin-bottom: 0.8vh; }
+        .kpi-bar-fill { height: 100%; border-radius: 2px; }
+        .kpi-bar-fill.blue { background: var(--accent-blue); }
+        .kpi-bar-fill.green { background: var(--accent-green); }
+        .kpi-bar-fill.orange { background: var(--accent-orange); }
+        .kpi-bar-fill.red { background: var(--accent-red); }
+        .kpi-footer { display: flex; justify-content: space-between; font-size: 0.85vh; color: var(--text-muted); font-weight: 600; }
+        .kpi-delta { font-family: 'JetBrains Mono'; }
         .kpi-delta.up { color: var(--accent-green); }
         .kpi-delta.down { color: var(--accent-red); }
-        .kpi-sub { font-size: 1vh; color: var(--text-muted); font-weight: 600; text-align: right; }
-        
-        .kpi-sparkline { height: 30px; margin-top: 1vh; opacity: 0.9; }
+        .kpi-sparkline { height: 28px; margin-top: 0.8vh; }
 
-        /* === MAIN CONTENT === */
-        .main-content { display: flex; gap: 1.5vw; flex: 1; min-height: 0; }
+        /* Main Content */
+        .main-content { display: flex; gap: 1.2vw; flex: 1; min-height: 0; }
         
         .cedis-section { flex: 2; display: flex; flex-direction: column; min-height: 0; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2vh; flex-shrink: 0; }
-        .section-title { font-family: 'Rubik'; font-size: 1.5vh; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.8vw; }
-        .section-count { font-family: 'JetBrains Mono'; font-size: 1vh; color: var(--text-muted); background: var(--bg-secondary); padding: 3px 8px; border-radius: 5px; font-weight: 600; }
-        .section-filter { font-size: 0.95vh; color: var(--text-muted); display: flex; gap: 0.8vw; }
-        .filter-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); padding: 4px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .filter-btn:hover, .filter-btn.active { background: var(--accent-blue); border-color: var(--accent-blue); color: white; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1vh; flex-shrink: 0; }
+        .section-title { font-family: 'Rubik'; font-size: 1.3vh; font-weight: 700; display: flex; align-items: center; gap: 0.5vw; }
+        .filter-btn { background: var(--bg-card); border: 1px solid var(--border); padding: 3px 10px; border-radius: 5px; font-size: 0.85vh; font-weight: 600; cursor: pointer; }
+        .filter-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
         
-        /* ✅ CEDIS GRID: 2 columnas para mayor tamaño */
         .cedis-grid {
             display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 1.5vh; overflow-y: auto; flex: 1; padding-right: 0.5vh;
+            gap: 1.2vh; overflow-y: auto; flex: 1;
         }
         .cedis-grid::-webkit-scrollbar { width: 4px; }
-        .cedis-grid::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+        .cedis-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
 
-        /* ✅ FICHAS GRANDES Y ESPACIOSAS */
+        /* CEDIS Cards */
         .cedis-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
-            padding: 2vh 2vw; position: relative; overflow: hidden;
-            transition: all 0.2s ease; box-shadow: var(--shadow-sm);
-            display: flex; flex-direction: column;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+            padding: 1.8vh 1.5vw; display: flex; flex-direction: column;
+            min-height: 180px;
         }
-        .cedis-card:hover { border-color: var(--border-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-        .cedis-card.critical { border-left: 5px solid var(--accent-red); }
-        .cedis-card.on-track { border-left: 5px solid var(--accent-green); }
-        .cedis-card.warning { border-left: 5px solid var(--accent-orange); }
+        .cedis-card.critical { border-left: 4px solid var(--accent-red); }
+        .cedis-card.on-track { border-left: 4px solid var(--accent-green); }
+        .cedis-card.warning { border-left: 4px solid var(--accent-orange); }
 
-        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5vh; }
-        .card-cedis-info { display: flex; align-items: center; gap: 1vw; }
-        .card-rank { 
-            font-family: 'JetBrains Mono'; font-size: 1.2vh; font-weight: 700; 
-            width: 3.5vh; height: 3.5vh; border-radius: 8px; 
-            display: flex; align-items: center; justify-content: center; 
-            background: var(--bg-secondary); color: var(--text-muted); 
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1vh; }
+        .card-info { display: flex; align-items: center; gap: 0.8vw; }
+        .card-rank {
+            font-family: 'JetBrains Mono'; font-size: 0.9vh; font-weight: 700;
+            width: 2.8vh; height: 2.8vh; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            background: #f1f5f9; color: var(--text-muted);
         }
         .card-rank.top { background: var(--accent-green-soft); color: var(--accent-green); }
-        .card-rank.bottom { background: var(--accent-red-soft); color: var(--accent-red); }
-        .card-cedis-name { font-family: 'Rubik'; font-size: 2vh; font-weight: 700; color: var(--text-primary); }
-        .card-routes { font-size: 1.1vh; color: var(--text-muted); font-weight: 500; margin-top: 0.2vh; }
-        .card-status { padding: 4px 10px; border-radius: 6px; font-size: 0.95vh; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+        .card-name { font-family: 'Rubik'; font-size: 1.6vh; font-weight: 700; }
+        .card-routes { font-size: 0.9vh; color: var(--text-muted); }
+        .card-status { font-size: 0.8vh; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
         .card-status.critical { background: var(--accent-red-soft); color: var(--accent-red); }
         .card-status.on-track { background: var(--accent-green-soft); color: var(--accent-green); }
         .card-status.warning { background: var(--accent-orange-soft); color: var(--accent-orange); }
 
-        /* Sparkline más grande */
-        .card-sparkline { height: 50px; margin: 1vh 0 1.5vh 0; }
+        .card-sparkline { height: 45px; margin: 0.5vh 0 1vh 0; }
         
-        /* Progress más grande */
-        .card-progress { margin: 1vh 0 1.5vh 0; }
-        .card-progress-labels { display: flex; justify-content: space-between; font-size: 1.1vh; margin-bottom: 0.6vh; }
-        .card-progress-label { color: var(--text-muted); font-weight: 600; }
-        .card-progress-value { font-family: 'JetBrains Mono'; font-weight: 700; font-size: 1.2vh; }
+        .card-progress { margin-bottom: 1vh; }
+        .card-progress-labels { display: flex; justify-content: space-between; font-size: 0.95vh; margin-bottom: 0.4vh; font-weight: 600; }
+        .card-progress-value { font-family: 'JetBrains Mono'; }
         .card-progress-value.green { color: var(--accent-green); }
         .card-progress-value.red { color: var(--accent-red); }
-        .card-progress-value.orange { color: var(--accent-orange); }
-        .card-progress-bar { height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; position: relative; }
-        .card-progress-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
-        .card-progress-fill.green { background: linear-gradient(90deg, var(--accent-green), #34d399); }
-        .card-progress-fill.red { background: linear-gradient(90deg, var(--accent-red), #f87171); }
-        .card-progress-fill.orange { background: linear-gradient(90deg, var(--accent-orange), #fbbf24); }
-        .card-progress-expected { position: absolute; top: 0; height: 100%; width: 3px; background: var(--accent-blue); z-index: 5; border-radius: 2px; }
+        .card-progress-bar { height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; position: relative; }
+        .card-progress-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+        .card-progress-fill.green { background: var(--accent-green); }
+        .card-progress-fill.red { background: var(--accent-red); }
+        .card-progress-expected { position: absolute; top: 0; height: 100%; width: 2px; background: var(--accent-blue); }
 
-        /* Metrics más grandes */
-        .card-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5vw; margin-top: auto; padding-top: 1.5vh; border-top: 2px solid var(--border); }
+        .card-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1vw; margin-top: auto; padding-top: 1vh; border-top: 1px solid var(--border); }
         .card-metric { text-align: center; }
-        .card-metric-value { font-family: 'JetBrains Mono'; font-size: 1.8vh; font-weight: 700; color: var(--text-primary); margin-bottom: 0.4vh; }
+        .card-metric-value { font-family: 'JetBrains Mono'; font-size: 1.4vh; font-weight: 700; margin-bottom: 0.2vh; }
         .card-metric-value.green { color: var(--accent-green); }
         .card-metric-value.red { color: var(--accent-red); }
         .card-metric-value.orange { color: var(--accent-orange); }
         .card-metric-value.blue { color: var(--accent-blue); }
-        .card-metric-label { font-size: 0.95vh; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.3px; }
+        .card-metric-label { font-size: 0.8vh; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
 
-        /* SIDEBAR más ancho */
-        .sidebar { flex: 1; display: flex; flex-direction: column; gap: 1.5vh; min-width: 300px; max-width: 350px; flex-shrink: 0; }
-        .sidebar-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2vh 1.8vw; overflow: hidden; box-shadow: var(--shadow-sm); }
-        .sidebar-title { font-family: 'Rubik'; font-size: 1.3vh; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5vh; display: flex; align-items: center; gap: 0.6vw; }
+        /* Sidebar */
+        .sidebar { flex: 1; display: flex; flex-direction: column; gap: 1.2vh; min-width: 280px; max-width: 320px; flex-shrink: 0; }
+        .sidebar-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.5vh 1.2vw; }
+        .sidebar-title { font-family: 'Rubik'; font-size: 1.1vh; font-weight: 700; margin-bottom: 1vh; }
         
-        .ranking-item { display: flex; align-items: center; gap: 1vw; padding: 1vh 0; border-bottom: 1px solid var(--border); }
+        .ranking-item { display: flex; align-items: center; gap: 0.8vw; padding: 0.7vh 0; border-bottom: 1px solid var(--border); }
         .ranking-item:last-child { border-bottom: none; }
-        .ranking-pos { font-family: 'JetBrains Mono'; font-size: 1vh; font-weight: 700; width: 2.8vh; height: 2.8vh; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); color: var(--text-muted); flex-shrink: 0; }
-        .ranking-pos.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; }
-        .ranking-pos.silver { background: linear-gradient(135deg, #94a3b8, #64748b); color: white; }
-        .ranking-pos.bronze { background: linear-gradient(135deg, #d97706, #b45309); color: white; }
-        .ranking-name { flex: 1; font-size: 1.1vh; font-weight: 600; color: var(--text-primary); }
-        .ranking-value { font-family: 'JetBrains Mono'; font-size: 1.1vh; font-weight: 700; }
+        .ranking-pos { font-family: 'JetBrains Mono'; font-size: 0.85vh; font-weight: 700; width: 2.2vh; height: 2.2vh; border-radius: 5px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; flex-shrink: 0; }
+        .ranking-name { flex: 1; font-size: 0.95vh; font-weight: 600; }
+        .ranking-value { font-family: 'JetBrains Mono'; font-size: 0.9vh; font-weight: 600; }
         .ranking-value.green { color: var(--accent-green); }
         .ranking-value.red { color: var(--accent-red); }
 
-        .summary-stat { display: flex; justify-content: space-between; align-items: center; padding: 1vh 0; border-bottom: 1px solid var(--border); }
+        .summary-stat { display: flex; justify-content: space-between; padding: 0.7vh 0; border-bottom: 1px solid var(--border); font-size: 0.9vh; }
         .summary-stat:last-child { border-bottom: none; }
-        .summary-label { font-size: 1vh; color: var(--text-muted); font-weight: 600; }
-        .summary-value { font-family: 'JetBrains Mono'; font-size: 1.1vh; font-weight: 700; color: var(--text-primary); }
-        .summary-value.green { color: var(--accent-green); }
-        .summary-value.red { color: var(--accent-red); }
-        .summary-value.orange { color: var(--accent-orange); }
-        .summary-value.blue { color: var(--accent-blue); }
+        .summary-value { font-family: 'JetBrains Mono'; font-weight: 700; }
 
-        .footer { display: flex; justify-content: space-between; align-items: center; padding: 0.8vh 0; flex-shrink: 0; }
-        .footer-text { font-size: 0.85vh; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .footer { text-align: center; font-size: 0.75vh; color: var(--text-muted); padding: 0.5vh 0; flex-shrink: 0; }
 
-        @media (max-width: 1600px) { .sidebar { display: none; } .cedis-section { flex: 1; } }
-        @media (max-width: 1200px) { 
+        @media (max-width: 1400px) { .sidebar { display: none; } }
+        @media (max-width: 1000px) { 
             .kpi-row { grid-template-columns: repeat(2, 1fr); } 
             .cedis-grid { grid-template-columns: 1fr; }
         }
@@ -219,86 +164,45 @@
 </head>
 <body>
     <div id="wrapper">
-        <!-- HEADER -->
         <header>
-            <div class="header-left">
-                <div class="logo">MONITOREO <span>GERENCIAL</span></div>
-                <div class="header-divider"></div>
-                <div class="header-subtitle">Sistema de Inteligencia Comercial</div>
-            </div>
-            <div class="header-right">
-                <div class="header-badge">CIERRE: AYER</div>
-                <div class="header-date" id="header-date"></div>
-            </div>
+            <div class="logo">MONITOREO <span>GERENCIAL</span></div>
+            <div class="header-badge">CIERRE: AYER</div>
         </header>
 
-        <!-- KPIs ROW -->
         <div class="kpi-row">
-            <div class="kpi-card accent-blue">
-                <div class="kpi-header">
-                    <div class="kpi-label">Objetivo Quincenal</div>
-                    <div class="kpi-icon">🎯</div>
-                </div>
-                <div class="kpi-value mono" id="kpi-objetivo">$0</div>
+            <div class="kpi-card blue">
+                <div class="kpi-label">Objetivo Quincenal</div>
+                <div class="kpi-value" id="kpi-objetivo">$0</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill blue" style="width:100%"></div></div>
-                <div class="kpi-footer">
-                    <div class="kpi-sub" id="kpi-cedis-count">0 CEDIS</div>
-                    <div class="kpi-sub" id="kpi-rutas-count">0 Rutas</div>
-                </div>
+                <div class="kpi-footer"><span id="kpi-cedis-count">0 CEDIS</span><span id="kpi-rutas-count">0 Rutas</span></div>
             </div>
-            
-            <div class="kpi-card accent-green">
-                <div class="kpi-header">
-                    <div class="kpi-label">Venta Alcanzada</div>
-                    <div class="kpi-icon">💰</div>
-                </div>
-                <div class="kpi-value mono" id="kpi-venta">$0</div>
+            <div class="kpi-card green">
+                <div class="kpi-label">Venta Alcanzada</div>
+                <div class="kpi-value" id="kpi-venta">$0</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill green" id="venta-bar" style="width:0%"></div></div>
-                <div class="kpi-footer">
-                    <div class="kpi-delta" id="venta-delta">0%</div>
-                    <div class="kpi-sub" id="venta-gap">$0 faltante</div>
-                </div>
+                <div class="kpi-footer"><span class="kpi-delta" id="venta-delta">0%</span><span id="venta-gap">$0 faltante</span></div>
                 <canvas id="sparkline-venta" class="kpi-sparkline"></canvas>
             </div>
-            
-            <div class="kpi-card accent-orange">
-                <div class="kpi-header">
-                    <div class="kpi-label">Avance Global</div>
-                    <div class="kpi-icon">📈</div>
-                </div>
-                <div class="kpi-value mono" id="kpi-avance">0%</div>
+            <div class="kpi-card orange">
+                <div class="kpi-label">Avance Global</div>
+                <div class="kpi-value" id="kpi-avance">0%</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill orange" id="avance-bar" style="width:0%"></div></div>
-                <div class="kpi-footer">
-                    <div class="kpi-delta" id="avance-delta">0% vs esperado</div>
-                    <div class="kpi-sub">Meta: <span id="kpi-esperado" class="mono">0%</span></div>
-                </div>
+                <div class="kpi-footer"><span class="kpi-delta" id="avance-delta">0% vs esperado</span><span>Meta: <span id="kpi-esperado">0%</span></span></div>
                 <canvas id="sparkline-avance" class="kpi-sparkline"></canvas>
             </div>
-            
-            <div class="kpi-card accent-red">
-                <div class="kpi-header">
-                    <div class="kpi-label">Rescate Diario</div>
-                    <div class="kpi-icon">🚨</div>
-                </div>
-                <div class="kpi-value mono" id="kpi-rescate">$0</div>
+            <div class="kpi-card red">
+                <div class="kpi-label">Rescate Diario</div>
+                <div class="kpi-value" id="kpi-rescate">$0</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill red" style="width:100%"></div></div>
-                <div class="kpi-footer">
-                    <div class="kpi-delta down">Urgente</div>
-                    <div class="kpi-sub">Faltante acumulado</div>
-                </div>
+                <div class="kpi-footer"><span class="kpi-delta down">Urgente</span><span>Faltante acumulado</span></div>
             </div>
         </div>
 
-        <!-- MAIN CONTENT -->
         <div class="main-content">
-            <!-- CEDIS GRID -->
             <div class="cedis-section">
                 <div class="section-header">
-                    <div class="section-title">
-                        📊 Desempeño por CEDIS
-                        <span class="section-count" id="cedis-count-badge">0</span>
-                    </div>
-                    <div class="section-filter">
+                    <div class="section-title">📊 Desempeño por CEDIS <span id="cedis-count-badge" style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:0.85vh; margin-left:0.5vw;">0</span></div>
+                    <div style="display:flex; gap:0.5vw;">
                         <button class="filter-btn active" onclick="filterCedis('all')">Todos</button>
                         <button class="filter-btn" onclick="filterCedis('critical')">Críticos</button>
                         <button class="filter-btn" onclick="filterCedis('warning')">Riesgo</button>
@@ -308,10 +212,9 @@
                 <div class="cedis-grid" id="cedis-grid"></div>
             </div>
 
-            <!-- SIDEBAR -->
             <div class="sidebar">
                 <div class="sidebar-card">
-                    <div class="sidebar-title"> Top Performers</div>
+                    <div class="sidebar-title">🏆 Top Performers</div>
                     <div id="top-performers"></div>
                 </div>
                 <div class="sidebar-card">
@@ -325,169 +228,120 @@
             </div>
         </div>
 
-        <!-- FOOTER -->
-        <div class="footer">
-            <div class="footer-text">Source: SistemaCP | Powered by Inteligencia Comercial for Arbolito</div>
-            <div class="footer-text">Actualización automática cada 5 min</div>
-        </div>
+        <div class="footer">SOURCE: SISTEMACP | POWERED BY INTELIGENCIA COMERCIAL FOR ARBOLITO</div>
     </div>
 
     <script>
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTxbA3JbYpdUJXXuUa3iicabHZ01QS98A610ugAgMRI7laj6B69ptMs6rG7Ot-pSIkaUe-stVIzL7BY/pub?gid=920388459&single=true&output=csv';
 
         function clean(v) { return v ? parseFloat(v.toString().replace(/[$, ]/g, '')) || 0 : 0; }
-        function fmtSmart(n) {
-            if (n >= 1000000) return '$' + (n / 1000000).toFixed(2) + 'M';
-            if (n >= 1000) return '$' + (n / 1000).toFixed(1) + 'K';
-            return '$' + Math.round(n).toLocaleString('en-US');
-        }
+        function fmtSmart(n) { return n >= 1000000 ? '$' + (n / 1000000).toFixed(2) + 'M' : n >= 1000 ? '$' + (n / 1000).toFixed(1) + 'K' : '$' + Math.round(n).toLocaleString('en-US'); }
         function fmtPerc(n) { return n.toFixed(2) + '%'; }
 
-        document.getElementById('header-date').textContent = new Date().toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-
-        function drawSparkline(canvasId, data, color, lineWidth = 2) {
+        function drawSparkline(canvasId, data, color) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width * 2;
+            canvas.height = 60;
             const ctx = canvas.getContext('2d');
-            const width = canvas.parentElement.offsetWidth;
-            const height = canvasId.includes('kpi') ? 30 : 50;
-            canvas.width = width * 2;
-            canvas.height = height * 2;
-            ctx.scale(2, 2);
-            ctx.clearRect(0, 0, width, height);
-
-            if (data.length < 2) return;
-
-            const min = Math.min(...data);
-            const max = Math.max(...data);
-            const range = max - min || 1;
-            const padding = 3;
+            ctx.scale(2, 1);
+            ctx.clearRect(0, 0, rect.width, 30);
             
-            const points = data.map((v, i) => ({
-                x: padding + (i / (data.length - 1)) * (width - padding * 2),
-                y: height - padding - ((v - min) / range) * (height - padding * 2)
-            }));
-
-            const gradient = ctx.createLinearGradient(0, 0, 0, height);
-            gradient.addColorStop(0, color + '50');
-            gradient.addColorStop(0.5, color + '20');
-            gradient.addColorStop(1, color + '00');
-
+            if (data.length < 2) return;
+            const min = Math.min(...data), max = Math.max(...data), range = max - min || 1;
+            const pad = 2;
+            const points = data.map((v, i) => ({ x: pad + (i / (data.length - 1)) * (rect.width - pad * 2), y: 30 - pad - ((v - min) / range) * (30 - pad * 2) }));
+            
+            const grad = ctx.createLinearGradient(0, 0, 0, 30);
+            grad.addColorStop(0, color + '60');
+            grad.addColorStop(1, color + '00');
+            
             ctx.beginPath();
             ctx.moveTo(points[0].x, points[0].y);
-            for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
-            ctx.lineTo(points[points.length - 1].x, height);
-            ctx.lineTo(points[0].x, height);
-            ctx.closePath();
-            ctx.fillStyle = gradient;
+            points.forEach(p => ctx.lineTo(p.x, p.y));
+            ctx.lineTo(points[points.length-1].x, 30);
+            ctx.lineTo(points[0].x, 30);
+            ctx.fillStyle = grad;
             ctx.fill();
-
+            
             ctx.beginPath();
             ctx.moveTo(points[0].x, points[0].y);
-            for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+            points.forEach(p => ctx.lineTo(p.x, p.y));
             ctx.strokeStyle = color;
-            ctx.lineWidth = lineWidth;
-            ctx.lineCap = 'round';
+            ctx.lineWidth = 2;
             ctx.lineJoin = 'round';
             ctx.stroke();
-
-            const last = points[points.length - 1];
-            const prev = points[points.length - 2];
-            const dotColor = last.y <= prev.y ? '#10b981' : '#ef4444';
+            
+            const last = points[points.length - 1], prev = points[points.length - 2];
             ctx.beginPath();
-            ctx.arc(last.x, last.y, 4, 0, Math.PI * 2);
+            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
             ctx.fillStyle = '#fff';
             ctx.fill();
-            ctx.beginPath();
-            ctx.arc(last.x, last.y, 4, 0, Math.PI * 2);
-            ctx.strokeStyle = dotColor;
-            ctx.lineWidth = 2.5;
+            ctx.strokeStyle = last.y <= prev.y ? '#10b981' : '#ef4444';
+            ctx.lineWidth = 2;
             ctx.stroke();
         }
 
-        let allCedisData = [];
-        let currentFilter = 'all';
+        let allCedisData = [], currentFilter = 'all';
 
         function filterCedis(filter) {
             currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.toLowerCase().includes(filter) || (filter === 'all' && btn.textContent === 'Todos'));
-            });
-            renderCedisCards();
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.textContent.toLowerCase().includes(filter === 'on-track' ? 'meta' : filter) || (filter === 'all' && btn.textContent === 'Todos')));
+            renderCards();
         }
 
-        function renderCedisCards() {
+        function renderCards() {
             const grid = document.getElementById('cedis-grid');
+            grid.innerHTML = '';
             const filtered = currentFilter === 'all' ? allCedisData : allCedisData.filter(d => d.statusClass === currentFilter);
             
-            grid.innerHTML = '';
-            filtered.forEach((d) => {
-                const sparkColor = d.statusClass === 'on-track' ? '#10b981' : d.statusClass === 'warning' ? '#f59e0b' : '#ef4444';
-                const bulletWidth = Math.min((d.perc / d.expPerc) * 100, 100);
+            filtered.forEach(d => {
+                const color = d.statusClass === 'on-track' ? '#10b981' : d.statusClass === 'warning' ? '#f59e0b' : '#ef4444';
+                const width = Math.min((d.perc / d.expPerc) * 100, 100);
                 
                 const card = document.createElement('div');
                 card.className = `cedis-card ${d.statusClass}`;
                 card.innerHTML = `
-                    <div class="card-top">
-                        <div class="card-cedis-info">
-                            <div class="card-rank ${d.rank <= 3 ? 'top' : d.rank > allCedisData.length - 3 ? 'bottom' : ''}">#${d.rank}</div>
-                            <div>
-                                <div class="card-cedis-name">${d.cedis}</div>
-                                <div class="card-routes">${d.rutaCount} rutas</div>
-                            </div>
+                    <div class="card-header">
+                        <div class="card-info">
+                            <div class="card-rank ${d.rank <= 3 ? 'top' : ''}">#${d.rank}</div>
+                            <div><div class="card-name">${d.cedis}</div><div class="card-routes">${d.rutaCount} rutas</div></div>
                         </div>
                         <span class="card-status ${d.statusClass}">${d.status}</span>
                     </div>
                     <canvas id="spark-${d.cedis}" class="card-sparkline"></canvas>
                     <div class="card-progress">
-                        <div class="card-progress-labels">
-                            <span class="card-progress-label">Progreso</span>
-                            <span class="card-progress-value ${d.perc >= d.expPerc ? 'green' : 'red'}">${fmtPerc(d.perc)} / ${fmtPerc(d.expPerc)}</span>
-                        </div>
-                        <div class="card-progress-bar">
-                            <div class="card-progress-fill ${d.perc >= d.expPerc ? 'green' : 'red'}" style="width:${bulletWidth}%"></div>
-                            <div class="card-progress-expected" style="left:${Math.min(d.expPerc, 100)}%"></div>
-                        </div>
+                        <div class="card-progress-labels"><span>Progreso</span><span class="card-progress-value ${d.perc >= d.expPerc ? 'green' : 'red'}">${fmtPerc(d.perc)} / ${fmtPerc(d.expPerc)}</span></div>
+                        <div class="card-progress-bar"><div class="card-progress-fill ${d.perc >= d.expPerc ? 'green' : 'red'}" style="width:${width}%"></div><div class="card-progress-expected" style="left:${Math.min(d.expPerc, 100)}%"></div></div>
                     </div>
                     <div class="card-metrics">
-                        <div class="card-metric">
-                            <div class="card-metric-value blue">${fmtSmart(d.obj)}</div>
-                            <div class="card-metric-label">Objetivo</div>
-                        </div>
-                        <div class="card-metric">
-                            <div class="card-metric-value ${d.perc >= d.expPerc ? 'green' : 'red'}">${fmtSmart(d.vta)}</div>
-                            <div class="card-metric-label">Alcanzado</div>
-                        </div>
-                        <div class="card-metric">
-                            <div class="card-metric-value orange">${fmtSmart(d.sug)}</div>
-                            <div class="card-metric-label">Rescate/Día</div>
-                        </div>
-                    </div>
-                `;
+                        <div class="card-metric"><div class="card-metric-value blue">${fmtSmart(d.obj)}</div><div class="card-metric-label">Objetivo</div></div>
+                        <div class="card-metric"><div class="card-metric-value ${d.perc >= d.expPerc ? 'green' : 'red'}">${fmtSmart(d.vta)}</div><div class="card-metric-label">Alcanzado</div></div>
+                        <div class="card-metric"><div class="card-metric-value orange">${fmtSmart(d.sug)}</div><div class="card-metric-label">Rescate/Día</div></div>
+                    </div>`;
                 grid.appendChild(card);
-                
-                setTimeout(() => drawSparkline(`spark-${d.cedis}`, d.ventaValues, sparkColor, 2), 0);
+                setTimeout(() => drawSparkline(`spark-${d.cedis}`, d.ventaValues, color), 10);
             });
         }
 
         Papa.parse(csvUrl, {
             download: true, header: true, skipEmptyLines: true,
             complete: function(res) {
-                const dataRaw = res.data;
-                const h = Object.keys(dataRaw[0]);
+                const h = Object.keys(res.data[0]);
                 const findK = (terms) => h.find(k => terms.some(t => k.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes(t.toUpperCase())));
-                const cKey = findK(['CEDIS']), rKey = findK(['RUTA']), zKey = findK(['ZONA']), vKey = findK(['ORGANICA']), oKey = findK(['OBJETIVO']), eKey = findK(['ESPERADA']), sKey = findK(['FALTANTES', 'CUOTA']);
+                const keys = { c: findK(['CEDIS']), r: findK(['RUTA']), v: findK(['ORGANICA']), o: findK(['OBJETIVO']), e: findK(['ESPERADA']), s: findK(['FALTANTES', 'CUOTA']) };
 
                 const byCedis = {};
-                dataRaw.forEach(row => {
-                    const cedis = row[cKey]?.trim().toUpperCase();
-                    if (!cedis || !row[rKey]?.trim()) return;
+                res.data.forEach(row => {
+                    const cedis = row[keys.c]?.trim().toUpperCase();
+                    if (!cedis || !row[keys.r]?.trim()) return;
                     if (!byCedis[cedis]) byCedis[cedis] = { obj:0, vta:0, esp:0, sug:0, rutas:[] };
-                    byCedis[cedis].obj += clean(row[oKey]);
-                    byCedis[cedis].vta += clean(row[vKey]);
-                    byCedis[cedis].esp += clean(row[eKey]);
-                    byCedis[cedis].sug += clean(row[sKey]);
-                    byCedis[cedis].rutas.push({ nombre: row[rKey], venta: clean(row[vKey]), esperado: clean(row[eKey]) });
+                    byCedis[cedis].obj += clean(row[keys.o]);
+                    byCedis[cedis].vta += clean(row[keys.v]);
+                    byCedis[cedis].esp += clean(row[keys.e]);
+                    byCedis[cedis].sug += clean(row[keys.s]);
+                    byCedis[cedis].rutas.push({ venta: clean(row[keys.v]), esperado: clean(row[keys.e]) });
                 });
 
                 allCedisData = Object.entries(byCedis).map(([cedis, d]) => {
@@ -498,71 +352,50 @@
                     if (perc >= expPerc) { status = 'EN META'; statusClass = 'on-track'; }
                     else if (gap < 5) { status = 'RIESGO'; statusClass = 'warning'; }
                     else { status = 'CRÍTICO'; statusClass = 'critical'; }
-                    return { cedis, ...d, perc, expPerc, gap, ventaValues: d.rutas.map(r => r.venta), status, statusClass, rutaCount: d.rutas.length };
-                });
+                    return { cedis, ...d, perc, expPerc, ventaValues: d.rutas.map(r => r.venta), status, statusClass, rutaCount: d.rutas.length };
+                }).sort((a, b) => b.perc - a.perc).map((d, i) => ({...d, rank: i + 1}));
 
-                allCedisData.sort((a, b) => b.perc - a.perc);
-                allCedisData.forEach((d, i) => d.rank = i + 1);
+                const totals = allCedisData.reduce((a, d) => ({ obj: a.obj + d.obj, vta: a.vta + d.vta, esp: a.esp + d.esp, sug: a.sug + d.sug, rutas: a.rutas + d.rutaCount }), {obj:0, vta:0, esp:0, sug:0, rutas:0});
+                const globalPerc = totals.obj > 0 ? (totals.vta/totals.obj)*100 : 0;
+                const globalExp = totals.obj > 0 ? (totals.esp/totals.obj)*100 : 0;
 
-                const totalObj = allCedisData.reduce((s, d) => s + d.obj, 0);
-                const totalVta = allCedisData.reduce((s, d) => s + d.vta, 0);
-                const totalEsp = allCedisData.reduce((s, d) => s + d.esp, 0);
-                const totalSug = allCedisData.reduce((s, d) => s + d.sug, 0);
-                const globalPerc = totalObj > 0 ? (totalVta/totalObj)*100 : 0;
-                const globalExp = totalObj > 0 ? (totalEsp/totalObj)*100 : 0;
-                const totalRutas = allCedisData.reduce((s, d) => s + d.rutaCount, 0);
-
-                document.getElementById('kpi-objetivo').textContent = fmtSmart(totalObj);
-                document.getElementById('kpi-venta').textContent = fmtSmart(totalVta);
+                document.getElementById('kpi-objetivo').textContent = fmtSmart(totals.obj);
+                document.getElementById('kpi-venta').textContent = fmtSmart(totals.vta);
                 document.getElementById('kpi-avance').textContent = fmtPerc(globalPerc);
-                document.getElementById('kpi-rescate').textContent = fmtSmart(totalSug);
+                document.getElementById('kpi-rescate').textContent = fmtSmart(totals.sug);
                 document.getElementById('kpi-esperado').textContent = fmtPerc(globalExp);
                 document.getElementById('kpi-cedis-count').textContent = allCedisData.length + ' CEDIS';
-                document.getElementById('kpi-rutas-count').textContent = totalRutas + ' Rutas';
+                document.getElementById('kpi-rutas-count').textContent = totals.rutas + ' Rutas';
                 
                 document.getElementById('venta-bar').style.width = Math.min(globalPerc, 100) + '%';
                 document.getElementById('venta-delta').textContent = fmtPerc(globalPerc) + ' del objetivo';
-                document.getElementById('venta-gap').textContent = fmtSmart(totalObj - totalVta) + ' faltante';
+                document.getElementById('venta-gap').textContent = fmtSmart(totals.obj - totals.vta) + ' faltante';
                 
-                const avanceBar = document.getElementById('avance-bar');
-                avanceBar.style.width = Math.min((globalPerc / globalExp) * 100, 100) + '%';
+                document.getElementById('avance-bar').style.width = Math.min((globalPerc / globalExp) * 100, 100) + '%';
                 const gapPerc = globalPerc - globalExp;
                 document.getElementById('avance-delta').textContent = (gapPerc >= 0 ? '+' : '') + fmtPerc(gapPerc) + ' vs esperado';
                 document.getElementById('avance-delta').className = 'kpi-delta ' + (gapPerc >= 0 ? 'up' : 'down');
 
-                const top3 = allCedisData.slice(0, 3);
-                document.getElementById('top-performers').innerHTML = top3.map((d, i) => {
-                    const posClass = i === 0 ? 'gold' : i === 1 ? 'silver' : 'bronze';
-                    return `<div class="ranking-item">
-                        <div class="ranking-pos ${posClass}">${i+1}</div>
-                        <div class="ranking-name">${d.cedis}</div>
-                        <div class="ranking-value green">${fmtPerc(d.perc)}</div>
-                    </div>`;
-                }).join('');
+                document.getElementById('top-performers').innerHTML = allCedisData.slice(0, 3).map((d, i) => `<div class="ranking-item"><div class="ranking-pos">${i+1}</div><div class="ranking-name">${d.cedis}</div><div class="ranking-value green">${fmtPerc(d.perc)}</div></div>`).join('');
+                
+                const bottom = allCedisData.slice(-3).reverse();
+                document.getElementById('need-attention').innerHTML = bottom.map((d, i) => `<div class="ranking-item"><div class="ranking-pos">${allCedisData.length - i}</div><div class="ranking-name">${d.cedis}</div><div class="ranking-value red">${fmtPerc(d.perc)}</div></div>`).join('');
 
-                const bottom3 = allCedisData.slice(-3).reverse();
-                document.getElementById('need-attention').innerHTML = bottom3.map((d, i) => {
-                    return `<div class="ranking-item">
-                        <div class="ranking-pos">${allCedisData.length - i}</div>
-                        <div class="ranking-name">${d.cedis}</div>
-                        <div class="ranking-value red">${fmtPerc(d.perc)}</div>
-                    </div>`;
-                }).join('');
-
-                const totalRutasRiesgo = allCedisData.reduce((s, d) => s + d.rutas.filter(r => r.venta < r.esperado).length, 0);
+                const rutasRiesgo = allCedisData.reduce((s, d) => s + d.rutas.filter(r => r.venta < r.esperado).length, 0);
                 document.getElementById('executive-summary').innerHTML = `
-                    <div class="summary-stat"><span class="summary-label">Mejor CEDIS</span><span class="summary-value green">${allCedisData[0].cedis} (${fmtPerc(allCedisData[0].perc)})</span></div>
-                    <div class="summary-stat"><span class="summary-label">Peor CEDIS</span><span class="summary-value red">${allCedisData[allCedisData.length-1].cedis} (${fmtPerc(allCedisData[allCedisData.length-1].perc)})</span></div>
-                    <div class="summary-stat"><span class="summary-label">Gap Global</span><span class="summary-value orange">${fmtSmart(totalEsp - totalVta)}</span></div>
-                    <div class="summary-stat"><span class="summary-label">Rutas en Meta</span><span class="summary-value green">${totalRutas - totalRutasRiesgo} / ${totalRutas}</span></div>
-                    <div class="summary-stat"><span class="summary-label">Promedio Avance</span><span class="summary-value blue">${fmtPerc(allCedisData.reduce((s,d) => s + d.perc, 0) / allCedisData.length)}</span></div>
-                `;
+                    <div class="summary-stat"><span>Mejor CEDIS</span><span class="summary-value" style="color:var(--accent-green)">${allCedisData[0].cedis} (${fmtPerc(allCedisData[0].perc)})</span></div>
+                    <div class="summary-stat"><span>Peor CEDIS</span><span class="summary-value" style="color:var(--accent-red)">${allCedisData[allCedisData.length-1].cedis} (${fmtPerc(allCedisData[allCedisData.length-1].perc)})</span></div>
+                    <div class="summary-stat"><span>Gap Global</span><span class="summary-value" style="color:var(--accent-orange)">${fmtSmart(totals.esp - totals.vta)}</span></div>
+                    <div class="summary-stat"><span>Rutas en Meta</span><span class="summary-value" style="color:var(--accent-green)">${totals.rutas - rutasRiesgo} / ${totals.rutas}</span></div>
+                    <div class="summary-stat"><span>Promedio Avance</span><span class="summary-value" style="color:var(--accent-blue)">${fmtPerc(allCedisData.reduce((s,d) => s + d.perc, 0) / allCedisData.length)}</span></div>`;
 
-                renderCedisCards();
+                renderCards();
                 document.getElementById('cedis-count-badge').textContent = allCedisData.length;
-
-                drawSparkline('sparkline-venta', allCedisData.map(d => d.vta), '#10b981', 2);
-                drawSparkline('sparkline-avance', allCedisData.map(d => d.perc), '#f59e0b', 2);
+                
+                setTimeout(() => {
+                    drawSparkline('sparkline-venta', allCedisData.map(d => d.vta), '#10b981');
+                    drawSparkline('sparkline-avance', allCedisData.map(d => d.perc), '#f59e0b');
+                }, 50);
             }
         });
     </script>
