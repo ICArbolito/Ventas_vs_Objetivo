@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -25,7 +24,7 @@
             height: 100vh; width: 100vw; background: var(--bg); color: var(--text-main); 
             font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; 
             overflow: hidden; 
-            padding: 4vh 4vw; /* Cambio Quirúrgico 1: Márgenes recorridos hacia adentro */
+            padding: 4vh 4vw;
         }
         
         #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
@@ -75,18 +74,87 @@
         .stat-card.warning .val { color: var(--accent-alert); }
 
         .source-footer { text-align: center; font-size: 0.8vh; color: var(--text-sub); font-weight: 700; margin-top: 1vh; text-transform: uppercase; letter-spacing: 1.5px; }
+
+        /* === NUEVOS ESTILOS PARA VISTA EMPRESA === */
+        .enterprise-row { 
+            transition: all 0.2s ease; 
+            cursor: pointer;
+        }
+        .enterprise-row:hover { 
+            background: rgba(6, 105, 254, 0.08) !important; 
+        }
+        .enterprise-btn {
+            background: var(--accent-data); 
+            color: #fff; 
+            padding: 4px 12px; 
+            border-radius: 4px; 
+            font-size: 1.1vh; 
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .back-btn {
+            background: var(--panel); 
+            border: 1px solid var(--border); 
+            padding: 5px 15px; 
+            border-radius: 6px; 
+            font-size: 1.1vh; 
+            cursor: pointer; 
+            color: var(--text-main); 
+            font-weight: 600; 
+            margin-left: 1vw;
+            display: none;
+        }
+        .back-btn:hover {
+            background: var(--border);
+        }
+        #enterprise-table-container {
+            overflow-y: auto; 
+            flex: 1; 
+            scrollbar-width: none;
+        }
+        #enterprise-table-container::-webkit-scrollbar { 
+            display: none; 
+        }
     </style>
 </head>
 <body>
     <div id="wrapper">
         <header>
-            <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
+            <div style="display:flex; align-items:center;">
+                <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
+                <button id="back-to-enterprise" class="back-btn" onclick="window.location='?'">← TODOS LOS CEDIS</button>
+            </div>
             <div id="date-tag" style="font-family: 'Inter'; color: var(--accent-data); font-size: 1.2vh; border: 2px solid var(--accent-data); padding: 5px 15px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
                 CIERRE HISTÓRICO: AYER
             </div>
         </header>
 
-        <div class="main-grid">
+        <!-- === VISTA EMPRESA (se muestra solo sin ?cedis=) === -->
+        <div id="enterprise-view" class="glass-panel" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5vh; padding-bottom:1vh; border-bottom:2px solid var(--border);">
+                <h2 style="font-family:'Rubik'; font-size:2.2vh; font-weight:700; color:var(--text-main);">📊 RESUMEN POR CEDIS</h2>
+                <span id="enterprise-date" style="font-size:1.1vh; color:var(--text-sub); font-family:'Inter';"></span>
+            </div>
+            <div id="enterprise-table-container">
+                <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
+                    <thead style="position:sticky; top:0; background:var(--panel); z-index:10;">
+                        <tr>
+                            <th style="text-align:left; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">CEDIS</th>
+                            <th style="text-align:right; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">OBJETIVO QUINCENAL</th>
+                            <th style="text-align:right; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">VENTA ALCANZADA</th>
+                            <th style="text-align:right; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">% AVANCE</th>
+                            <th style="text-align:right; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">% ESPERADO</th>
+                            <th style="text-align:center; padding:1vh 1.5vw; font-size:0.9vh; color:var(--text-sub); border-bottom:2px solid var(--border);">ACCIÓN</th>
+                        </tr>
+                    </thead>
+                    <tbody id="enterprise-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- === VISTA DETALLADA POR CEDIS (código original) === -->
+        <div class="main-grid" id="detail-view">
             <div class="glass-panel"><canvas id="bulletChart"></canvas></div>
             <div class="glass-panel">
                 <div class="table-container" id="content-tables"></div>
@@ -103,7 +171,7 @@
             </div>
         </div>
 
-        <div class="footer-stats">
+        <div class="footer-stats" id="footer-stats">
             <div id="card-perc" class="stat-card"><div class="val" id="global-perc">0%</div><div class="lbl">AVANCE QUINCENAL</div></div>
             <div class="stat-card blue"><div class="val" id="global-expected">0%</div><div class="lbl">AVANCE ESPERADO</div></div>
             <div class="stat-card"><div class="val" id="global-sug">$0</div><div class="lbl">META DIARIA DE RESCATE</div></div>
@@ -120,6 +188,60 @@
         function clean(v) { return v ? parseFloat(v.toString().replace(/[$, ]/g, '')) || 0 : 0; }
         function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
 
+        // === NUEVA FUNCIÓN: Renderizar vista empresa ===
+        function renderEnterpriseView(dataRaw, cKey, rKey, zKey, vKey, oKey, eKey, sKey) {
+            // Agrupar TODOS los datos por CEDIS
+            const byCedis = dataRaw.reduce((acc, row) => {
+                const cedis = row[cKey]?.trim().toUpperCase();
+                if (!cedis || !row[rKey]?.trim()) return acc;
+                if (!acc[cedis]) acc[cedis] = { obj:0, vta:0, esp:0, sug:0, count:0 };
+                acc[cedis].obj += clean(row[oKey]);
+                acc[cedis].vta += clean(row[vKey]);
+                acc[cedis].esp += clean(row[eKey]);
+                acc[cedis].sug += clean(row[sKey]);
+                acc[cedis].count++;
+                return acc;
+            }, {});
+
+            const tbody = document.getElementById('enterprise-tbody');
+            tbody.innerHTML = '';
+
+            // Ordenar CEDIS alfabéticamente
+            Object.keys(byCedis).sort().forEach(cedis => {
+                const d = byCedis[cedis];
+                const perc = d.obj > 0 ? ((d.vta/d.obj)*100).toFixed(2) : 0;
+                const expPerc = d.obj > 0 ? ((d.esp/d.obj)*100).toFixed(2) : 0;
+                const statusColor = parseFloat(perc) < parseFloat(expPerc) ? 'var(--accent-alert)' : 'var(--accent-success)';
+                
+                const tr = document.createElement('tr');
+                tr.className = 'enterprise-row';
+                
+                tr.innerHTML = `
+                    <td style="padding:1.2vh 1.5vw; font-weight:700; color:var(--text-main); border-bottom:1px solid var(--border); font-size:1.2vh;">${cedis}</td>
+                    <td style="padding:1.2vh 1.5vw; text-align:right; border-bottom:1px solid var(--border); font-size:1.1vh;">${fmt(d.obj)}</td>
+                    <td style="padding:1.2vh 1.5vw; text-align:right; border-bottom:1px solid var(--border); font-weight:600; font-size:1.1vh;">${fmt(d.vta)}</td>
+                    <td style="padding:1.2vh 1.5vw; text-align:right; border-bottom:1px solid var(--border); color:${statusColor}; font-weight:700; font-size:1.1vh;">${perc}%</td>
+                    <td style="padding:1.2vh 1.5vw; text-align:right; border-bottom:1px solid var(--border); font-size:1.1vh;">${expPerc}%</td>
+                    <td style="padding:1.2vh 1.5vw; text-align:center; border-bottom:1px solid var(--border);">
+                        <button class="enterprise-btn" onclick="window.location='?cedis=${cedis}'">VER DETALLE →</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Mostrar vista empresa, ocultar vista detallada
+            document.getElementById('enterprise-view').style.display = 'flex';
+            document.getElementById('detail-view').style.display = 'none';
+            document.getElementById('footer-stats').style.display = 'none';
+            document.getElementById('cedis-label').innerText = 'TODOS LOS CEDIS';
+            document.getElementById('back-to-enterprise').style.display = 'none';
+            
+            // Actualizar fecha
+            document.getElementById('enterprise-date').innerText = new Date().toLocaleDateString('es-MX', { 
+                weekday:'long', year:'numeric', month:'short', day:'numeric' 
+            });
+        }
+
         Papa.parse(csvUrl, {
             download: true, header: true, skipEmptyLines: true,
             complete: function(res) {
@@ -128,8 +250,19 @@
                 const findK = (terms) => h.find(k => terms.some(t => k.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes(t.toUpperCase())));
                 const cKey = findK(['CEDIS']), rKey = findK(['RUTA']), zKey = findK(['ZONA']), vKey = findK(['ORGANICA']), oKey = findK(['OBJETIVO']), eKey = findK(['ESPERADA']), sKey = findK(['FALTANTES', 'CUOTA']);
 
+                // === DETECTAR MODO: Empresa vs Detalle ===
+                const isEnterpriseMode = !filtradoCedis;
+
+                if (isEnterpriseMode) {
+                    // Renderizar vista empresa con TODOS los CEDIS
+                    renderEnterpriseView(dataRaw, cKey, rKey, zKey, vKey, oKey, eKey, sKey);
+                    return; // ⚠️ Salir aquí, NO ejecutar el código de vista detallada
+                }
+
+                // === CÓDIGO ORIGINAL DE VISTA DETALLADA (SIN CAMBIOS) ===
                 const rawCedis = filtradoCedis || dataRaw[0][cKey];
                 document.getElementById('cedis-label').innerText = "CEDIS " + rawCedis?.toUpperCase();
+                document.getElementById('back-to-enterprise').style.display = 'inline-block';
 
                 let data = dataRaw.filter(row => row[cKey]?.trim().toUpperCase() === rawCedis?.toUpperCase() && row[rKey]?.trim());
                 const grouped = data.reduce((acc, row) => {
@@ -168,7 +301,6 @@
                 document.getElementById('t-esp').innerText = fmt(tEsp);
                 document.getElementById('t-cuota').innerText = fmt(tSug);
 
-                // Cambio Quirúrgico 2: Porcentajes con 2 decimales usando toFixed(2)
                 const percVta = ((tVta/tObj)*100).toFixed(2);
                 const percEsp = ((tEsp/tObj)*100).toFixed(2);
                 
