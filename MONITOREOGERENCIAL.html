@@ -73,6 +73,10 @@
             font-family: 'JetBrains Mono'; font-size: 3vh; 
             font-weight: 700; margin: 0.6vh 0; letter-spacing: -1px;
         }
+        /* ✅ Tipografía más grande para Venta y Avance */
+        .kpi-value.large { font-size: 3.4vh; }
+        .kpi-value.large span { font-size: 2.2vh; color: var(--text-light); font-weight: 500; }
+        
         .kpi-bar { height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; }
         .kpi-bar-fill { height: 100%; border-radius: 3px; }
         .kpi-bar-fill.blue { background: var(--blue); }
@@ -173,7 +177,6 @@
         .progress-fill.red { background: var(--red); }
         .progress-marker { position: absolute; top: 0; height: 100%; width: 3px; background: var(--blue); z-index: 5; border-radius: 2px; }
 
-        /* ✅ Sparkline en la tarjeta */
         .card-sparkline { height: 22px; margin: 0.5vh 0 0.6vh 0; width: 100%; }
         .card-sparkline svg { width: 100%; height: 100%; display: block; }
 
@@ -186,14 +189,13 @@
         .metric-value.blue { color: var(--blue); }
         .metric-label { font-size: 0.75vh; color: var(--text-muted); text-transform: uppercase; font-weight: 600; line-height: 1; }
 
-        /* ✅ Sidebar con más margen derecho */
         .sidebar { 
             display: flex; flex-direction: column; gap: 0.8vh; min-height: 0;
-            padding-right: 0.3vw; /* ✅ Más margen del lado derecho */
+            padding-right: 0.3vw;
         }
         .sidebar-card { 
             background: var(--card); border: 1px solid var(--border); 
-            border-radius: 12px; padding: 1.2vh 1.2vw; /* ✅ Padding más generoso */
+            border-radius: 12px; padding: 1.2vh 1.2vw;
             box-shadow: var(--shadow); flex: 1; 
             display: flex; flex-direction: column; min-height: 0; 
         }
@@ -231,16 +233,18 @@
                 <div class="kpi-bar"><div class="kpi-bar-fill blue" style="width:100%"></div></div>
                 <div class="kpi-footer"><span id="kpi-cedis-count">0 CEDIS</span><span id="kpi-rutas-count">0 Rutas</span></div>
             </div>
+            <!-- ✅ Tarjeta Venta Alcanzada modificada -->
             <div class="kpi-card">
                 <div class="kpi-label">Venta Alcanzada</div>
-                <div class="kpi-value" id="kpi-venta">$0</div>
+                <div class="kpi-value large" id="kpi-venta">$0</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill green" id="venta-bar" style="width:0%"></div></div>
-                <div class="kpi-footer"><span class="kpi-delta" id="venta-delta">0%</span><span id="venta-gap">$0 faltante</span></div>
+                <div class="kpi-footer"><span class="kpi-delta" id="venta-delta">0% del esperado</span><span id="venta-gap">$0 faltante</span></div>
                 <canvas id="chart-venta" class="kpi-chart"></canvas>
             </div>
+            <!-- ✅ Tarjeta Avance Global modificada -->
             <div class="kpi-card">
                 <div class="kpi-label">Avance Global</div>
-                <div class="kpi-value" id="kpi-avance">0%</div>
+                <div class="kpi-value large" id="kpi-avance">0%</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill orange" id="avance-bar" style="width:0%"></div></div>
                 <div class="kpi-footer"><span class="kpi-delta" id="avance-delta">0% vs esperado</span><span>Meta: <span id="kpi-esperado">0%</span></span></div>
                 <canvas id="chart-avance" class="kpi-chart"></canvas>
@@ -293,7 +297,6 @@
         function fmt(n) { return n >= 1e6 ? '$' + (n/1e6).toFixed(2) + 'M' : n >= 1e3 ? '$' + (n/1e3).toFixed(1) + 'K' : '$' + Math.round(n).toLocaleString(); }
         function pct(n) { return n.toFixed(2) + '%'; }
 
-        // Curva suave Bézier
         function drawSmoothPath(ctx, pts) {
             ctx.moveTo(pts[0].x, pts[0].y);
             for (let i = 0; i < pts.length - 1; i++) {
@@ -342,7 +345,6 @@
             ctx.stroke();
         }
 
-        // ✅ Sparkline SVG para tarjetas
         function drawCardSparkline(containerId, data, color) {
             const container = document.getElementById(containerId);
             if (!container || data.length < 2) return;
@@ -474,8 +476,13 @@
                 const gExp = tot.obj ? (tot.esp/tot.obj)*100 : 0;
 
                 document.getElementById('kpi-objetivo').textContent = fmt(tot.obj);
-                document.getElementById('kpi-venta').textContent = fmt(tot.vta);
-                document.getElementById('kpi-avance').textContent = pct(gPerc);
+                
+                // ✅ Venta Alcanzada: "$6.62M de $7.12M"
+                document.getElementById('kpi-venta').innerHTML = fmt(tot.vta) + ' <span>de ' + fmt(tot.esp) + '</span>';
+                
+                // ✅ Avance Global: "42.15% de 46.15%"
+                document.getElementById('kpi-avance').innerHTML = pct(gPerc) + ' <span>de ' + pct(gExp) + '</span>';
+                
                 document.getElementById('kpi-rescate').textContent = fmt(tot.sug);
                 document.getElementById('kpi-esperado').textContent = pct(gExp);
                 document.getElementById('kpi-cedis-count').textContent = allData.length + ' CEDIS';
@@ -483,8 +490,8 @@
                 document.getElementById('count-badge').textContent = allData.length;
                 
                 document.getElementById('venta-bar').style.width = Math.min(gPerc, 100) + '%';
-                document.getElementById('venta-delta').textContent = pct(gPerc) + ' del objetivo';
-                document.getElementById('venta-gap').textContent = fmt(tot.obj - tot.vta) + ' faltante';
+                document.getElementById('venta-delta').textContent = pct(gPerc) + ' del esperado';
+                document.getElementById('venta-gap').textContent = fmt(tot.esp - tot.vta) + ' faltante';
                 
                 document.getElementById('avance-bar').style.width = Math.min((gPerc/gExp)*100, 100) + '%';
                 const gap = gPerc - gExp;
