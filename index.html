@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,16 +10,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { 
-            --bg: #f8fafc; 
-            --panel: #ffffff; 
+            --bg: #ffffff; 
+            --panel: #f8fafc; 
             --accent-data: #0669FE; 
             --accent-success: #29903B; 
-            --accent-warning: #f59e0b;
             --accent-alert: #d63031; 
             --text-main: #0f172a; 
             --text-sub: #64748b;
-            --border: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --border: #e2e8f0; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
         
@@ -26,198 +25,68 @@
             height: 100vh; width: 100vw; background: var(--bg); color: var(--text-main); 
             font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; 
             overflow: hidden; 
-            padding: 3vh 3vw;
+            padding: 4vh 4vw; /* Cambio Quirúrgico 1: Márgenes recorridos hacia adentro */
         }
         
-        #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr; gap: 2vh; }
+        #wrapper { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1.5vh; }
         
-        header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: var(--panel); padding: 2vh 3vw; border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-        h1 { font-family: 'Rubik', sans-serif; font-size: 2.5vh; font-weight: 900; letter-spacing: -0.5px; color: var(--text-main); text-transform: uppercase; }
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.2vh; border-bottom: 2px solid var(--border); }
+        h1 { font-family: 'Rubik', sans-serif; font-size: 2.8vh; font-weight: 900; letter-spacing: -0.5px; color: var(--text-main); text-transform: uppercase; }
 
-        /* === KPIs GLOBALES === */
-        .global-kpis { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vw; margin-bottom: 2vh;
-        }
-        .kpi-card {
-            background: var(--panel); border-radius: 12px; padding: 2vh; 
-            box-shadow: var(--shadow); text-align: center; position: relative;
-            overflow: hidden; border-left: 4px solid var(--accent-data);
-        }
-        .kpi-card.success { border-left-color: var(--accent-success); }
-        .kpi-card.warning { border-left-color: var(--accent-warning); }
-        .kpi-card.danger { border-left-color: var(--accent-alert); }
+        .main-grid { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 2vw; min-height: 0; }
+        .glass-panel { background: var(--panel); border-radius: 12px; border: 1px solid var(--border); padding: 2vh; display: flex; flex-direction: column; height: 100%; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         
-        .kpi-card .icon { font-size: 3vh; margin-bottom: 1vh; }
-        .kpi-card .value { font-family: 'Rubik'; font-size: 3.5vh; font-weight: 700; color: var(--text-main); margin: 1vh 0; }
-        .kpi-card .label { font-size: 1vh; color: var(--text-sub); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-        .kpi-card .delta { 
-            position: absolute; top: 1.5vh; right: 2vw; 
-            font-size: 1.1vh; font-weight: 700; padding: 2px 8px; border-radius: 4px;
-        }
-        .delta.up { background: rgba(41, 144, 59, 0.1); color: var(--accent-success); }
-        .delta.down { background: rgba(214, 48, 49, 0.1); color: var(--accent-alert); }
+        .table-container { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; scrollbar-width: none; }
+        .table-container::-webkit-scrollbar { display: none; }
 
-        /* === GRID DE CEDIS === */
-        .cedis-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 2vh;
-            overflow-y: auto;
-            padding-right: 1vh;
+        .table-wrapper { width: 100%; position: relative; padding-left: 50px; flex: 1; display: flex; flex-direction: column; margin-bottom: 10px; }
+        
+        .zona-tag {
+            position: absolute; left: 0; top: 0; bottom: 0; width: 40px;
+            background: rgba(6, 105, 254, 0.05); border-left: 4px solid var(--accent-data);
+            display: flex; align-items: center; justify-content: center;
         }
-        .cedis-grid::-webkit-scrollbar { width: 6px; }
-        .cedis-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .zona-tag span { transform: rotate(270deg); white-space: nowrap; font-family: 'Rubik'; font-weight: 700; color: var(--accent-data); font-size: 1.3vh; letter-spacing: 1px; }
 
-        .cedis-card {
-            background: var(--panel); border-radius: 12px; padding: 2.5vh;
-            box-shadow: var(--shadow); position: relative;
-            transition: all 0.3s ease; cursor: pointer;
-            border: 2px solid transparent;
-        }
-        .cedis-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border-color: var(--accent-data);
-        }
-        .cedis-card.critical { border-left: 4px solid var(--accent-alert); }
-        .cedis-card.on-track { border-left: 4px solid var(--accent-success); }
-        .cedis-card.warning { border-left: 4px solid var(--accent-warning); }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; flex: 1; }
+        th { font-family: 'Inter'; font-size: 0.85vh; color: var(--text-sub); text-transform: uppercase; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border); }
+        
+        .col-ruta { width: 28%; text-align: left; }
+        .col-data { width: 18%; text-align: right; }
 
-        .card-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 2vh; padding-bottom: 1.5vh; border-bottom: 2px solid var(--border);
-        }
-        .cedis-name {
-            font-family: 'Rubik'; font-size: 2vh; font-weight: 700; color: var(--text-main);
-            display: flex; align-items: center; gap: 1vw;
-        }
-        .status-badge {
-            padding: 4px 12px; border-radius: 20px; font-size: 1vh; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .status-badge.critical { background: rgba(214, 48, 49, 0.1); color: var(--accent-alert); }
-        .status-badge.on-track { background: rgba(41, 144, 59, 0.1); color: var(--accent-success); }
-        .status-badge.warning { background: rgba(245, 158, 11, 0.1); color: var(--accent-warning); }
+        .ruta-row td { padding: 0.6vh 10px; font-size: 1.15vh; border-bottom: 1px solid var(--border); color: #334155; }
+        .ruta-name { font-weight: 700; color: var(--text-main); }
 
-        /* === BULLET CHART MINI === */
-        .bullet-container { margin: 2vh 0; }
-        .bullet-labels {
-            display: flex; justify-content: space-between; font-size: 1vh;
-            color: var(--text-sub); margin-bottom: 0.5vh; font-weight: 600;
+        .total-bar { 
+            background: var(--accent-success); color: #ffffff; padding: 1.2vh 0; border-radius: 6px; 
+            display: flex; align-items: center; font-family: 'Rubik'; font-weight: 700; font-size: 1.45vh;
+            margin-top: auto; width: 100%; box-shadow: 0 4px 12px rgba(41, 144, 59, 0.2);
         }
-        .bullet-chart {
-            height: 40px; background: var(--bg); border-radius: 6px;
-            position: relative; overflow: hidden;
-        }
-        .bullet-bar {
-            position: absolute; height: 100%; transition: width 0.5s ease;
-        }
-        .bullet-bg { background: #e2e8f0; width: 100%; }
-        .bullet-expected { 
-            background: repeating-linear-gradient(
-                45deg,
-                rgba(6, 105, 254, 0.2),
-                rgba(6, 105, 254, 0.2) 10px,
-                rgba(6, 105, 254, 0.3) 10px,
-                rgba(6, 105, 254, 0.3) 20px
-            );
-            border-right: 3px solid var(--accent-data);
-        }
-        .bullet-actual {
-            background: linear-gradient(90deg, var(--accent-success), #4ade80);
-            z-index: 10;
-        }
-        .bullet-actual.short {
-            background: linear-gradient(90deg, var(--accent-alert), #f87171);
-        }
+        .total-spacer { width: 50px; flex-shrink: 0; }
+        .total-content { display: flex; flex: 1; padding: 0 10px; }
+        .t-lbl { width: 28%; text-align: left; }
+        .t-val { width: 18%; text-align: right; }
 
-        /* === METRICS ROW === */
-        .metrics-row {
-            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5vw;
-            margin-top: 2vh; padding-top: 1.5vh; border-top: 1px solid var(--border);
-        }
-        .metric { text-align: center; }
-        .metric-value {
-            font-family: 'Rubik'; font-size: 1.8vh; font-weight: 700;
-            color: var(--text-main); margin-bottom: 0.5vh;
-        }
-        .metric-label { font-size: 0.9vh; color: var(--text-sub); text-transform: uppercase; font-weight: 600; }
-        .metric-value.rescue { color: var(--accent-data); }
-        .metric-value.sales { color: var(--accent-success); }
-        .metric-value.goal { color: var(--text-sub); }
+        .footer-stats { display: flex; gap: 1.5vw; justify-content: center; }
+        .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.5vh 2vw; text-align: center; min-width: 220px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .stat-card .val { font-family: 'Rubik'; font-size: 4.2vh; color: var(--accent-success); font-weight: 700; }
+        .stat-card .lbl { font-size: 0.85vh; color: var(--text-sub); text-transform: uppercase; font-weight: 700; margin-top: 5px; }
+        .stat-card.blue .val { color: var(--accent-data); }
+        .stat-card.warning .val { color: var(--accent-alert); }
 
-        .back-btn {
-            background: var(--panel); border: 2px solid var(--border); 
-            padding: 8px 20px; border-radius: 8px; font-size: 1.2vh; 
-            cursor: pointer; color: var(--text-main); font-weight: 700; 
-            transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .back-btn:hover {
-            background: var(--accent-data); color: white; border-color: var(--accent-data);
-        }
-
-        .source-footer { 
-            text-align: center; font-size: 0.8vh; color: var(--text-sub); 
-            font-weight: 700; padding: 1vh; text-transform: uppercase; letter-spacing: 1.5px; 
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .global-kpis { grid-template-columns: repeat(2, 1fr); }
-            .cedis-grid { grid-template-columns: 1fr; }
-        }
+        .source-footer { text-align: center; font-size: 0.8vh; color: var(--text-sub); font-weight: 700; margin-top: 1vh; text-transform: uppercase; letter-spacing: 1.5px; }
     </style>
 </head>
 <body>
     <div id="wrapper">
         <header>
-            <div style="display:flex; align-items:center; gap: 2vw;">
-                <h1>📊 AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">TODOS LOS CEDIS</span></h1>
-                <button id="back-to-enterprise" class="back-btn" onclick="window.location='?'" style="display:none;">← Volver al Resumen</button>
-            </div>
-            <div id="date-tag" style="font-family: 'Inter'; color: var(--accent-data); font-size: 1.2vh; border: 2px solid var(--accent-data); padding: 5px 15px; border-radius: 8px; font-weight: 700; text-transform: uppercase;">
-                CIERRE: AYER
+            <h1>AVANCE DE VENTAS VS OBJETIVO - <span id="cedis-label">...</span></h1>
+            <div id="date-tag" style="font-family: 'Inter'; color: var(--accent-data); font-size: 1.2vh; border: 2px solid var(--accent-data); padding: 5px 15px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
+                CIERRE HISTÓRICO: AYER
             </div>
         </header>
 
-        <!-- === VISTA EMPRESA: DASHBOARD EJECUTIVO === -->
-        <div id="enterprise-view" style="display:none; height: 100%; overflow: hidden;">
-            <!-- KPIs Globales -->
-            <div class="global-kpis">
-                <div class="kpi-card" id="kpi-total-obj">
-                    <div class="icon">🎯</div>
-                    <div class="value" id="total-objetivo">$0</div>
-                    <div class="label">Objetivo Quincenal</div>
-                </div>
-                <div class="kpi-card success" id="kpi-total-vta">
-                    <div class="icon">💰</div>
-                    <div class="value" id="total-venta">$0</div>
-                    <div class="label">Venta Alcanzada</div>
-                    <div class="delta up" id="delta-venta">+0%</div>
-                </div>
-                <div class="kpi-card warning" id="kpi-global-perc">
-                    <div class="icon">📈</div>
-                    <div class="value" id="global-perc">0%</div>
-                    <div class="label">Avance Global</div>
-                    <div class="delta down" id="delta-perc">-0%</div>
-                </div>
-                <div class="kpi-card danger" id="kpi-total-rescue">
-                    <div class="icon">🚨</div>
-                    <div class="value" id="total-rescue">$0</div>
-                    <div class="label">Meta Diaria de Rescate</div>
-                </div>
-            </div>
-
-            <!-- Grid de CEDIS -->
-            <div class="cedis-grid" id="cedis-grid"></div>
-        </div>
-
-        <!-- === VISTA DETALLADA (código original) === -->
-        <div class="main-grid" id="detail-view" style="display:none;">
+        <div class="main-grid">
             <div class="glass-panel"><canvas id="bulletChart"></canvas></div>
             <div class="glass-panel">
                 <div class="table-container" id="content-tables"></div>
@@ -234,13 +103,13 @@
             </div>
         </div>
 
-        <div class="footer-stats" id="footer-stats" style="display:none;">
-            <div id="card-perc" class="stat-card"><div class="val" id="global-perc-detail">0%</div><div class="lbl">AVANCE QUINCENAL</div></div>
+        <div class="footer-stats">
+            <div id="card-perc" class="stat-card"><div class="val" id="global-perc">0%</div><div class="lbl">AVANCE QUINCENAL</div></div>
             <div class="stat-card blue"><div class="val" id="global-expected">0%</div><div class="lbl">AVANCE ESPERADO</div></div>
             <div class="stat-card"><div class="val" id="global-sug">$0</div><div class="lbl">META DIARIA DE RESCATE</div></div>
         </div>
 
-        <div class="source-footer">SOURCE: SistemaCP | POWERED BY INTELIGENCIA COMERCIAL FOR ARBOLITO</div>
+        <div class="source-footer">SOURCE: SistemaCP | Powered by Inteligencia Comercial for Arbolito</div>
     </div>
 
     <script>
@@ -250,125 +119,6 @@
 
         function clean(v) { return v ? parseFloat(v.toString().replace(/[$, ]/g, '')) || 0 : 0; }
         function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
-        function fmtPerc(n) { return n.toFixed(2) + '%'; }
-
-        // === NUEVA FUNCIÓN: Renderizar vista empresa mejorada ===
-        function renderEnterpriseView(dataRaw, cKey, rKey, zKey, vKey, oKey, eKey, sKey) {
-            const byCedis = dataRaw.reduce((acc, row) => {
-                const cedis = row[cKey]?.trim().toUpperCase();
-                if (!cedis || !row[rKey]?.trim()) return acc;
-                if (!acc[cedis]) acc[cedis] = { obj:0, vta:0, esp:0, sug:0, count:0 };
-                acc[cedis].obj += clean(row[oKey]);
-                acc[cedis].vta += clean(row[vKey]);
-                acc[cedis].esp += clean(row[eKey]);
-                acc[cedis].sug += clean(row[sKey]);
-                acc[cedis].count++;
-                return acc;
-            }, {});
-
-            // Calcular totales globales
-            let totalObj = 0, totalVta = 0, totalEsp = 0, totalSug = 0;
-            Object.values(byCedis).forEach(d => {
-                totalObj += d.obj;
-                totalVta += d.vta;
-                totalEsp += d.esp;
-                totalSug += d.sug;
-            });
-
-            const globalPerc = totalObj > 0 ? (totalVta/totalObj)*100 : 0;
-            const globalExp = totalObj > 0 ? (totalEsp/totalObj)*100 : 0;
-            const gap = globalExp - globalPerc;
-
-            // Actualizar KPIs globales
-            document.getElementById('total-objetivo').innerText = fmt(totalObj);
-            document.getElementById('total-venta').innerText = fmt(totalVta);
-            document.getElementById('global-perc').innerText = fmtPerc(globalPerc);
-            document.getElementById('total-rescue').innerText = fmt(totalSug);
-            
-            document.getElementById('delta-venta').innerText = (globalPerc >= globalExp ? '+' : '') + fmtPerc(globalPerc - globalExp);
-            document.getElementById('delta-venta').className = 'delta ' + (globalPerc >= globalExp ? 'up' : 'down');
-            
-            document.getElementById('delta-perc').innerText = (gap >= 0 ? '-' : '+') + fmtPerc(Math.abs(gap));
-            document.getElementById('delta-perc').className = 'delta ' + (gap <= 0 ? 'up' : 'down');
-
-            // Actualizar colores de KPIs
-            document.getElementById('kpi-global-perc').className = 'kpi-card ' + (globalPerc >= globalExp ? 'success' : 'warning');
-
-            // Renderizar cards de CEDIS
-            const grid = document.getElementById('cedis-grid');
-            grid.innerHTML = '';
-
-            Object.keys(byCedis).sort().forEach(cedis => {
-                const d = byCedis[cedis];
-                const perc = d.obj > 0 ? (d.vta/d.obj)*100 : 0;
-                const expPerc = d.obj > 0 ? (d.esp/d.obj)*100 : 0;
-                const gapCedis = expPerc - perc;
-                
-                let status, statusClass, cardClass;
-                if (perc >= expPerc) {
-                    status = 'EN META'; statusClass = 'on-track'; cardClass = 'on-track';
-                } else if (gapCedis < 5) {
-                    status = 'RIESGO'; statusClass = 'warning'; cardClass = 'warning';
-                } else {
-                    status = 'CRÍTICO'; statusClass = 'critical'; cardClass = 'critical';
-                }
-
-                const bulletWidth = Math.min((perc / expPerc) * 100, 100);
-                const expectedWidth = 100;
-
-                const card = document.createElement('div');
-                card.className = `cedis-card ${cardClass}`;
-                card.onclick = () => window.location = `?cedis=${cedis}`;
-                
-                card.innerHTML = `
-                    <div class="card-header">
-                        <div class="cedis-name">
-                            <span style="font-size:2.5vh;">🏭</span>
-                            ${cedis}
-                        </div>
-                        <span class="status-badge ${statusClass}">${status}</span>
-                    </div>
-                    
-                    <div class="bullet-container">
-                        <div class="bullet-labels">
-                            <span>Progreso vs Esperado</span>
-                            <span style="color:${perc >= expPerc ? 'var(--accent-success)' : 'var(--accent-alert)'}; font-weight:700;">
-                                ${fmtPerc(perc)} de ${fmtPerc(expPerc)}
-                            </span>
-                        </div>
-                        <div class="bullet-chart">
-                            <div class="bullet-bar bullet-bg"></div>
-                            <div class="bullet-bar bullet-expected" style="width: ${expectedWidth}%"></div>
-                            <div class="bullet-bar bullet-actual ${perc < expPerc ? 'short' : ''}" style="width: ${bulletWidth}%"></div>
-                        </div>
-                    </div>
-
-                    <div class="metrics-row">
-                        <div class="metric">
-                            <div class="metric-value goal">${fmt(d.obj)}</div>
-                            <div class="metric-label">Objetivo</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value sales" style="color:${perc >= expPerc ? 'var(--accent-success)' : 'var(--accent-alert)'}">
-                                ${fmt(d.vta)}
-                            </div>
-                            <div class="metric-label">Alcanzado</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value rescue">${fmt(d.sug)}</div>
-                            <div class="metric-label">Rescate/Día</div>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            // Mostrar/ocultar vistas
-            document.getElementById('enterprise-view').style.display = 'block';
-            document.getElementById('detail-view').style.display = 'none';
-            document.getElementById('footer-stats').style.display = 'none';
-            document.getElementById('back-to-enterprise').style.display = 'none';
-        }
 
         Papa.parse(csvUrl, {
             download: true, header: true, skipEmptyLines: true,
@@ -378,17 +128,8 @@
                 const findK = (terms) => h.find(k => terms.some(t => k.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes(t.toUpperCase())));
                 const cKey = findK(['CEDIS']), rKey = findK(['RUTA']), zKey = findK(['ZONA']), vKey = findK(['ORGANICA']), oKey = findK(['OBJETIVO']), eKey = findK(['ESPERADA']), sKey = findK(['FALTANTES', 'CUOTA']);
 
-                const isEnterpriseMode = !filtradoCedis;
-
-                if (isEnterpriseMode) {
-                    renderEnterpriseView(dataRaw, cKey, rKey, zKey, vKey, oKey, eKey, sKey);
-                    return;
-                }
-
-                // === CÓDIGO ORIGINAL DE VISTA DETALLADA (sin cambios) ===
                 const rawCedis = filtradoCedis || dataRaw[0][cKey];
                 document.getElementById('cedis-label').innerText = "CEDIS " + rawCedis?.toUpperCase();
-                document.getElementById('back-to-enterprise').style.display = 'inline-block';
 
                 let data = dataRaw.filter(row => row[cKey]?.trim().toUpperCase() === rawCedis?.toUpperCase() && row[rKey]?.trim());
                 const grouped = data.reduce((acc, row) => {
@@ -427,10 +168,11 @@
                 document.getElementById('t-esp').innerText = fmt(tEsp);
                 document.getElementById('t-cuota').innerText = fmt(tSug);
 
+                // Cambio Quirúrgico 2: Porcentajes con 2 decimales usando toFixed(2)
                 const percVta = ((tVta/tObj)*100).toFixed(2);
                 const percEsp = ((tEsp/tObj)*100).toFixed(2);
                 
-                document.getElementById('global-perc-detail').innerText = percVta + '%';
+                document.getElementById('global-perc').innerText = percVta + '%';
                 document.getElementById('global-expected').innerText = percEsp + '%';
                 document.getElementById('global-sug').innerText = fmt(tSug);
                 
