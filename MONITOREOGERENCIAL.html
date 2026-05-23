@@ -32,172 +32,189 @@
             --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.06);
         }
         
-        /* ✅ CORRECCIÓN: Cursor visible */
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: default; }
         
         body {
             height: 100vh; width: 100vw; background: var(--bg-primary); color: var(--text-primary);
             font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center;
-            overflow: hidden; padding: 1.5vh 2vw;
+            overflow: hidden; padding: 1.5vh 1.5vw;
         }
         
         #wrapper {
             width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh;
             overflow-y: auto; overflow-x: hidden;
         }
-        #wrapper::-webkit-scrollbar { width: 4px; }
-        #wrapper::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+        #wrapper::-webkit-scrollbar { width: 5px; }
+        #wrapper::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
         
         /* === HEADER === */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
-            padding: 1vh 2vw; box-shadow: var(--shadow-sm); flex-shrink: 0;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 1.5vh 2vw; box-shadow: var(--shadow-sm); flex-shrink: 0;
         }
-        .header-left { display: flex; align-items: center; gap: 1.5vw; }
-        .logo { font-family: 'Rubik'; font-size: 1.7vh; font-weight: 800; color: var(--text-primary); }
+        .header-left { display: flex; align-items: center; gap: 2vw; }
+        .logo { font-family: 'Rubik'; font-size: 2vh; font-weight: 800; color: var(--text-primary); }
         .logo span { color: var(--accent-blue); }
-        .header-divider { width: 1px; height: 1.8vh; background: var(--border); }
-        .header-subtitle { font-size: 0.95vh; color: var(--text-muted); font-weight: 500; }
-        .header-right { display: flex; align-items: center; gap: 1.5vw; }
+        .header-divider { width: 1px; height: 2.5vh; background: var(--border); }
+        .header-subtitle { font-size: 1.1vh; color: var(--text-muted); font-weight: 500; }
+        .header-right { display: flex; align-items: center; gap: 2vw; }
         .header-badge {
-            font-family: 'JetBrains Mono'; font-size: 0.95vh; color: var(--text-secondary);
+            font-family: 'JetBrains Mono'; font-size: 1vh; color: var(--text-secondary);
             background: var(--bg-secondary); border: 1px solid var(--border);
-            padding: 3px 10px; border-radius: 5px; font-weight: 600;
+            padding: 5px 12px; border-radius: 6px; font-weight: 600;
         }
-        .header-date { font-size: 0.95vh; color: var(--text-muted); font-weight: 500; }
+        .header-date { font-size: 1vh; color: var(--text-muted); font-weight: 500; }
 
         /* === KPIs ROW === */
         .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5vw; flex-shrink: 0; }
         
         .kpi-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
-            padding: 1.5vh 1.5vw; position: relative; overflow: hidden;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 2vh 2vw; position: relative; overflow: hidden;
             transition: all 0.2s ease; box-shadow: var(--shadow-sm);
             display: flex; flex-direction: column; justify-content: space-between;
         }
         .kpi-card:hover { border-color: var(--border-light); box-shadow: var(--shadow-md); }
-        .kpi-card.accent-blue { border-top: 3px solid var(--accent-blue); }
-        .kpi-card.accent-green { border-top: 3px solid var(--accent-green); }
-        .kpi-card.accent-orange { border-top: 3px solid var(--accent-orange); }
-        .kpi-card.accent-red { border-top: 3px solid var(--accent-red); }
+        .kpi-card.accent-blue { border-top: 4px solid var(--accent-blue); }
+        .kpi-card.accent-green { border-top: 4px solid var(--accent-green); }
+        .kpi-card.accent-orange { border-top: 4px solid var(--accent-orange); }
+        .kpi-card.accent-red { border-top: 4px solid var(--accent-red); }
         
-        .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5vh; }
-        .kpi-label { font-size: 0.85vh; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
-        .kpi-icon { font-size: 1.4vh; }
+        .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1vh; }
+        .kpi-label { font-size: 1vh; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .kpi-icon { font-size: 1.8vh; }
         
         .kpi-value {
-            font-family: 'Rubik'; font-size: 2.8vh; font-weight: 700; color: var(--text-primary);
-            margin: 0.2vh 0; line-height: 1;
+            font-family: 'Rubik'; font-size: 3.5vh; font-weight: 700; color: var(--text-primary);
+            margin: 0.5vh 0; line-height: 1;
         }
         .kpi-value.mono { font-family: 'JetBrains Mono'; }
         
-        .kpi-bar { height: 3px; background: var(--bg-secondary); border-radius: 2px; overflow: hidden; margin: 0.5vh 0; }
+        .kpi-bar { height: 4px; background: var(--bg-secondary); border-radius: 2px; overflow: hidden; margin: 1vh 0; }
         .kpi-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
         .kpi-bar-fill.blue { background: linear-gradient(90deg, var(--accent-blue), #60a5fa); }
         .kpi-bar-fill.green { background: linear-gradient(90deg, var(--accent-green), #34d399); }
         .kpi-bar-fill.orange { background: linear-gradient(90deg, var(--accent-orange), #fbbf24); }
         .kpi-bar-fill.red { background: linear-gradient(90deg, var(--accent-red), #f87171); }
         
-        .kpi-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 0.5vh; }
-        .kpi-delta { font-family: 'JetBrains Mono'; font-size: 0.9vh; font-weight: 600; }
+        .kpi-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1vh; }
+        .kpi-delta { font-family: 'JetBrains Mono'; font-size: 1.1vh; font-weight: 600; }
         .kpi-delta.up { color: var(--accent-green); }
         .kpi-delta.down { color: var(--accent-red); }
-        .kpi-sub { font-size: 0.8vh; color: var(--text-muted); font-weight: 500; text-align: right; }
+        .kpi-sub { font-size: 1vh; color: var(--text-muted); font-weight: 600; text-align: right; }
         
-        .kpi-sparkline { height: 25px; margin-top: 0.5vh; opacity: 0.8; }
+        .kpi-sparkline { height: 30px; margin-top: 1vh; opacity: 0.9; }
 
         /* === MAIN CONTENT === */
         .main-content { display: flex; gap: 1.5vw; flex: 1; min-height: 0; }
         
         .cedis-section { flex: 2; display: flex; flex-direction: column; min-height: 0; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1vh; flex-shrink: 0; }
-        .section-title { font-family: 'Rubik'; font-size: 1.2vh; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5vw; }
-        .section-count { font-family: 'JetBrains Mono'; font-size: 0.85vh; color: var(--text-muted); background: var(--bg-secondary); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
-        .section-filter { font-size: 0.8vh; color: var(--text-muted); display: flex; gap: 0.5vw; }
-        .filter-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); padding: 2px 8px; border-radius: 5px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2vh; flex-shrink: 0; }
+        .section-title { font-family: 'Rubik'; font-size: 1.5vh; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.8vw; }
+        .section-count { font-family: 'JetBrains Mono'; font-size: 1vh; color: var(--text-muted); background: var(--bg-secondary); padding: 3px 8px; border-radius: 5px; font-weight: 600; }
+        .section-filter { font-size: 0.95vh; color: var(--text-muted); display: flex; gap: 0.8vw; }
+        .filter-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); padding: 4px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .filter-btn:hover, .filter-btn.active { background: var(--accent-blue); border-color: var(--accent-blue); color: white; }
         
+        /* ✅ CEDIS GRID: 2 columnas para mayor tamaño */
         .cedis-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1.2vh; overflow-y: auto; flex: 1; padding-right: 0.5vh;
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 1.5vh; overflow-y: auto; flex: 1; padding-right: 0.5vh;
         }
-        .cedis-grid::-webkit-scrollbar { width: 3px; }
+        .cedis-grid::-webkit-scrollbar { width: 4px; }
         .cedis-grid::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
 
-        /* ✅ CORRECCIÓN: Fichas compactas */
+        /* ✅ FICHAS GRANDES Y ESPACIOSAS */
         .cedis-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
-            padding: 1.2vh 1.2vw; position: relative; overflow: hidden;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 2vh 2vw; position: relative; overflow: hidden;
             transition: all 0.2s ease; box-shadow: var(--shadow-sm);
+            display: flex; flex-direction: column;
         }
-        .cedis-card:hover { border-color: var(--border-light); box-shadow: var(--shadow-md); transform: translateY(-1px); }
-        .cedis-card.critical { border-left: 3px solid var(--accent-red); }
-        .cedis-card.on-track { border-left: 3px solid var(--accent-green); }
-        .cedis-card.warning { border-left: 3px solid var(--accent-orange); }
+        .cedis-card:hover { border-color: var(--border-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .cedis-card.critical { border-left: 5px solid var(--accent-red); }
+        .cedis-card.on-track { border-left: 5px solid var(--accent-green); }
+        .cedis-card.warning { border-left: 5px solid var(--accent-orange); }
 
-        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8vh; }
-        .card-cedis-info { display: flex; align-items: center; gap: 0.6vw; }
-        .card-rank { font-family: 'JetBrains Mono'; font-size: 0.8vh; font-weight: 700; width: 2.2vh; height: 2.2vh; border-radius: 5px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); color: var(--text-muted); }
+        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5vh; }
+        .card-cedis-info { display: flex; align-items: center; gap: 1vw; }
+        .card-rank { 
+            font-family: 'JetBrains Mono'; font-size: 1.2vh; font-weight: 700; 
+            width: 3.5vh; height: 3.5vh; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; 
+            background: var(--bg-secondary); color: var(--text-muted); 
+        }
         .card-rank.top { background: var(--accent-green-soft); color: var(--accent-green); }
         .card-rank.bottom { background: var(--accent-red-soft); color: var(--accent-red); }
-        .card-cedis-name { font-family: 'Rubik'; font-size: 1.3vh; font-weight: 700; color: var(--text-primary); }
-        .card-routes { font-size: 0.75vh; color: var(--text-muted); }
-        .card-status { padding: 2px 6px; border-radius: 3px; font-size: 0.7vh; font-weight: 700; text-transform: uppercase; }
+        .card-cedis-name { font-family: 'Rubik'; font-size: 2vh; font-weight: 700; color: var(--text-primary); }
+        .card-routes { font-size: 1.1vh; color: var(--text-muted); font-weight: 500; margin-top: 0.2vh; }
+        .card-status { padding: 4px 10px; border-radius: 6px; font-size: 0.95vh; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
         .card-status.critical { background: var(--accent-red-soft); color: var(--accent-red); }
         .card-status.on-track { background: var(--accent-green-soft); color: var(--accent-green); }
         .card-status.warning { background: var(--accent-orange-soft); color: var(--accent-orange); }
 
-        .card-sparkline { height: 32px; margin: 0.6vh 0; }
+        /* Sparkline más grande */
+        .card-sparkline { height: 50px; margin: 1vh 0 1.5vh 0; }
         
-        .card-progress { margin: 0.6vh 0; }
-        .card-progress-labels { display: flex; justify-content: space-between; font-size: 0.8vh; margin-bottom: 0.3vh; }
-        .card-progress-value { font-family: 'JetBrains Mono'; font-weight: 600; font-size: 0.85vh; }
-        .card-progress-bar { height: 4px; background: var(--bg-secondary); border-radius: 2px; overflow: hidden; position: relative; }
-        .card-progress-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
+        /* Progress más grande */
+        .card-progress { margin: 1vh 0 1.5vh 0; }
+        .card-progress-labels { display: flex; justify-content: space-between; font-size: 1.1vh; margin-bottom: 0.6vh; }
+        .card-progress-label { color: var(--text-muted); font-weight: 600; }
+        .card-progress-value { font-family: 'JetBrains Mono'; font-weight: 700; font-size: 1.2vh; }
+        .card-progress-value.green { color: var(--accent-green); }
+        .card-progress-value.red { color: var(--accent-red); }
+        .card-progress-value.orange { color: var(--accent-orange); }
+        .card-progress-bar { height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; position: relative; }
+        .card-progress-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
         .card-progress-fill.green { background: linear-gradient(90deg, var(--accent-green), #34d399); }
         .card-progress-fill.red { background: linear-gradient(90deg, var(--accent-red), #f87171); }
-        .card-progress-expected { position: absolute; top: 0; height: 100%; width: 2px; background: var(--accent-blue); z-index: 5; }
+        .card-progress-fill.orange { background: linear-gradient(90deg, var(--accent-orange), #fbbf24); }
+        .card-progress-expected { position: absolute; top: 0; height: 100%; width: 3px; background: var(--accent-blue); z-index: 5; border-radius: 2px; }
 
-        .card-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5vw; margin-top: 0.8vh; padding-top: 0.8vh; border-top: 1px solid var(--border); }
+        /* Metrics más grandes */
+        .card-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5vw; margin-top: auto; padding-top: 1.5vh; border-top: 2px solid var(--border); }
         .card-metric { text-align: center; }
-        .card-metric-value { font-family: 'JetBrains Mono'; font-size: 1.1vh; font-weight: 600; color: var(--text-primary); margin-bottom: 0.1vh; }
+        .card-metric-value { font-family: 'JetBrains Mono'; font-size: 1.8vh; font-weight: 700; color: var(--text-primary); margin-bottom: 0.4vh; }
         .card-metric-value.green { color: var(--accent-green); }
         .card-metric-value.red { color: var(--accent-red); }
         .card-metric-value.orange { color: var(--accent-orange); }
         .card-metric-value.blue { color: var(--accent-blue); }
-        .card-metric-label { font-size: 0.65vh; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+        .card-metric-label { font-size: 0.95vh; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.3px; }
 
-        /* SIDEBAR */
-        .sidebar { flex: 1; display: flex; flex-direction: column; gap: 1.5vh; min-width: 260px; max-width: 300px; flex-shrink: 0; }
-        .sidebar-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.5vh 1.2vw; overflow: hidden; box-shadow: var(--shadow-sm); }
-        .sidebar-title { font-family: 'Rubik'; font-size: 1vh; font-weight: 700; color: var(--text-primary); margin-bottom: 1vh; display: flex; align-items: center; gap: 0.4vw; }
+        /* SIDEBAR más ancho */
+        .sidebar { flex: 1; display: flex; flex-direction: column; gap: 1.5vh; min-width: 300px; max-width: 350px; flex-shrink: 0; }
+        .sidebar-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2vh 1.8vw; overflow: hidden; box-shadow: var(--shadow-sm); }
+        .sidebar-title { font-family: 'Rubik'; font-size: 1.3vh; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5vh; display: flex; align-items: center; gap: 0.6vw; }
         
-        .ranking-item { display: flex; align-items: center; gap: 0.6vw; padding: 0.6vh 0; border-bottom: 1px solid var(--border); }
+        .ranking-item { display: flex; align-items: center; gap: 1vw; padding: 1vh 0; border-bottom: 1px solid var(--border); }
         .ranking-item:last-child { border-bottom: none; }
-        .ranking-pos { font-family: 'JetBrains Mono'; font-size: 0.8vh; font-weight: 700; width: 2vh; height: 2vh; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); color: var(--text-muted); flex-shrink: 0; }
+        .ranking-pos { font-family: 'JetBrains Mono'; font-size: 1vh; font-weight: 700; width: 2.8vh; height: 2.8vh; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); color: var(--text-muted); flex-shrink: 0; }
         .ranking-pos.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; }
         .ranking-pos.silver { background: linear-gradient(135deg, #94a3b8, #64748b); color: white; }
         .ranking-pos.bronze { background: linear-gradient(135deg, #d97706, #b45309); color: white; }
-        .ranking-name { flex: 1; font-size: 0.9vh; font-weight: 600; color: var(--text-primary); }
-        .ranking-value { font-family: 'JetBrains Mono'; font-size: 0.85vh; font-weight: 600; }
+        .ranking-name { flex: 1; font-size: 1.1vh; font-weight: 600; color: var(--text-primary); }
+        .ranking-value { font-family: 'JetBrains Mono'; font-size: 1.1vh; font-weight: 700; }
         .ranking-value.green { color: var(--accent-green); }
         .ranking-value.red { color: var(--accent-red); }
 
-        .summary-stat { display: flex; justify-content: space-between; align-items: center; padding: 0.6vh 0; border-bottom: 1px solid var(--border); }
+        .summary-stat { display: flex; justify-content: space-between; align-items: center; padding: 1vh 0; border-bottom: 1px solid var(--border); }
         .summary-stat:last-child { border-bottom: none; }
-        .summary-label { font-size: 0.85vh; color: var(--text-muted); font-weight: 500; }
-        .summary-value { font-family: 'JetBrains Mono'; font-size: 0.9vh; font-weight: 700; color: var(--text-primary); }
+        .summary-label { font-size: 1vh; color: var(--text-muted); font-weight: 600; }
+        .summary-value { font-family: 'JetBrains Mono'; font-size: 1.1vh; font-weight: 700; color: var(--text-primary); }
         .summary-value.green { color: var(--accent-green); }
         .summary-value.red { color: var(--accent-red); }
         .summary-value.orange { color: var(--accent-orange); }
         .summary-value.blue { color: var(--accent-blue); }
 
-        .footer { display: flex; justify-content: space-between; align-items: center; padding: 0.5vh 0; flex-shrink: 0; }
-        .footer-text { font-size: 0.7vh; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .footer { display: flex; justify-content: space-between; align-items: center; padding: 0.8vh 0; flex-shrink: 0; }
+        .footer-text { font-size: 0.85vh; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
         @media (max-width: 1600px) { .sidebar { display: none; } .cedis-section { flex: 1; } }
-        @media (max-width: 1200px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1200px) { 
+            .kpi-row { grid-template-columns: repeat(2, 1fr); } 
+            .cedis-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -328,14 +345,13 @@
 
         document.getElementById('header-date').textContent = new Date().toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 
-        // ✅ Sparkline en Canvas (Estilo TradingView)
         function drawSparkline(canvasId, data, color, lineWidth = 2) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const width = canvas.parentElement.offsetWidth;
-            const height = 25;
-            canvas.width = width * 2; // Retina
+            const height = canvasId.includes('kpi') ? 30 : 50;
+            canvas.width = width * 2;
             canvas.height = height * 2;
             ctx.scale(2, 2);
             ctx.clearRect(0, 0, width, height);
@@ -345,21 +361,18 @@
             const min = Math.min(...data);
             const max = Math.max(...data);
             const range = max - min || 1;
-            const padding = 2;
+            const padding = 3;
             
-            // Points
             const points = data.map((v, i) => ({
                 x: padding + (i / (data.length - 1)) * (width - padding * 2),
                 y: height - padding - ((v - min) / range) * (height - padding * 2)
             }));
 
-            // Gradient
             const gradient = ctx.createLinearGradient(0, 0, 0, height);
-            gradient.addColorStop(0, color + '40'); // 25% opacity
-            gradient.addColorStop(0.6, color + '10'); // 6% opacity
-            gradient.addColorStop(1, color + '00'); // 0% opacity
+            gradient.addColorStop(0, color + '50');
+            gradient.addColorStop(0.5, color + '20');
+            gradient.addColorStop(1, color + '00');
 
-            // Area
             ctx.beginPath();
             ctx.moveTo(points[0].x, points[0].y);
             for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
@@ -369,7 +382,6 @@
             ctx.fillStyle = gradient;
             ctx.fill();
 
-            // Line
             ctx.beginPath();
             ctx.moveTo(points[0].x, points[0].y);
             for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
@@ -379,18 +391,17 @@
             ctx.lineJoin = 'round';
             ctx.stroke();
 
-            // Dot
             const last = points[points.length - 1];
             const prev = points[points.length - 2];
             const dotColor = last.y <= prev.y ? '#10b981' : '#ef4444';
             ctx.beginPath();
-            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+            ctx.arc(last.x, last.y, 4, 0, Math.PI * 2);
             ctx.fillStyle = '#fff';
             ctx.fill();
             ctx.beginPath();
-            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+            ctx.arc(last.x, last.y, 4, 0, Math.PI * 2);
             ctx.strokeStyle = dotColor;
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 2.5;
             ctx.stroke();
         }
 
@@ -427,7 +438,7 @@
                         </div>
                         <span class="card-status ${d.statusClass}">${d.status}</span>
                     </div>
-                    <canvas id="spark-${d.cedis}" class="card-sparkline" width="240" height="32"></canvas>
+                    <canvas id="spark-${d.cedis}" class="card-sparkline"></canvas>
                     <div class="card-progress">
                         <div class="card-progress-labels">
                             <span class="card-progress-label">Progreso</span>
@@ -455,8 +466,7 @@
                 `;
                 grid.appendChild(card);
                 
-                // Draw sparkline after append
-                setTimeout(() => drawSparkline(`spark-${d.cedis}`, d.ventaValues, sparkColor, 1.5), 0);
+                setTimeout(() => drawSparkline(`spark-${d.cedis}`, d.ventaValues, sparkColor, 2), 0);
             });
         }
 
@@ -502,7 +512,6 @@
                 const globalExp = totalObj > 0 ? (totalEsp/totalObj)*100 : 0;
                 const totalRutas = allCedisData.reduce((s, d) => s + d.rutaCount, 0);
 
-                // KPIs
                 document.getElementById('kpi-objetivo').textContent = fmtSmart(totalObj);
                 document.getElementById('kpi-venta').textContent = fmtSmart(totalVta);
                 document.getElementById('kpi-avance').textContent = fmtPerc(globalPerc);
@@ -521,7 +530,6 @@
                 document.getElementById('avance-delta').textContent = (gapPerc >= 0 ? '+' : '') + fmtPerc(gapPerc) + ' vs esperado';
                 document.getElementById('avance-delta').className = 'kpi-delta ' + (gapPerc >= 0 ? 'up' : 'down');
 
-                // Sidebar Data
                 const top3 = allCedisData.slice(0, 3);
                 document.getElementById('top-performers').innerHTML = top3.map((d, i) => {
                     const posClass = i === 0 ? 'gold' : i === 1 ? 'silver' : 'bronze';
@@ -553,9 +561,8 @@
                 renderCedisCards();
                 document.getElementById('cedis-count-badge').textContent = allCedisData.length;
 
-                // ✅ Sparklines KPI (Venta y Avance)
-                drawSparkline('sparkline-venta', allCedisData.map(d => d.vta), '#10b981', 1.5);
-                drawSparkline('sparkline-avance', allCedisData.map(d => d.perc), '#f59e0b', 1.5);
+                drawSparkline('sparkline-venta', allCedisData.map(d => d.vta), '#10b981', 2);
+                drawSparkline('sparkline-avance', allCedisData.map(d => d.perc), '#f59e0b', 2);
             }
         });
     </script>
