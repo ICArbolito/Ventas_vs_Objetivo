@@ -4,76 +4,98 @@
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="300">
     <title>Monitoreo Gerencial - Arbolito</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root {
-            --bg: #f8fafc;
+            --bg: #f0f4f8;
             --card: #ffffff;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --text-muted: #64748b;
-            --blue: #3b82f6;
-            --green: #10b981;
-            --orange: #f59e0b;
-            --red: #ef4444;
+            --border: #e1e8ed;
+            --text: #1a202c;
+            --text-muted: #718096;
+            --text-dim: #a0aec0;
+            --blue: #4299e1;
+            --green: #48bb78;
+            --orange: #ed8936;
+            --red: #fc8181;
+            --green-bg: rgba(72, 187, 120, 0.08);
+            --orange-bg: rgba(237, 137, 54, 0.08);
+            --red-bg: rgba(252, 129, 129, 0.08);
+            --blue-bg: rgba(66, 153, 225, 0.08);
+            --shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; cursor: default; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            height: 100vh; width: 100vw; overflow: hidden; background: var(--bg); color: var(--text);
-            font-family: 'Inter', sans-serif; padding: 1.2vh 1.5vw;
+            height: 100vh; width: 100vw; overflow: hidden; 
+            background: var(--bg); color: var(--text);
+            font-family: 'Inter', sans-serif;
+            padding: 0.8vh 1vw;
         }
         
         #wrapper {
-            height: 100vh; width: 100vw; display: flex; flex-direction: column; gap: 1vh;
+            height: 100vh; width: 100vw; 
+            display: flex; flex-direction: column; 
+            gap: 0.8vh;
         }
 
         /* Header */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-            padding: 1vh 1.5vw; flex-shrink: 0;
+            background: var(--card); border: 1px solid var(--border); 
+            border-radius: 12px; padding: 0.8vh 1.5vw; 
+            box-shadow: var(--shadow); flex-shrink: 0;
         }
-        .logo { font-family: 'Rubik'; font-size: 1.8vh; font-weight: 800; }
+        .logo { font-size: 1.6vh; font-weight: 800; letter-spacing: -0.3px; }
         .logo span { color: var(--blue); }
         .badge {
-            font-family: 'JetBrains Mono'; font-size: 0.9vh; background: #f1f5f9;
-            padding: 4px 10px; border-radius: 5px; font-weight: 600;
+            font-family: 'JetBrains Mono'; font-size: 0.85vh; 
+            background: var(--bg); padding: 3px 8px; 
+            border-radius: 6px; font-weight: 600; color: var(--text-muted);
         }
 
         /* KPIs */
         .kpi-row { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vw; flex-shrink: 0; 
-            height: 18vh;
+            display: grid; grid-template-columns: repeat(4, 1fr); 
+            gap: 0.8vw; flex-shrink: 0; height: 15vh;
         }
         .kpi-card {
-            background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-            padding: 1.5vh 1.5vw; border-top: 4px solid; display: flex; flex-direction: column; justify-content: space-between;
+            background: var(--card); border: 1px solid var(--border); 
+            border-radius: 12px; padding: 1.2vh 1.2vw; 
+            box-shadow: var(--shadow);
+            display: flex; flex-direction: column; justify-content: space-between;
         }
-        .kpi-card.blue { border-top-color: var(--blue); }
-        .kpi-card.green { border-top-color: var(--green); }
-        .kpi-card.orange { border-top-color: var(--orange); }
-        .kpi-card.red { border-top-color: var(--red); }
-        
-        .kpi-label { font-size: 0.9vh; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5vh; }
-        .kpi-value { font-family: 'JetBrains Mono'; font-size: 2.8vh; font-weight: 700; margin-bottom: 0.8vh; }
-        .kpi-bar { height: 3px; background: #f1f5f9; border-radius: 2px; overflow: hidden; margin-bottom: 0.8vh; }
+        .kpi-label { 
+            font-size: 0.8vh; color: var(--text-muted); 
+            text-transform: uppercase; font-weight: 700; 
+            letter-spacing: 0.5px; margin-bottom: 0.4vh; 
+        }
+        .kpi-value { 
+            font-family: 'JetBrains Mono'; font-size: 2.6vh; 
+            font-weight: 700; margin-bottom: 0.6vh; letter-spacing: -0.5px;
+        }
+        .kpi-bar { height: 3px; background: var(--bg); border-radius: 2px; overflow: hidden; }
         .kpi-bar-fill { height: 100%; border-radius: 2px; }
         .kpi-bar-fill.blue { background: var(--blue); }
         .kpi-bar-fill.green { background: var(--green); }
         .kpi-bar-fill.orange { background: var(--orange); }
         .kpi-bar-fill.red { background: var(--red); }
-        .kpi-footer { display: flex; justify-content: space-between; font-size: 0.8vh; color: var(--text-muted); font-weight: 600; }
-        .kpi-delta { font-family: 'JetBrains Mono'; }
+        .kpi-footer { 
+            display: flex; justify-content: space-between; 
+            font-size: 0.75vh; color: var(--text-muted); font-weight: 600; 
+            margin-top: 0.6vh;
+        }
+        .kpi-delta { font-family: 'JetBrains Mono'; font-weight: 600; }
         .kpi-delta.up { color: var(--green); }
         .kpi-delta.down { color: var(--red); }
-        .kpi-chart { height: 24px; width: 100%; }
+        .kpi-chart { height: 22px; width: 100%; margin-top: 0.4vh; }
 
         /* Main Layout */
         .main { 
-            flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 240px; gap: 1vw; 
+            flex: 1; min-height: 0; 
+            display: grid; grid-template-columns: 1fr 200px; 
+            gap: 0.8vw;
         }
         
         .cedis-section { 
@@ -81,101 +103,108 @@
         }
         .section-header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 0.8vh; flex-shrink: 0;
+            margin-bottom: 0.6vh; flex-shrink: 0;
         }
-        .section-title { font-family: 'Rubik'; font-size: 1.2vh; font-weight: 700; }
-        .filters { display: flex; gap: 0.4vw; }
+        .section-title { font-size: 1vh; font-weight: 700; }
+        .filters { display: flex; gap: 0.3vw; }
         .filter-btn {
-            background: var(--card); border: 1px solid var(--border); padding: 3px 8px;
-            border-radius: 5px; font-size: 0.8vh; font-weight: 600; cursor: pointer;
+            background: var(--card); border: 1px solid var(--border); 
+            padding: 2px 8px; border-radius: 5px; 
+            font-size: 0.75vh; font-weight: 600; cursor: pointer;
+            transition: all 0.2s;
         }
         .filter-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
 
-        /* 3x3 Grid for 9 CEDIS */
+        /* 3x3 Grid */
         .cards-grid {
             display: grid; 
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 0.8vh; flex: 1; min-height: 0;
+            gap: 0.6vh; flex: 1; min-height: 0;
         }
 
-        /* Compact CEDIS Card */
+        /* Compact Card */
         .cedis-card {
-            background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-            padding: 1vh 1.2vw; display: flex; flex-direction: column;
-            justify-content: space-between; overflow: hidden;
+            background: var(--card); border: 1px solid var(--border); 
+            border-radius: 10px; padding: 0.8vh 1vw; 
+            display: flex; flex-direction: column;
+            box-shadow: var(--shadow); overflow: hidden;
         }
-        .cedis-card.critical { border-left: 4px solid var(--red); }
-        .cedis-card.on-track { border-left: 4px solid var(--green); }
-        .cedis-card.warning { border-left: 4px solid var(--orange); }
+        .cedis-card.critical { border-left: 3px solid var(--red); }
+        .cedis-card.on-track { border-left: 3px solid var(--green); }
+        .cedis-card.warning { border-left: 3px solid var(--orange); }
 
-        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6vh; }
-        .card-info { display: flex; align-items: center; gap: 0.6vw; }
+        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4vh; }
+        .card-info { display: flex; align-items: center; gap: 0.5vw; }
         .rank {
-            font-family: 'JetBrains Mono'; font-size: 0.8vh; font-weight: 700;
-            width: 2.2vh; height: 2.2vh; border-radius: 5px;
+            font-family: 'JetBrains Mono'; font-size: 0.7vh; font-weight: 700;
+            width: 2vh; height: 2vh; border-radius: 4px;
             display: flex; align-items: center; justify-content: center;
-            background: #f1f5f9; color: var(--text-muted);
+            background: var(--bg); color: var(--text-muted);
         }
-        .rank.top { background: rgba(16, 185, 129, 0.15); color: var(--green); }
-        .rank.bottom { background: rgba(239, 68, 68, 0.15); color: var(--red); }
-        .cedis-name { font-family: 'Rubik'; font-size: 1.3vh; font-weight: 700; line-height: 1.1; }
-        .cedis-routes { font-size: 0.8vh; color: var(--text-muted); line-height: 1.1; }
+        .rank.top { background: var(--green-bg); color: var(--green); }
+        .cedis-name { font-size: 1.1vh; font-weight: 700; line-height: 1.1; }
+        .cedis-routes { font-size: 0.7vh; color: var(--text-muted); }
         .status {
-            font-size: 0.7vh; font-weight: 700; text-transform: uppercase;
-            padding: 2px 6px; border-radius: 4px; line-height: 1.2;
+            font-size: 0.65vh; font-weight: 700; text-transform: uppercase;
+            padding: 2px 5px; border-radius: 3px;
         }
-        .status.critical { background: rgba(239, 68, 68, 0.1); color: var(--red); }
-        .status.on-track { background: rgba(16, 185, 129, 0.1); color: var(--green); }
-        .status.warning { background: rgba(245, 158, 11, 0.1); color: var(--orange); }
+        .status.critical { background: var(--red-bg); color: var(--red); }
+        .status.on-track { background: var(--green-bg); color: var(--green); }
+        .status.warning { background: var(--orange-bg); color: var(--orange); }
 
-        .chart-container { height: 28px; margin: 0.4vh 0; width: 100%; }
+        .chart-container { height: 24px; margin: 0.3vh 0; width: 100%; }
         .chart-svg { width: 100%; height: 100%; display: block; }
         .chart-line { fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-        .chart-area { opacity: 0.2; }
-        .chart-dot { stroke: #fff; stroke-width: 1.5; }
+        .chart-area { opacity: 0.25; }
+        .chart-dot { stroke: #fff; stroke-width: 2; }
 
-        .progress-section { margin-bottom: 0.6vh; }
-        .progress-labels { display: flex; justify-content: space-between; font-size: 0.8vh; margin-bottom: 0.3vh; font-weight: 600; }
-        .progress-value { font-family: 'JetBrains Mono'; font-weight: 700; }
+        .progress-section { margin-bottom: 0.4vh; }
+        .progress-labels { display: flex; justify-content: space-between; font-size: 0.7vh; margin-bottom: 0.2vh; font-weight: 600; }
+        .progress-value { font-family: 'JetBrains Mono'; font-weight: 700; font-size: 0.7vh; }
         .progress-value.green { color: var(--green); }
         .progress-value.red { color: var(--red); }
-        .progress-bar { height: 4px; background: #f1f5f9; border-radius: 2px; overflow: hidden; position: relative; }
-        .progress-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+        .progress-bar { height: 3px; background: var(--bg); border-radius: 2px; overflow: hidden; position: relative; }
+        .progress-fill { height: 100%; border-radius: 2px; }
         .progress-fill.green { background: var(--green); }
         .progress-fill.red { background: var(--red); }
         .progress-marker { position: absolute; top: 0; height: 100%; width: 2px; background: var(--blue); z-index: 5; }
 
-        .metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5vw; margin-top: auto; padding-top: 0.8vh; border-top: 1px solid var(--border); }
+        .metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.4vw; margin-top: auto; padding-top: 0.5vh; border-top: 1px solid var(--border); }
         .metric { text-align: center; }
-        .metric-value { font-family: 'JetBrains Mono'; font-size: 1.2vh; font-weight: 700; margin-bottom: 0.2vh; line-height: 1.1; }
+        .metric-value { font-family: 'JetBrains Mono'; font-size: 1vh; font-weight: 700; margin-bottom: 0.1vh; line-height: 1; }
         .metric-value.green { color: var(--green); }
         .metric-value.red { color: var(--red); }
         .metric-value.orange { color: var(--orange); }
         .metric-value.blue { color: var(--blue); }
-        .metric-label { font-size: 0.7vh; color: var(--text-muted); text-transform: uppercase; font-weight: 600; line-height: 1.1; }
+        .metric-label { font-size: 0.6vh; color: var(--text-muted); text-transform: uppercase; font-weight: 600; line-height: 1; }
 
         /* Compact Sidebar */
-        .sidebar { display: flex; flex-direction: column; gap: 0.8vh; min-height: 0; }
-        .sidebar-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1vh 1vw; flex: 1; display: flex; flex-direction: column; min-height: 0; }
-        .sidebar-title { font-family: 'Rubik'; font-size: 1vh; font-weight: 700; margin-bottom: 0.8vh; flex-shrink: 0; }
+        .sidebar { display: flex; flex-direction: column; gap: 0.6vh; min-height: 0; }
+        .sidebar-card { 
+            background: var(--card); border: 1px solid var(--border); 
+            border-radius: 10px; padding: 0.8vh 0.8vw; 
+            box-shadow: var(--shadow); flex: 1; 
+            display: flex; flex-direction: column; min-height: 0; 
+        }
+        .sidebar-title { font-size: 0.85vh; font-weight: 700; margin-bottom: 0.5vh; flex-shrink: 0; }
         
         .list-container { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: space-evenly; }
-        .list-item { display: flex; align-items: center; gap: 0.6vw; padding: 0.4vh 0; }
-        .list-pos { font-family: 'JetBrains Mono'; font-size: 0.75vh; font-weight: 700; width: 2vh; height: 2vh; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; flex-shrink: 0; }
-        .list-pos.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; }
-        .list-pos.silver { background: linear-gradient(135deg, #94a3b8, #64748b); color: white; }
-        .list-pos.bronze { background: linear-gradient(135deg, #d97706, #b45309); color: white; }
-        .list-name { flex: 1; font-size: 0.85vh; font-weight: 600; }
-        .list-value { font-family: 'JetBrains Mono'; font-size: 0.85vh; font-weight: 700; }
+        .list-item { display: flex; align-items: center; gap: 0.5vw; padding: 0.2vh 0; }
+        .list-pos { font-family: 'JetBrains Mono'; font-size: 0.65vh; font-weight: 700; width: 1.6vh; height: 1.6vh; border-radius: 3px; display: flex; align-items: center; justify-content: center; background: var(--bg); flex-shrink: 0; }
+        .list-pos.gold { background: linear-gradient(135deg, #ecc94b, #d69e2e); color: white; }
+        .list-pos.silver { background: linear-gradient(135deg, #a0aec0, #718096); color: white; }
+        .list-pos.bronze { background: linear-gradient(135deg, #d69e2e, #b7791f); color: white; }
+        .list-name { flex: 1; font-size: 0.75vh; font-weight: 600; }
+        .list-value { font-family: 'JetBrains Mono'; font-size: 0.75vh; font-weight: 700; }
         .list-value.green { color: var(--green); }
         .list-value.red { color: var(--red); }
 
-        .summary-item { display: flex; justify-content: space-between; padding: 0.5vh 0; font-size: 0.8vh; border-bottom: 1px solid var(--border); }
+        .summary-item { display: flex; justify-content: space-between; padding: 0.3vh 0; font-size: 0.7vh; border-bottom: 1px solid var(--border); }
         .summary-item:last-child { border-bottom: none; }
         .summary-value { font-family: 'JetBrains Mono'; font-weight: 700; }
 
-        .footer { text-align: center; font-size: 0.7vh; color: var(--text-muted); padding: 0.4vh 0; flex-shrink: 0; font-weight: 500; }
+        .footer { text-align: center; font-size: 0.65vh; color: var(--text-dim); padding: 0.3vh 0; flex-shrink: 0; font-weight: 500; letter-spacing: 0.3px; }
     </style>
 </head>
 <body>
@@ -186,27 +215,27 @@
         </header>
 
         <div class="kpi-row">
-            <div class="kpi-card blue">
+            <div class="kpi-card">
                 <div class="kpi-label">Objetivo Quincenal</div>
                 <div class="kpi-value" id="kpi-objetivo">$0</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill blue" style="width:100%"></div></div>
                 <div class="kpi-footer"><span id="kpi-cedis-count">0 CEDIS</span><span id="kpi-rutas-count">0 Rutas</span></div>
             </div>
-            <div class="kpi-card green">
+            <div class="kpi-card">
                 <div class="kpi-label">Venta Alcanzada</div>
                 <div class="kpi-value" id="kpi-venta">$0</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill green" id="venta-bar" style="width:0%"></div></div>
                 <div class="kpi-footer"><span class="kpi-delta" id="venta-delta">0%</span><span id="venta-gap">$0 faltante</span></div>
                 <canvas id="chart-venta" class="kpi-chart"></canvas>
             </div>
-            <div class="kpi-card orange">
+            <div class="kpi-card">
                 <div class="kpi-label">Avance Global</div>
                 <div class="kpi-value" id="kpi-avance">0%</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill orange" id="avance-bar" style="width:0%"></div></div>
                 <div class="kpi-footer"><span class="kpi-delta" id="avance-delta">0% vs esperado</span><span>Meta: <span id="kpi-esperado">0%</span></span></div>
                 <canvas id="chart-avance" class="kpi-chart"></canvas>
             </div>
-            <div class="kpi-card red">
+            <div class="kpi-card">
                 <div class="kpi-label">Rescate Diario</div>
                 <div class="kpi-value" id="kpi-rescate">$0</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill red" style="width:100%"></div></div>
@@ -217,7 +246,7 @@
         <div class="main">
             <div class="cedis-section">
                 <div class="section-header">
-                    <div class="section-title"> Desempeño por CEDIS <span id="count-badge" style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:0.8vh; margin-left:0.4vw;">0</span></div>
+                    <div class="section-title"> Desempeño por CEDIS <span id="count-badge" style="background:var(--bg); padding:2px 6px; border-radius:4px; font-size:0.7vh; margin-left:0.4vw; font-weight:600;">0</span></div>
                     <div class="filters">
                         <button class="filter-btn active" onclick="setFilter('all')">Todos</button>
                         <button class="filter-btn" onclick="setFilter('critical')">Críticos</button>
@@ -234,11 +263,11 @@
                     <div class="list-container" id="top-list"></div>
                 </div>
                 <div class="sidebar-card">
-                    <div class="sidebar-title">️ Requieren Atención</div>
+                    <div class="sidebar-title"> Requieren Atención</div>
                     <div class="list-container" id="attention-list"></div>
                 </div>
                 <div class="sidebar-card">
-                    <div class="sidebar-title">📋 Resumen Ejecutivo</div>
+                    <div class="sidebar-title"> Resumen</div>
                     <div class="list-container" id="summary"></div>
                 </div>
             </div>
@@ -254,59 +283,111 @@
         function fmt(n) { return n >= 1e6 ? '$' + (n/1e6).toFixed(2) + 'M' : n >= 1e3 ? '$' + (n/1e3).toFixed(1) + 'K' : '$' + Math.round(n).toLocaleString(); }
         function pct(n) { return n.toFixed(2) + '%'; }
 
+        // Curva suave tipo monotone/cubic spline
+        function smoothLine(ctx, pts) {
+            if (pts.length < 2) return;
+            ctx.moveTo(pts[0].x, pts[0].y);
+            
+            for (let i = 0; i < pts.length - 1; i++) {
+                const p0 = pts[Math.max(i - 1, 0)];
+                const p1 = pts[i];
+                const p2 = pts[i + 1];
+                const p3 = pts[Math.min(i + 2, pts.length - 1)];
+                
+                const cp1x = p1.x + (p2.x - p0.x) / 6;
+                const cp1y = p1.y + (p2.y - p0.y) / 6;
+                const cp2x = p2.x - (p3.x - p1.x) / 6;
+                const cp2y = p2.y - (p3.y - p1.y) / 6;
+                
+                ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+            }
+        }
+
         function drawChart(canvasId, data, color) {
             const canvas = document.getElementById(canvasId);
             if (!canvas || data.length < 2) return;
             const ctx = canvas.getContext('2d');
-            const w = canvas.offsetWidth, h = 24;
+            const w = canvas.offsetWidth, h = 22;
             canvas.width = w * 2; canvas.height = h * 2;
             ctx.scale(2, 2);
             
             const min = Math.min(...data), max = Math.max(...data), range = max - min || 1;
-            const pts = data.map((v, i) => ({ x: 2 + i/(data.length-1)*(w-4), y: h-2 - (v-min)/range*(h-4) }));
+            const pts = data.map((v, i) => ({ 
+                x: 1 + i/(data.length-1)*(w-2), 
+                y: h-1 - (v-min)/range*(h-2) 
+            }));
             
             const grad = ctx.createLinearGradient(0, 0, 0, h);
-            grad.addColorStop(0, color + '60');
-            grad.addColorStop(1, color + '00');
+            grad.addColorStop(0, color + '70');
+            grad.addColorStop(1, color + '05');
             
+            // Area
             ctx.beginPath();
-            ctx.moveTo(pts[0].x, pts[0].y);
-            pts.forEach(p => ctx.lineTo(p.x, p.y));
+            smoothLine(ctx, pts);
             ctx.lineTo(pts[pts.length-1].x, h);
             ctx.lineTo(pts[0].x, h);
+            ctx.closePath();
             ctx.fillStyle = grad;
             ctx.fill();
             
+            // Line
             ctx.beginPath();
-            ctx.moveTo(pts[0].x, pts[0].y);
-            pts.forEach(p => ctx.lineTo(p.x, p.y));
+            smoothLine(ctx, pts);
             ctx.strokeStyle = color;
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
             ctx.stroke();
             
+            // Dot
             const last = pts[pts.length-1], prev = pts[pts.length-2];
             ctx.beginPath();
-            ctx.arc(last.x, last.y, 2, 0, Math.PI*2);
+            ctx.arc(last.x, last.y, 3, 0, Math.PI*2);
             ctx.fillStyle = '#fff'; ctx.fill();
-            ctx.strokeStyle = last.y <= prev.y ? '#10b981' : '#ef4444';
-            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = last.y <= prev.y ? '#48bb78' : '#fc8181';
+            ctx.lineWidth = 2;
             ctx.stroke();
         }
 
         function drawCardChart(containerId, data, color) {
             const container = document.getElementById(containerId);
             if (!container || data.length < 2) return;
-            const w = container.offsetWidth, h = 28;
+            const w = container.offsetWidth, h = 24;
             
             const min = Math.min(...data), max = Math.max(...data), range = max - min || 1;
-            const pts = data.map((v, i) => ({ x: 2 + i/(data.length-1)*(w-4), y: h-2 - (v-min)/range*(h-4) }));
+            const pts = data.map((v, i) => ({ 
+                x: 1 + i/(data.length-1)*(w-2), 
+                y: h-1 - (v-min)/range*(h-2) 
+            }));
             
             let svg = `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">`;
-            svg += `<defs><linearGradient id="g${containerId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity="0.4"/><stop offset="100%" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>`;
-            svg += `<path class="chart-area" d="M${pts[0].x},${pts[0].y} ${pts.map(p => `L${p.x},${p.y}`).join(' ')} L${pts[pts.length-1].x},${h} L${pts[0].x},${h} Z" fill="url(#g${containerId})"/>`;
-            svg += `<path class="chart-line" d="M${pts[0].x},${pts[0].y} ${pts.map(p => `L${p.x},${p.y}`).join(' ')}" stroke="${color}"/>`;
+            svg += `<defs><linearGradient id="g${containerId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity="0.5"/><stop offset="100%" stop-color="${color}" stop-opacity="0.05"/></linearGradient></defs>`;
+            
+            // Smooth area path
+            const smoothPath = (pts) => {
+                let d = `M${pts[0].x},${pts[0].y}`;
+                for (let i = 0; i < pts.length - 1; i++) {
+                    const p0 = pts[Math.max(i - 1, 0)];
+                    const p1 = pts[i];
+                    const p2 = pts[i + 1];
+                    const p3 = pts[Math.min(i + 2, pts.length - 1)];
+                    const cp1x = p1.x + (p2.x - p0.x) / 6;
+                    const cp1y = p1.y + (p2.y - p0.y) / 6;
+                    const cp2x = p2.x - (p3.x - p1.x) / 6;
+                    const cp2y = p2.y - (p3.y - p1.y) / 6;
+                    d += ` C${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
+                }
+                return d;
+            };
+            
+            const lineD = smoothPath(pts);
+            const areaD = lineD + ` L${pts[pts.length-1].x},${h} L${pts[0].x},${h} Z`;
+            
+            svg += `<path class="chart-area" d="${areaD}" fill="url(#g${containerId})"/>`;
+            svg += `<path class="chart-line" d="${lineD}" stroke="${color}"/>`;
+            
             const last = pts[pts.length-1], prev = pts[pts.length-2];
-            const dotColor = last.y <= prev.y ? '#10b981' : '#ef4444';
+            const dotColor = last.y <= prev.y ? '#48bb78' : '#fc8181';
             svg += `<circle class="chart-dot" cx="${last.x}" cy="${last.y}" r="2.5" fill="#fff" stroke="${dotColor}"/>`;
             svg += '</svg>';
             container.innerHTML = svg;
@@ -318,7 +399,10 @@
             filter = f;
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 const txt = btn.textContent.toLowerCase();
-                btn.classList.toggle('active', (f === 'all' && txt === 'todos') || (f === 'on-track' && txt === 'en meta') || txt === (f === 'critical' ? 'críticos' : f === 'warning' ? 'riesgo' : 'en meta'));
+                const match = (f === 'all' && txt === 'todos') || 
+                             (f === 'on-track' && txt === 'en meta') || 
+                             txt === (f === 'critical' ? 'críticos' : f === 'warning' ? 'riesgo' : 'en meta');
+                btn.classList.toggle('active', match);
             });
             render();
         }
@@ -329,7 +413,7 @@
             const data = filter === 'all' ? allData : allData.filter(d => d.statusClass === filter);
             
             data.forEach(d => {
-                const color = d.statusClass === 'on-track' ? '#10b981' : d.statusClass === 'warning' ? '#f59e0b' : '#ef4444';
+                const color = d.statusClass === 'on-track' ? '#48bb78' : d.statusClass === 'warning' ? '#ed8936' : '#fc8181';
                 const width = Math.min((d.perc / d.expPerc) * 100, 100);
                 
                 const card = document.createElement('div');
@@ -337,20 +421,26 @@
                 card.innerHTML = `
                     <div class="card-top">
                         <div class="card-info">
-                            <div class="rank ${d.rank <= 3 ? 'top' : d.rank > allData.length-3 ? 'bottom' : ''}">#${d.rank}</div>
+                            <div class="rank ${d.rank <= 3 ? 'top' : ''}">#${d.rank}</div>
                             <div><div class="cedis-name">${d.cedis}</div><div class="cedis-routes">${d.rutaCount} rutas</div></div>
                         </div>
                         <span class="status ${d.statusClass}">${d.status}</span>
                     </div>
                     <div class="chart-container" id="chart-${d.cedis}"></div>
                     <div class="progress-section">
-                        <div class="progress-labels"><span>Progreso</span><span class="progress-value ${d.perc >= d.expPerc ? 'green' : 'red'}">${pct(d.perc)} / ${pct(d.expPerc)}</span></div>
-                        <div class="progress-bar"><div class="progress-fill ${d.perc >= d.expPerc ? 'green' : 'red'}" style="width:${width}%"></div><div class="progress-marker" style="left:${Math.min(d.expPerc, 100)}%"></div></div>
+                        <div class="progress-labels">
+                            <span>Progreso</span>
+                            <span class="progress-value ${d.perc >= d.expPerc ? 'green' : 'red'}">${pct(d.perc)} / ${pct(d.expPerc)}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill ${d.perc >= d.expPerc ? 'green' : 'red'}" style="width:${width}%"></div>
+                            <div class="progress-marker" style="left:${Math.min(d.expPerc, 100)}%"></div>
+                        </div>
                     </div>
                     <div class="metrics">
                         <div class="metric"><div class="metric-value blue">${fmt(d.obj)}</div><div class="metric-label">Objetivo</div></div>
                         <div class="metric"><div class="metric-value ${d.perc >= d.expPerc ? 'green' : 'red'}">${fmt(d.vta)}</div><div class="metric-label">Alcanzado</div></div>
-                        <div class="metric"><div class="metric-value orange">${fmt(d.sug)}</div><div class="metric-label">Rescate/Día</div></div>
+                        <div class="metric"><div class="metric-value orange">${fmt(d.sug)}</div><div class="metric-label">Rescate</div></div>
                     </div>`;
                 grid.appendChild(card);
                 setTimeout(() => drawCardChart(`chart-${d.cedis}`, d.ventas, color), 10);
@@ -421,17 +511,17 @@
 
                 const riesgo = allData.reduce((s, d) => s + d.rutas.filter(r => r.v < r.e).length, 0);
                 document.getElementById('summary').innerHTML = `
-                    <div class="summary-item"><span>Mejor CEDIS</span><span class="summary-value" style="color:var(--green)">${allData[0].cedis} (${pct(allData[0].perc)})</span></div>
-                    <div class="summary-item"><span>Peor CEDIS</span><span class="summary-value" style="color:var(--red)">${allData[allData.length-1].cedis} (${pct(allData[allData.length-1].perc)})</span></div>
-                    <div class="summary-item"><span>Gap Global</span><span class="summary-value" style="color:var(--orange)">${fmt(tot.esp - tot.vta)}</span></div>
-                    <div class="summary-item"><span>Rutas en Meta</span><span class="summary-value" style="color:var(--green)">${tot.rutas - riesgo} / ${tot.rutas}</span></div>
-                    <div class="summary-item"><span>Promedio Avance</span><span class="summary-value" style="color:var(--blue)">${pct(allData.reduce((s,d)=>s+d.perc,0)/allData.length)}</span></div>
+                    <div class="summary-item"><span>Mejor</span><span class="summary-value" style="color:var(--green)">${allData[0].cedis} (${pct(allData[0].perc)})</span></div>
+                    <div class="summary-item"><span>Peor</span><span class="summary-value" style="color:var(--red)">${allData[allData.length-1].cedis} (${pct(allData[allData.length-1].perc)})</span></div>
+                    <div class="summary-item"><span>Gap</span><span class="summary-value" style="color:var(--orange)">${fmt(tot.esp - tot.vta)}</span></div>
+                    <div class="summary-item"><span>Meta</span><span class="summary-value" style="color:var(--green)">${tot.rutas - riesgo}/${tot.rutas}</span></div>
+                    <div class="summary-item"><span>Promedio</span><span class="summary-value" style="color:var(--blue)">${pct(allData.reduce((s,d)=>s+d.perc,0)/allData.length)}</span></div>
                 `;
 
                 render();
                 setTimeout(() => {
-                    drawChart('chart-venta', allData.map(d => d.vta), '#10b981');
-                    drawChart('chart-avance', allData.map(d => d.perc), '#f59e0b');
+                    drawChart('chart-venta', allData.map(d => d.vta), '#48bb78');
+                    drawChart('chart-avance', allData.map(d => d.perc), '#ed8936');
                 }, 50);
             }
         });
