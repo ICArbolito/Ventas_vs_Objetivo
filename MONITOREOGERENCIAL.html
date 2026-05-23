@@ -40,7 +40,6 @@
             gap: 1vh;
         }
 
-        /* Header */
         header {
             display: flex; justify-content: space-between; align-items: center;
             background: var(--card); border: 1px solid var(--border); 
@@ -55,7 +54,6 @@
             border-radius: 8px; font-weight: 600; color: var(--text-muted);
         }
 
-        /* KPIs */
         .kpi-row { 
             display: grid; grid-template-columns: repeat(4, 1fr); 
             gap: 1vw; flex-shrink: 0; height: 16vh;
@@ -91,10 +89,9 @@
         .kpi-delta.down { color: var(--red); }
         .kpi-chart { height: 26px; width: 100%; margin-top: 0.6vh; }
 
-        /* Main Layout */
         .main { 
             flex: 1; min-height: 0; 
-            display: grid; grid-template-columns: 1fr 220px; 
+            display: grid; grid-template-columns: 1fr 230px; 
             gap: 1vw;
         }
         
@@ -115,7 +112,6 @@
         }
         .filter-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
 
-        /* 3x3 Grid */
         .cards-grid {
             display: grid; 
             grid-template-columns: repeat(3, 1fr);
@@ -123,7 +119,6 @@
             gap: 0.8vh; flex: 1; min-height: 0;
         }
 
-        /* Compact Card */
         .cedis-card {
             background: var(--card); border: 1px solid var(--border); 
             border-radius: 12px; padding: 1.2vh 1.4vw; 
@@ -136,7 +131,7 @@
         .cedis-card.on-track { border-left: 4px solid var(--green); }
         .cedis-card.warning { border-left: 4px solid var(--orange); }
 
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6vh; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4vh; }
         .card-info { display: flex; align-items: center; gap: 0.7vw; }
         .rank {
             font-family: 'JetBrains Mono'; font-size: 0.85vh; font-weight: 700;
@@ -156,29 +151,33 @@
         .status.on-track { background: var(--green-bg); color: var(--green); }
         .status.warning { background: var(--orange-bg); color: var(--orange); }
 
-        /* BIG PERCENTAGE */
         .card-percentage {
             display: flex; align-items: baseline; gap: 0.5vw;
-            margin: 0.5vh 0 0.8vh 0;
+            margin: 0.3vh 0 0.5vh 0;
         }
         .card-percent-value {
             font-family: 'JetBrains Mono'; font-size: 2.8vh; font-weight: 700;
             line-height: 1; letter-spacing: -1px;
         }
         .card-percent-value.green { color: var(--green); }
-        .card-percent-value.red { color: var(--red); }
         .card-percent-value.orange { color: var(--orange); }
+        .card-percent-value.red { color: var(--red); }
         .card-percent-label {
             font-size: 0.9vh; color: var(--text-light); font-weight: 600;
         }
 
-        .progress-bar { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; position: relative; margin-bottom: 0.8vh; }
+        .progress-bar { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; position: relative; margin-bottom: 0.6vh; }
         .progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
         .progress-fill.green { background: var(--green); }
+        .progress-fill.orange { background: var(--orange); }
         .progress-fill.red { background: var(--red); }
         .progress-marker { position: absolute; top: 0; height: 100%; width: 3px; background: var(--blue); z-index: 5; border-radius: 2px; }
 
-        .metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8vw; margin-top: auto; padding-top: 1vh; border-top: 1px solid var(--border); }
+        /* ✅ Sparkline en la tarjeta */
+        .card-sparkline { height: 22px; margin: 0.5vh 0 0.6vh 0; width: 100%; }
+        .card-sparkline svg { width: 100%; height: 100%; display: block; }
+
+        .metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8vw; margin-top: auto; padding-top: 0.8vh; border-top: 1px solid var(--border); }
         .metric { text-align: center; }
         .metric-value { font-family: 'JetBrains Mono'; font-size: 1.3vh; font-weight: 700; margin-bottom: 0.2vh; line-height: 1; }
         .metric-value.green { color: var(--green); }
@@ -187,11 +186,14 @@
         .metric-value.blue { color: var(--blue); }
         .metric-label { font-size: 0.75vh; color: var(--text-muted); text-transform: uppercase; font-weight: 600; line-height: 1; }
 
-        /* Compact Sidebar */
-        .sidebar { display: flex; flex-direction: column; gap: 0.8vh; min-height: 0; }
+        /* ✅ Sidebar con más margen derecho */
+        .sidebar { 
+            display: flex; flex-direction: column; gap: 0.8vh; min-height: 0;
+            padding-right: 0.3vw; /* ✅ Más margen del lado derecho */
+        }
         .sidebar-card { 
             background: var(--card); border: 1px solid var(--border); 
-            border-radius: 12px; padding: 1.2vh 1vw; 
+            border-radius: 12px; padding: 1.2vh 1.2vw; /* ✅ Padding más generoso */
             box-shadow: var(--shadow); flex: 1; 
             display: flex; flex-direction: column; min-height: 0; 
         }
@@ -291,6 +293,15 @@
         function fmt(n) { return n >= 1e6 ? '$' + (n/1e6).toFixed(2) + 'M' : n >= 1e3 ? '$' + (n/1e3).toFixed(1) + 'K' : '$' + Math.round(n).toLocaleString(); }
         function pct(n) { return n.toFixed(2) + '%'; }
 
+        // Curva suave Bézier
+        function drawSmoothPath(ctx, pts) {
+            ctx.moveTo(pts[0].x, pts[0].y);
+            for (let i = 0; i < pts.length - 1; i++) {
+                const p0 = pts[Math.max(i - 1, 0)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(i + 2, pts.length - 1)];
+                ctx.bezierCurveTo(p1.x + (p2.x - p0.x)/6, p1.y + (p2.y - p0.y)/6, p2.x - (p3.x - p1.x)/6, p2.y - (p3.y - p1.y)/6, p2.x, p2.y);
+            }
+        }
+
         function drawChart(canvasId, data, color) {
             const canvas = document.getElementById(canvasId);
             if (!canvas || data.length < 2) return;
@@ -300,21 +311,14 @@
             ctx.scale(2, 2);
             
             const min = Math.min(...data), max = Math.max(...data), range = max - min || 1;
-            const pts = data.map((v, i) => ({ 
-                x: 1 + i/(data.length-1)*(w-2), 
-                y: h-1 - (v-min)/range*(h-2) 
-            }));
+            const pts = data.map((v, i) => ({ x: 1 + i/(data.length-1)*(w-2), y: h-1 - (v-min)/range*(h-2) }));
             
             const grad = ctx.createLinearGradient(0, 0, 0, h);
             grad.addColorStop(0, color + '70');
             grad.addColorStop(1, color + '05');
             
             ctx.beginPath();
-            ctx.moveTo(pts[0].x, pts[0].y);
-            for (let i = 0; i < pts.length - 1; i++) {
-                const p0 = pts[Math.max(i - 1, 0)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(i + 2, pts.length - 1)];
-                ctx.bezierCurveTo(p1.x + (p2.x - p0.x)/6, p1.y + (p2.y - p0.y)/6, p2.x - (p3.x - p1.x)/6, p2.y - (p3.y - p1.y)/6, p2.x, p2.y);
-            }
+            drawSmoothPath(ctx, pts);
             ctx.lineTo(pts[pts.length-1].x, h);
             ctx.lineTo(pts[0].x, h);
             ctx.closePath();
@@ -322,11 +326,7 @@
             ctx.fill();
             
             ctx.beginPath();
-            ctx.moveTo(pts[0].x, pts[0].y);
-            for (let i = 0; i < pts.length - 1; i++) {
-                const p0 = pts[Math.max(i - 1, 0)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(i + 2, pts.length - 1)];
-                ctx.bezierCurveTo(p1.x + (p2.x - p0.x)/6, p1.y + (p2.y - p0.y)/6, p2.x - (p3.x - p1.x)/6, p2.y - (p3.y - p1.y)/6, p2.x, p2.y);
-            }
+            drawSmoothPath(ctx, pts);
             ctx.strokeStyle = color;
             ctx.lineWidth = 2;
             ctx.lineCap = 'round';
@@ -340,6 +340,38 @@
             ctx.strokeStyle = last.y <= prev.y ? '#22c55e' : '#ef4444';
             ctx.lineWidth = 2;
             ctx.stroke();
+        }
+
+        // ✅ Sparkline SVG para tarjetas
+        function drawCardSparkline(containerId, data, color) {
+            const container = document.getElementById(containerId);
+            if (!container || data.length < 2) return;
+            const w = container.offsetWidth, h = 22;
+            
+            const min = Math.min(...data), max = Math.max(...data), range = max - min || 1;
+            const pts = data.map((v, i) => ({ x: 1 + i/(data.length-1)*(w-2), y: h-1 - (v-min)/range*(h-2) }));
+            
+            const smoothPath = (pts) => {
+                let d = `M${pts[0].x},${pts[0].y}`;
+                for (let i = 0; i < pts.length - 1; i++) {
+                    const p0 = pts[Math.max(i - 1, 0)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(i + 2, pts.length - 1)];
+                    d += ` C${p1.x + (p2.x - p0.x)/6},${p1.y + (p2.y - p0.y)/6} ${p2.x - (p3.x - p1.x)/6},${p2.y - (p3.y - p1.y)/6} ${p2.x},${p2.y}`;
+                }
+                return d;
+            };
+            
+            const lineD = smoothPath(pts);
+            const areaD = lineD + ` L${pts[pts.length-1].x},${h} L${pts[0].x},${h} Z`;
+            
+            let svg = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">`;
+            svg += `<defs><linearGradient id="g${containerId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity="0.5"/><stop offset="100%" stop-color="${color}" stop-opacity="0.05"/></linearGradient></defs>`;
+            svg += `<path d="${areaD}" fill="url(#g${containerId})"/>`;
+            svg += `<path d="${lineD}" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+            const last = pts[pts.length-1], prev = pts[pts.length-2];
+            const dotColor = last.y <= prev.y ? '#22c55e' : '#ef4444';
+            svg += `<circle cx="${last.x}" cy="${last.y}" r="2.5" fill="#fff" stroke="${dotColor}" stroke-width="1.5"/>`;
+            svg += '</svg>';
+            container.innerHTML = svg;
         }
 
         let allData = [], filter = 'all';
@@ -387,6 +419,7 @@
                         <div class="progress-fill ${colorClass}" style="width:${width}%"></div>
                         <div class="progress-marker" style="left:${Math.min(d.expPerc, 100)}%"></div>
                     </div>
+                    <div class="card-sparkline" id="spark-${d.cedis}"></div>
                     <div class="metrics">
                         <div class="metric">
                             <div class="metric-value blue">${fmt(d.obj)}</div>
@@ -402,6 +435,7 @@
                         </div>
                     </div>`;
                 grid.appendChild(card);
+                setTimeout(() => drawCardSparkline(`spark-${d.cedis}`, d.ventas, color), 10);
             });
         }
 
